@@ -1,0 +1,28 @@
+/*-- title page --*/
+h1.title{
+  font-size: 2em;
+  color: white;
+}
+
+#title-slide .subtitle {
+    margin-bottom: 9rem;
+    color: white;
+}
+
+p.date{
+  font-size: 0.7em;
+  color: white;
+}
+
+p.author{
+  color: white;
+}
+
+.reveal .slide-logo{
+  height: 70px !important;
+  width: 170px!important;
+  max-width: unset !important;
+  max-height: unset !important;
+  margin: 0.1;
+  color: white;
+}
