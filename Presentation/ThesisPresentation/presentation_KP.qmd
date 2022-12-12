@@ -5,7 +5,7 @@ institute: "December 14, 2022"
 author: "Kyuri Park"
 format: 
   revealjs:
-    self-contained: true
+    embed-resources: true
     # template-partials:
     #   - title-slide.html
     logo: img/logo.black.png
@@ -28,10 +28,6 @@ execute:
 bibliography: main_ref.bib
 csl: "apa.csl"
 ---
-
-::: notes
-Hi, welcome to the grand opening of the masters' thesis presentation. I am Kyuri, I am honored to be the first to give you the quick intro of my project. As you can see in the title, the topic of my project is discovering cyclic causal model using observational data in Psychology, which is my background
-:::
 
 ## Network Theory in Psychology
 
@@ -65,8 +61,14 @@ As you can see here, feeling down makes you sleep poorly and lack of sleep makes
 
 ## Inferring causality from observational data
 
+<!-- ::: notes -->
+
+<!-- Hi, welcome to the grand opening of the masters' thesis presentation. I am Kyuri, I am honored to be the first to give you the quick intro of my project. As you can see in the title, the topic of my project is discovering cyclic causal model using observational data in Psychology, which is my background -->
+
+<!-- ::: -->
+
 ::: notes
-And what has happened a lot in psychology is that many empirical researchers try to gain insights into this causal relationships by fitting this statistical network model using observational data. \[Alt + click!\] But these connections in the network is merely statistical relations, which cannot be directly translated into causal relations.
+And what has happened a lot in psychology is that many empirical researchers try to gain insights into this causal relationships by fitting this statistical network model using observational data. \[Alt + click!\] But these connections in the network are merely statistical relations, which cannot be directly translated into causal relations.
 
 And more and more people have become aware of that, and there has come another popular modeling tool, which is DAG. DAG stands for directed acyclic graphical model. And it is specifically designed to make causal inference based on the observational data.\[Alt + click!\] It has all these arrows you can interpret as a cause and effect. It seems very promising, however, one of biggest shortcomings of DAG is by definition it does not allow cycles. But as we saw before, the true system contains cycles. In that sense, we cannot really use DAG to estimate the real underlying mechanism. So what do we need to do?
 :::
@@ -163,9 +165,9 @@ qgraph(Adj,
 :::
 
 ::: notes
-Instead of DAGS, we need to look at directed cyclic graph model. You might wonder then, why do people not use this already? Why are they even bothered using DAGs which cannot handle cycles?
+We need to look at directed cyclic graph model, instead of DAGS. You might wonder then, why do people not use this already? Why are they even bothered using DAGs which cannot handle cycles?
 
-Well, the answer is because estimating cyclic causal models is basically very very difficult. Long story short, relaxing the acyclicity assumption comes with a lot theoretical complications.
+Well, the answer is because estimating cyclic causal models is basically very difficult. Long story short, relaxing the acyclicity assumption comes with a lot theoretical complications.
 :::
 
 ------------------------------------------------------------------------
@@ -193,23 +195,23 @@ MAAG: *Maximal Almost Ancestral Graph* ?
 :::
 
 ::: notes
-But unfortunately, these solutions are also very complicated. Each of these solutions come with all different sorts of assumptions as you can see in this table. And especially their resulting graphs, which are called PAG, and PAAG with double A. And they are not that straightforward: it is not clear what the connections mean and how we can actually interpret them.
+But unfortunately, these solutions are also complicated. Each of these solutions come with all different sorts of assumptions as you can see in this table. And especially their resulting graphs, which are called PAG, and PAAG with double A. And they are not that straightforward: it is not clear what the connections mean and how we can actually interpret them.
 :::
 
 ------------------------------------------------------------------------
 
-## The aim of project {background-image="img/bg_sl33.png"}
+## Project goals {background-image="img/bg_sl33.png"}
 
 <br>
 
 ::: {style="line-height: 2.3;"}
-1.  Give an [accessible overview]{.fragment .highlight-current-red} of the algorithms. <br>
-2.  Investigate the [performance]{.fragment .highlight-current-red} of each algorithm. <br>
-3.  Apply to the [empirical]{.fragment .highlight-current-red} data [@mcnally2017].
+1.  Give an [accessible overview]{.fragment .highlight-current-red} of the algorithms <br>
+2.  Investigate the [performance]{.fragment .highlight-current-red} of each algorithm <br>
+3.  Apply to the [empirical]{.fragment .highlight-current-red} data
 :::
 
 ::: notes
-So there comes our project finally. The aim of our project is actually threefold. First, we'd like to provide an ACCESSIBLE overview of these set of causal discovery algorithms. And secondly, we want to investigate how well each of these algorithms work by means of a simulation study. And lastly, we want to test the algorirhtm with the empirical data. So, we can get some idea on the actual applicability in practice.
+So there comes our project finally. Accordingly, the aim of our project is threefold. First, we'd like to provide an ACCESSIBLE overview of these algorithms that I just introduced. And secondly, we want to investigate how well each of these algorithms work by means of a simulation study. And lastly, we want to test them on the empirical data. So, we can get some idea on the actual applicability in practice.
 :::
 
 ------------------------------------------------------------------------
@@ -245,7 +247,13 @@ Here is a quick example. What I will do in my siumation study. So I will generat
 :::
 
 ::: notes
-To sum it up, causal inference is the fundamental interest in science regardless of field of study. And often, the underlying causal mechanism of interest contains cycles. But estimating causal model with cycles based on observational data is very challenging and it is not too easy to understand how they work. So hopefully our project can show some of the possibilities to researchers that we can actually use these algorithms to estimate the cyclic causal models.
+To sum it up, causal inference is the fundamental interest in science regardless of field of study.
+
+And often, the underlying causal mechanism of interest contains cycles.
+
+But estimating causal model with cycles based on observational data is very challenging and it is not too easy to understand how they work.
+
+So hopefully our project can show some of the possibilities to researchers that we can actually use these algorithms to estimate the cyclic causal models.
 :::
 
 ------------------------------------------------------------------------
@@ -275,11 +283,25 @@ That was in a nutshell, what I've been working on and what I am planning to do i
 
 ![](img/confusionmatrix.png){fig-align="center"}
 
+::: notes
+For evaluation of performance I am going to look at three metrics.
+
+-   Precision for the prediction accuracy, so for example, out of the arrow heads it predicted to be, how many of those are actually correct? (table show)
+
+-   Recall for the retrieval rate, so out of true arrow heads in the true graph, how many of those the algorithm actually picked up.
+
+-   And lastly, uncertainty rate. They usually cannot identify all directions correctly, and when they are unsure, it outputs this circle endpoint. So I am going to quantify the uncertainty rate by the proportion of circles occurred in the output graph.
+:::
+
 ------------------------------------------------------------------------
 
 ## Simulation settings {background-image="img/bg_sl2.png"}
 
 ![](img/simsetting3.png){fig-align="center"}
+
+::: notes
+This is my simulation settings in specifics. I am planning to vary the size of models, the density of the models and see how they perform in each case. Also, I am interested in the situations when there exist a latent variable, the node called L1 in this figure, because in practice, it is likely that the latent variables do exist.
+:::
 
 ------------------------------------------------------------------------
 
@@ -295,21 +317,15 @@ That was in a nutshell, what I've been working on and what I am planning to do i
 
 -   [*Equilibrium*]{.highlight-red} *state* is necessary ([All $|\lambda| < 1$]{style="color:#cc0000"}).
 
-------------------------------------------------------------------------
+::: notes
+-   There are many problems with assumptions when estimating causal model with cycles. But I picked three the most cruicial ones. So when it comes to cyclic model, the most crucial issues are first, the global markov property which is the necessary property in order to read off the graphical model, that is often violated in the models with cycles.
 
-## Steps of CCD {background-image="img/bg_sl.png"}
+-   And another major issue is that the cyclic models are often not statistically identified, meaning that either there are too many solutions possible or no solution at all.
 
-picture of steps
+-   Lastly, not all cycles can be estimated. The ones we can estimate are limited such that it has to converge to some equilibrium states, and in order for that to happen, all eigen values of regression matrix has to be smaller than 1!
 
-------------------------------------------------------------------------
-
-## Steps of FCI {background-image="img/bg_sl33.png"}
-
-------------------------------------------------------------------------
-
-## Steps of CCI {background-image="img/bg_sl4.png"}
-
-pictrue of steps
+So this causes quite some headaches when trying to estimate the cyclic models. <!-- Basically, in DAG, the global Markov property always holds, and the identifiability problem is not as big of an issue often as the equivalence set is much smaller.. -->
+:::
 
 ------------------------------------------------------------------------
 
@@ -318,5 +334,73 @@ pictrue of steps
 ![](img/CB_summary.png){fig-align="center" width="684"}
 
 ::: notes
-how the constrained-based algorithms work in general
+The algorithms that I am looking at in this project, CCD, FCI, and CCI, they are called constraint-based algorithms. this figure summarizes how they work in general. So from observational data, they extract statistical independencies and based on those patterns, it can infer a causal graph structures. Each of the graph can be represented with SCM, which stands for structural causal model and this encodes the causal relations implied by the graph.
+:::
+
+------------------------------------------------------------------------
+
+## Possible Practical Application
+
+-   Personalized psychotherapy (target symptoms)
+
+-   Medical: effective treatment design
+
+::: r-stack
+![](img/hypothetical1.png){.fragment fig-align="center" width="550"}
+
+![](img/hypothetical2.png){.fragment fig-align="center" width="550"}
+:::
+
+::: notes
+Q:"What is the expected benefits/applications if you actually succeed in estimating cyclic model?"
+
+-   For example in psychology, the possible application would be that we can customize therapy based on the found causal dynamics. For example, imagine that this is a person's real depression model, then we can see that insomnia is the central node that has a lot of connections causing other depression symptoms. So we can effectively treat this patient's depression by targeting the sleep problems.
+-   I think this would also apply more or less the same way to other medical treatments. You can imagine that this is a causal model for some other disease, right. Then, we can also design a more effective treatment once we identify which is the most influential cause of the disease. So yeah this would be one of the crucial practical implications of this project.
+:::
+
+------------------------------------------------------------------------
+
+## Follow-up {background-image="img/bg_sl.png"}
+
+Possible combination with different types of causal discovery algorithm. $\rightarrow$ [Hybrid!]{style="color:#cc0000"}
+
+[CCD ]{.fragment fragment-index="3"}[+ GES (greedy equivalence search)]{style="color:#cc0000"}
+
+::: r-stack
+![](img/extension.true.png){.fragment .fade-in-then-out fig-align="center" width="450" fragment-index="1"}
+
+![](img/extension.est.png){.fragment .fade-in-then-out fig-align="center" width="450" fragment-index="2"}
+
+![](img/extension.comb.png){.fragment fig-align="center" width="450" fragment-index="3"}
+:::
+
+::: notes
+Q:"What could be an interesting follow-up or extension you could do if more fundings become available?"
+
+If there are more fundings available, one of the interesting extension to this could be coming up with a hybrid algorithm, such that combining different types of algorithms together. Because one of the general limitations of the causal discovery algorithms is that they often do not give you the full picture of the causal system, meaning that there are always some directions that the algorithm cannot correctly identify.
+
+So for example let's say this is the true model. And usually, the algorithms can only identify up to a certain extent. So you see these edges are left undirected. Then we can use another algorithm, to orient the rest of edges.
+
+For example, we could combine CCD with GES, greedy equivalence search algorithm, which utilizes different types of information to find an optimal model.
+
+So like this, we can combine these two and get the full picture.
+
+This extension is very plausible in my opinion and promising but it's not known yet, which combination would work the best in practice. So this would be a great work to do if there is extra resources available in the future.
+
+<!-- that I am looking at now, called constraint-based algorithms, which use only statistical independence patterns to infer causal relationships, they often do not give you the full picture of the causal system, meaning that in general there are some edges that the algorithm cannot identify the direction. -->
+
+<!-- So in order to get the full picture, we could think of combining different types of algorithms together which utilizes different information. For example, we could combine CCD with GES, greedy equivalence search algorithm, which utilizes different information to find an optimal model. -->
+
+<!-- This is definitely possible but it is not yet known which combination would work the best in practice. So this would be a great work to do if there is extra resources available in the future. -->
+
+<!-- I believe that it would be an interesting follow-up how we can sort of complement one algorithm with the others and get the fully directed causal model, which would be much more informative. -->
+:::
+
+## Thank you {background-image="img/bg_sl33.png"}
+
+![](img/boris.png){.fragment .grow fig-align="center" width="500"}
+
+::: notes
+
+Thank you very much for your attention! I hope you enjoyed!
 :::
