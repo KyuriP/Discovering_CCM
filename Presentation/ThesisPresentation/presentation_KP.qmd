@@ -329,12 +329,30 @@ So this causes quite some headaches when trying to estimate the cyclic models. <
 
 ------------------------------------------------------------------------
 
-## Constraint-Based Algorithms {background-image="img/bg_sl4.png"}
+## Output Graphs {background-image="img/bg_sl4.png"}
 
-![](img/CB_summary.png){fig-align="center" width="684"}
+::: {#outputgraph .panel-tabset}
+### CPDAG
+![](img/cpdagforslide.png){fig-align="center" width="600"}
+
+### PAG
+
+![](img/CCDsummary.png){fig-align="center" width="650"}
+
+### PAAG
+![](img/CCIsummary.png){fig-align="center" width="900"}
+:::
 
 ::: notes
-The algorithms that I am looking at in this project, CCD, FCI, and CCI, they are called constraint-based algorithms. this figure summarizes how they work in general. So from observational data, they extract statistical independencies and based on those patterns, it can infer a causal graph structures. Each of the graph can be represented with SCM, which stands for structural causal model and this encodes the causal relations implied by the graph.
+So the questions is how I could make this in general more accessible for the empirical researchers who don't have much experience on this causal discovery field?
+
+And this is a very good question and as I also mentioned before it is one of the goals of my project to give an accessible overview.. I believe that one of main reasons that people are thrown off by this, is because of all these terminology that sound very technical. For example the output graph that I mentioned previously,called PAG, and MAG I think these terms make people unncessarily confused. But if you look into it, they are in principle the same thing as CPDAG, I don't know if you all recall CPDAG that we learned during the causal inference course by Noemi. 
+
+They are all basically just a representation for all the equivalent set of graphs. This comes up because algorithm usually cannot uniquely identify one true graph but it gives you a set of graphs that are possible. So like here, CPDAG represents three different DAGs that are equally possible and PAG in the same way also represents two different cyclic graphs here that are statistically the same, 
+
+and again same goes for the PAAG with double A. They are fundamentally the same things but unfortunately they come with  all these different names and scare people off. So my plan to make this more accessible is trying to explain all these terms PAG, MAG, and CPDAG, in a normal language that I can understand and the others can also understand, just like how I explained it to you guys now. I think once people know that these technical terms are not too bad in the end, then it will motivate them to actually take a look at this method and try to use them. So my strategy to make it more accessible would be let people first understand what these all means. did that answer you question? Good! 
+
+
 :::
 
 ------------------------------------------------------------------------
@@ -352,10 +370,11 @@ The algorithms that I am looking at in this project, CCD, FCI, and CCI, they are
 :::
 
 ::: notes
-Q:"What is the expected benefits/applications if you actually succeed in estimating cyclic model?"
 
--   For example in psychology, the possible application would be that we can customize therapy based on the found causal dynamics. For example, imagine that this is a person's real depression model, then we can see that insomnia is the central node that has a lot of connections causing other depression symptoms. So we can effectively treat this patient's depression by targeting the sleep problems.
--   I think this would also apply more or less the same way to other medical treatments. You can imagine that this is a causal model for some other disease, right. Then, we can also design a more effective treatment once we identify which is the most influential cause of the disease. So yeah this would be one of the crucial practical implications of this project.
+Q: "what are the potential application of this project, so what does this mean to a clinical psychologist?"
+
+-   For example, a clinical psychologist could use this to customize the therapy based on the found causal dynamics. Let's imagine that this is a person's real depression model with cycles, then we can see that insomnia is the central node that has a lot of connections causing other depression symptoms. So we can effectively treat this patient's depression by targeting the sleeping problems.
+-   I think this would work more or less the same way to other medical treatments. You can imagine that this is a cyclic causal model for some other disease, right. Then, we can also design a more effective treatment once we are able to identify which is the most influential cause of the disease. So yeah this would be one of the crucial clinical implications of this project.
 :::
 
 ------------------------------------------------------------------------
@@ -364,7 +383,7 @@ Q:"What is the expected benefits/applications if you actually succeed in estimat
 
 Possible combination with different types of causal discovery algorithm. $\rightarrow$ [Hybrid!]{style="color:#cc0000"}
 
-[CCD ]{.fragment fragment-index="3"}[+ GES (greedy equivalence search)]{style="color:#cc0000"}
+[CCD [+ GES (greedy equivalence search)]{style="color:#cc0000"}]{.fragment fragment-index="3"}
 
 ::: r-stack
 ![](img/extension.true.png){.fragment .fade-in-then-out fig-align="center" width="450" fragment-index="1"}
@@ -377,9 +396,9 @@ Possible combination with different types of causal discovery algorithm. $\right
 ::: notes
 Q:"What could be an interesting follow-up or extension you could do if more fundings become available?"
 
-If there are more fundings available, one of the interesting extension to this could be coming up with a hybrid algorithm, such that combining different types of algorithms together. Because one of the general limitations of the causal discovery algorithms is that they often do not give you the full picture of the causal system, meaning that there are always some directions that the algorithm cannot correctly identify.
+So I just told you that the algorithm usually cannot identify the one true graph but instead give you this whole set. And that's the general limitations of the causal discovery algorithms, that they often don't give you the full picture.
 
-So for example let's say this is the true model. And usually, the algorithms can only identify up to a certain extent. So you see these edges are left undirected. Then we can use another algorithm, to orient the rest of edges.
+So let's say this is the true model.And usually, the algorithms can only identify this up to a certain extent. So you see these edges are left undirected. Then I think we can use another algorithm, to orient the rest of edges.
 
 For example, we could combine CCD with GES, greedy equivalence search algorithm, which utilizes different types of information to find an optimal model.
 
@@ -387,13 +406,7 @@ So like this, we can combine these two and get the full picture.
 
 This extension is very plausible in my opinion and promising but it's not known yet, which combination would work the best in practice. So this would be a great work to do if there is extra resources available in the future.
 
-<!-- that I am looking at now, called constraint-based algorithms, which use only statistical independence patterns to infer causal relationships, they often do not give you the full picture of the causal system, meaning that in general there are some edges that the algorithm cannot identify the direction. -->
 
-<!-- So in order to get the full picture, we could think of combining different types of algorithms together which utilizes different information. For example, we could combine CCD with GES, greedy equivalence search algorithm, which utilizes different information to find an optimal model. -->
-
-<!-- This is definitely possible but it is not yet known which combination would work the best in practice. So this would be a great work to do if there is extra resources available in the future. -->
-
-<!-- I believe that it would be an interesting follow-up how we can sort of complement one algorithm with the others and get the fully directed causal model, which would be much more informative. -->
 :::
 
 ## Thank you {background-image="img/bg_sl33.png"}
@@ -401,6 +414,5 @@ This extension is very plausible in my opinion and promising but it's not known 
 ![](img/boris.png){.fragment .grow fig-align="center" width="500"}
 
 ::: notes
-
 Thank you very much for your attention! I hope you enjoyed!
 :::
