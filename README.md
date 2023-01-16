@@ -5,8 +5,7 @@ This repository contains all the files concerning the thesis project.
 Checklist
 ================
 
-- <a href="#content-overview" id="toc-content-overview">Content
-  Overview</a>
+- Content Overview
 - <a href="#introduction" id="toc-introduction"><span
   class="toc-section-number">1</span> Introduction</a>
   - <a href="#background" id="toc-background"><span
