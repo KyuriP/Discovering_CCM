@@ -95,7 +95,7 @@ Content Overview
 </tr>
 <tr class="even">
 <td>week7</td>
-<td>Work on simulation &amp; Consultancy</td>
+<td>Work on simulation &amp; Consultancy session</td>
 <td><ul>
 <li>Trouble-shooting code.</li>
 <li>Create summary figures / tables.</li>
@@ -103,7 +103,7 @@ Content Overview
 </tr>
 <tr class="odd">
 <td>week8</td>
-<td>Work on simulation &amp; Consultancy</td>
+<td>Work on simulation &amp; Consultancy session</td>
 <td><ul>
 <li>Trouble-shooting code.</li>
 <li>Create summary figures / tables.</li>
@@ -128,7 +128,7 @@ algorithm.</li>
 </tr>
 <tr class="even">
 <td>week11</td>
-<td>Work on empirical analysis &amp; Consultancy</td>
+<td>Work on empirical analysis &amp; Consultancy session</td>
 <td><ul>
 <li>Choose an empirical data.</li>
 <li>Try running the algorithm(s).</li>
@@ -136,10 +136,11 @@ algorithm.</li>
 </tr>
 <tr class="odd">
 <td>week12</td>
-<td>Work on empirical analysis &amp; Consultancy</td>
+<td>Work on empirical analysis &amp; Consultancy session & Peer feedback</td>
 <td><ul>
 <li>Try running the algorithm(s).</li>
 <li>Trouble-shooting the code.</li>
+<li>Send a draft (peer feedback).</li>
 </ul></td>
 </tr>
 <tr class="even">
