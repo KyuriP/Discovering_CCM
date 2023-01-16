@@ -1,0 +1,880 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Bollen%
+\ \BBA {} Pearl%
+}{%
+Bollen%
+\ \BBA {} Pearl%
+}{%
+{\protect \APACyear {2013}}%
+}]{%
+bollen_eight_2013}
+\APACinsertmetastar {%
+bollen_eight_2013}%
+\begin{APACrefauthors}%
+Bollen, K\BPBI A.%
+\BCBT {}\ \BBA {} Pearl, J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2013}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Eight {Myths} {About} {Causality} and {Structural}
+  {Equation} {Models}} {Eight {Myths} {About} {Causality} and {Structural}
+  {Equation} {Models}}.{\BBCQ}
+\newblock
+\BIn{} S\BPBI L.~Morgan\ (\BED), \APACrefbtitle {Handbook of {Causal}
+  {Analysis} for {Social} {Research}} {Handbook of {Causal} {Analysis} for
+  {Social} {Research}}\ (\BPGS\ 301--328).
+\newblock
+\APACaddressPublisher{Dordrecht}{Springer Netherlands}.
+\newblock
+\begin{APACrefDOI} \doi{10.1007/978-94-007-6094-3_15} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Bongers%
+, Forr{\'e}%
+, Peters%
+\BCBL {}\ \BBA {} Mooij%
+}{%
+Bongers%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2021}}%
+}]{%
+Bongers2021}
+\APACinsertmetastar {%
+Bongers2021}%
+\begin{APACrefauthors}%
+Bongers, S.%
+, Forr{\'e}, P.%
+, Peters, J.%
+\BCBL {}\ \BBA {} Mooij, J\BPBI M.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2021}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {{Foundations of structural causal models with cycles and
+  latent variables}} {{Foundations of structural causal models with cycles and
+  latent variables}}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{The Annals of Statistics}{49}{5}{2885 -- 2915}.
+\newblock
+\begin{APACrefDOI} \doi{10.1214/21-AOS2064} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Borsboom%
+}{%
+Borsboom%
+}{%
+{\protect \APACyear {2017}}%
+}]{%
+borsboom_network_2017}
+\APACinsertmetastar {%
+borsboom_network_2017}%
+\begin{APACrefauthors}%
+Borsboom, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2017}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {A network theory of mental disorders} {A network theory
+  of mental disorders}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{World Psychiatry}{16}{1}{5--13}.
+\newblock
+\begin{APACrefDOI} \doi{10.1002/wps.20375} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Borsboom%
+\ \BBA {} Cramer%
+}{%
+Borsboom%
+\ \BBA {} Cramer%
+}{%
+{\protect \APACyear {2013}}%
+}]{%
+BorsboomCramer2013}
+\APACinsertmetastar {%
+BorsboomCramer2013}%
+\begin{APACrefauthors}%
+Borsboom, D.%
+\BCBT {}\ \BBA {} Cramer, A\BPBI O.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2013}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Network Analysis: An Integrative Approach to the
+  Structure of Psychopathology} {Network analysis: An integrative approach to
+  the structure of psychopathology}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Annual Review of Clinical Psychology}{9}{1}{91-121}.
+\newblock
+\APACrefnote{PMID: 23537483}
+\newblock
+\begin{APACrefDOI} \doi{10.1146/annurev-clinpsy-050212-185608} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Borsboom%
+\ \protect \BOthers {.}}{%
+Borsboom%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2021}}%
+}]{%
+borsboom_network_2021}
+\APACinsertmetastar {%
+borsboom_network_2021}%
+\begin{APACrefauthors}%
+Borsboom, D.%
+, Deserno, M\BPBI K.%
+, Rhemtulla, M.%
+, Epskamp, S.%
+, Fried, E\BPBI I.%
+, McNally, R\BPBI J.%
+\BDBL {}Waldorp, L\BPBI J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2021}{{\APACmonth{08}}}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Network analysis of multivariate data in psychological
+  science} {Network analysis of multivariate data in psychological
+  science}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Nature Reviews Methods Primers}{1}{1}{1--18}.
+\newblock
+\begin{APACrefDOI} \doi{10.1038/s43586-021-00055-w} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Briganti%
+, Scutari%
+\BCBL {}\ \BBA {} McNally%
+}{%
+Briganti%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2022}}%
+}]{%
+briganti_tutorial_2022}
+\APACinsertmetastar {%
+briganti_tutorial_2022}%
+\begin{APACrefauthors}%
+Briganti, G.%
+, Scutari, M.%
+\BCBL {}\ \BBA {} McNally, R\BPBI J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2022}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {A tutorial on bayesian networks for psychopathology
+  researchers} {A tutorial on bayesian networks for psychopathology
+  researchers}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychological Methods}{}{}{}.
+\newblock
+\begin{APACrefDOI} \doi{10.1037/met0000479} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Constantin%
+\ \BBA {} Cramer%
+}{%
+Constantin%
+\ \BBA {} Cramer%
+}{%
+{\protect \APACyear {2022}}%
+}]{%
+constantin2022}
+\APACinsertmetastar {%
+constantin2022}%
+\begin{APACrefauthors}%
+Constantin, M.%
+\BCBT {}\ \BBA {} Cramer, A\BPBI O\BPBI J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2022}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Sample Size Recommendations for Estimating
+  Cross-Sectional Network Models} {Sample size recommendations for estimating
+  cross-sectional network models}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{OSF}{}{}{}.
+\newblock
+\begin{APACrefDOI} \doi{10.17605/OSF.IO/ZKAXU} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Dablander%
+\ \BBA {} Hinne%
+}{%
+Dablander%
+\ \BBA {} Hinne%
+}{%
+{\protect \APACyear {2019}}%
+}]{%
+dablander2019node}
+\APACinsertmetastar {%
+dablander2019node}%
+\begin{APACrefauthors}%
+Dablander, F.%
+\BCBT {}\ \BBA {} Hinne, M.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2019}{{\APACmonth{05}}}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Node centrality measures are a poor substitute for
+  causal inference} {Node centrality measures are a poor substitute for causal
+  inference}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Scientific Reports}{9}{1}{6846}.
+\newblock
+\begin{APACrefDOI} \doi{10.1038/s41598-019-43033-9} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+de Jongh%
+\ \BBA {} Druzdzel%
+}{%
+de Jongh%
+\ \BBA {} Druzdzel%
+}{%
+{\protect \APACyear {2009}}%
+}]{%
+de2009comparison}
+\APACinsertmetastar {%
+de2009comparison}%
+\begin{APACrefauthors}%
+de Jongh, M.%
+\BCBT {}\ \BBA {} Druzdzel, M\BPBI J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2009}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {A comparison of structural distance measures for causal
+  Bayesian network models} {A comparison of structural distance measures for
+  causal bayesian network models}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Recent Advances in Intelligent Information Systems,
+  Challenging Problems of Science, Computer Science series}{}{}{443--456}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Eberhardt%
+, Hoyer%
+\BCBL {}\ \BBA {} Scheines%
+}{%
+Eberhardt%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2010}}%
+}]{%
+eberhardt2010}
+\APACinsertmetastar {%
+eberhardt2010}%
+\begin{APACrefauthors}%
+Eberhardt, F.%
+, Hoyer, P.%
+\BCBL {}\ \BBA {} Scheines, R.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2010}{13--15 May}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Combining Experiments to Discover Linear Cyclic Models
+  with Latent Variables} {Combining experiments to discover linear cyclic
+  models with latent variables}.{\BBCQ}
+\newblock
+\BIn{} Y\BPBI W.~Teh\ \BBA {} M.~Titterington\ (\BEDS), \APACrefbtitle
+  {Proceedings of the Thirteenth International Conference on Artificial
+  Intelligence and Statistics} {Proceedings of the thirteenth international
+  conference on artificial intelligence and statistics}\ (\BVOL~9, \BPGS\
+  185--192).
+\newblock
+\APACaddressPublisher{}{PMLR}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Forr{\'e}%
+\ \BBA {} Mooij%
+}{%
+Forr{\'e}%
+\ \BBA {} Mooij%
+}{%
+{\protect \APACyear {2017}}%
+}]{%
+forre_markov_2017}
+\APACinsertmetastar {%
+forre_markov_2017}%
+\begin{APACrefauthors}%
+Forr{\'e}, P.%
+\BCBT {}\ \BBA {} Mooij, J\BPBI M.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2017}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Markov {Properties} for {Graphical} {Models} with
+  {Cycles} and {Latent} {Variables}} {Markov {Properties} for {Graphical}
+  {Models} with {Cycles} and {Latent} {Variables}}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{arXiv preprint arXiv:1710.08775}{}{}{}.
+\newblock
+\begin{APACrefDOI} \doi{10.48550/arXiv.1710.08775} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Geiger%
+\ \BBA {} Pearl%
+}{%
+Geiger%
+\ \BBA {} Pearl%
+}{%
+{\protect \APACyear {1990}}%
+}]{%
+geiger_logic_1990}
+\APACinsertmetastar {%
+geiger_logic_1990}%
+\begin{APACrefauthors}%
+Geiger, D.%
+\BCBT {}\ \BBA {} Pearl, J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1990}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {On the logic of causal models} {On the logic of causal
+  models}.{\BBCQ}
+\newblock
+\BIn{} R\BPBI D.~Shachter, T\BPBI S.~Levitt, L\BPBI N.~Kanal\BCBL {}\ \BBA {}
+  J\BPBI F.~Lemmer\ (\BEDS), \APACrefbtitle {Machine Intelligence and Pattern
+  Recognition} {Machine intelligence and pattern recognition}\ (\BVOL~9, \BPGS\
+  3--14).
+\newblock
+\APACaddressPublisher{}{North-Holland}.
+\newblock
+\begin{APACrefDOI} \doi{10.1016/B978-0-444-88650-7.50006-8} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Geiger%
+, Verma%
+\BCBL {}\ \BBA {} Pearl%
+}{%
+Geiger%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {1990}}%
+}]{%
+geiger_d-separation_1990}
+\APACinsertmetastar {%
+geiger_d-separation_1990}%
+\begin{APACrefauthors}%
+Geiger, D.%
+, Verma, T.%
+\BCBL {}\ \BBA {} Pearl, J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1990}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {d-{Separation}: {From} {Theorems} to {Algorithms}}
+  {d-{Separation}: {From} {Theorems} to {Algorithms}}.{\BBCQ}
+\newblock
+\BIn{} M.~Henrion, R\BPBI D.~Shachter, L\BPBI N.~Kanal\BCBL {}\ \BBA {} J\BPBI
+  F.~Lemmer\ (\BEDS), \APACrefbtitle {Machine {Intelligence} and {Pattern}
+  {Recognition}} {Machine {Intelligence} and {Pattern} {Recognition}}\
+  (\BVOL~10, \BPGS\ 139--148).
+\newblock
+\APACaddressPublisher{}{North-Holland}.
+\newblock
+\begin{APACrefDOI} \doi{10.1016/B978-0-444-88738-2.50018-X} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Glymour%
+, Zhang%
+\BCBL {}\ \BBA {} Spirtes%
+}{%
+Glymour%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2019}}%
+}]{%
+Glymour2019}
+\APACinsertmetastar {%
+Glymour2019}%
+\begin{APACrefauthors}%
+Glymour, C.%
+, Zhang, K.%
+\BCBL {}\ \BBA {} Spirtes, P.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2019}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Review of Causal Discovery Methods Based on Graphical
+  Models} {Review of causal discovery methods based on graphical
+  models}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Frontiers in Genetics}{10}{}{524}.
+\newblock
+\begin{APACrefDOI} \doi{10.3389/fgene.2019.00524} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Haslbeck%
+, Ryan%
+, Robinaugh%
+, Waldorp%
+\BCBL {}\ \BBA {} Borsboom%
+}{%
+Haslbeck%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2021}}%
+}]{%
+haslbeck_modeling_2021}
+\APACinsertmetastar {%
+haslbeck_modeling_2021}%
+\begin{APACrefauthors}%
+Haslbeck, J\BPBI M\BPBI B.%
+, Ryan, O.%
+, Robinaugh, D\BPBI J.%
+, Waldorp, L\BPBI J.%
+\BCBL {}\ \BBA {} Borsboom, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2021}{{\APACmonth{11}}}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Modeling psychopathology: {From} data models to formal
+  theories} {Modeling psychopathology: {From} data models to formal
+  theories}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychological Methods}{}{}{}.
+\newblock
+\begin{APACrefDOI} \doi{10.1037/met0000303} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Kossakowski%
+, Waldorp%
+\BCBL {}\ \BBA {} van~der Maas%
+}{%
+Kossakowski%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2021}}%
+}]{%
+Kossakowski2021}
+\APACinsertmetastar {%
+Kossakowski2021}%
+\begin{APACrefauthors}%
+Kossakowski, J.%
+, Waldorp, L\BPBI J.%
+\BCBL {}\ \BBA {} van~der Maas, H\BPBI L\BPBI J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2021}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {The search for causality: A comparison of different
+  techniques for causal inference graphs.} {The search for causality: A
+  comparison of different techniques for causal inference graphs.}{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychological Methods}{26}{6}{719--742}.
+\newblock
+\begin{APACrefDOI} \doi{10.1037/met0000390} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Lauritzen%
+}{%
+Lauritzen%
+}{%
+{\protect \APACyear {1996}}%
+}]{%
+lauritzen1996graphical}
+\APACinsertmetastar {%
+lauritzen1996graphical}%
+\begin{APACrefauthors}%
+Lauritzen, S.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{1996}.
+\newblock
+\APACrefbtitle {Graphical models} {Graphical models}\ (\BVOL~17).
+\newblock
+\APACaddressPublisher{}{Clarendon Press}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Lauritzen%
+}{%
+Lauritzen%
+}{%
+{\protect \APACyear {2000}}%
+}]{%
+lauritzen2000graphical}
+\APACinsertmetastar {%
+lauritzen2000graphical}%
+\begin{APACrefauthors}%
+Lauritzen, S.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2000}{}{}.
+\newblock
+\APACrefbtitle {Graphical models for causal inference.} {Graphical models for
+  causal inference.}
+\newblock
+\APACaddressPublisher{}{Complex Stochastic Systems. London/Boca Raton: Chapman
+  and Hall/CRC Press}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Mooij%
+\ \BBA {} Claassen%
+}{%
+Mooij%
+\ \BBA {} Claassen%
+}{%
+{\protect \APACyear {2020}}%
+}]{%
+mooij_classen2020}
+\APACinsertmetastar {%
+mooij_classen2020}%
+\begin{APACrefauthors}%
+Mooij, J\BPBI M.%
+\BCBT {}\ \BBA {} Claassen, T.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2020}{Aug}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Constraint-Based Causal Discovery using Partial
+  Ancestral Graphs in the presence of Cycles} {Constraint-based causal
+  discovery using partial ancestral graphs in the presence of cycles}.{\BBCQ}
+\newblock
+\BIn{} J.~Peters\ \BBA {} D.~Sontag\ (\BEDS), \APACrefbtitle {Proceedings of
+  the 36th Conference on Uncertainty in Artificial Intelligence (UAI)}
+  {Proceedings of the 36th conference on uncertainty in artificial intelligence
+  (uai)}\ (\BVOL~124, \BPGS\ 1159--1168).
+\newblock
+\APACaddressPublisher{}{PMLR}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Pearl%
+}{%
+Pearl%
+}{%
+{\protect \APACyear {2010}}%
+}]{%
+pearl_causal_2010}
+\APACinsertmetastar {%
+pearl_causal_2010}%
+\begin{APACrefauthors}%
+Pearl, J.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2010}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Causal {Inference}} {Causal {Inference}}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Proceedings of {Workshop} on {Causality}: {Objectives}
+  and {Assessment} at {NIPS} 2008} {Proceedings of {Workshop} on {Causality}:
+  {Objectives} and {Assessment} at {NIPS} 2008}\ (\BPGS\ 39--58).
+\newblock
+\APACaddressPublisher{}{PMLR}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Richardson%
+}{%
+Richardson%
+}{%
+{\protect \APACyear {1996}}%
+{\protect \APACexlab {{\protect \BCnt {1}}}}}]{%
+richardson1996}
+\APACinsertmetastar {%
+richardson1996}%
+\begin{APACrefauthors}%
+Richardson, T.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{1996{\protect \BCnt {1}}}.
+\newblock
+\APACrefbtitle {Discovering cyclic causal structure} {Discovering cyclic causal
+  structure}.
+\newblock
+\APACaddressPublisher{}{Carnegie Mellon [Department of Philosophy]}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Richardson%
+}{%
+Richardson%
+}{%
+{\protect \APACyear {1996}}%
+{\protect \APACexlab {{\protect \BCnt {2}}}}}]{%
+Richardson1996a}
+\APACinsertmetastar {%
+Richardson1996a}%
+\begin{APACrefauthors}%
+Richardson, T.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1996{\protect \BCnt {2}}}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {A Discovery Algorithm for Directed Cyclic Graphs} {A
+  discovery algorithm for directed cyclic graphs}.{\BBCQ}
+\newblock
+\BIn{} \APACrefbtitle {Proceedings of the Twelfth International Conference on
+  Uncertainty in Artificial Intelligence} {Proceedings of the twelfth
+  international conference on uncertainty in artificial intelligence}\
+  (\BPG~454–461).
+\newblock
+\APACaddressPublisher{San Francisco, CA, USA}{Morgan Kaufmann Publishers Inc.}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Robinaugh%
+, Hoekstra%
+, Toner%
+\BCBL {}\ \BBA {} Borsboom%
+}{%
+Robinaugh%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2020}}%
+}]{%
+robinaugh2020}
+\APACinsertmetastar {%
+robinaugh2020}%
+\begin{APACrefauthors}%
+Robinaugh, D\BPBI J.%
+, Hoekstra, R\BPBI H\BPBI A.%
+, Toner, E\BPBI R.%
+\BCBL {}\ \BBA {} Borsboom, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2020}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {The network approach to psychopathology: a review of the
+  literature 2008–2018 and an agenda for future research} {The network
+  approach to psychopathology: a review of the literature 2008–2018 and an
+  agenda for future research}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychological Medicine}{50}{3}{353–366}.
+\newblock
+\begin{APACrefDOI} \doi{10.1017/S0033291719003404} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Ryan%
+, Bringmann%
+\BCBL {}\ \BBA {} Schuurman%
+}{%
+Ryan%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2022}}%
+}]{%
+Ryan2022}
+\APACinsertmetastar {%
+Ryan2022}%
+\begin{APACrefauthors}%
+Ryan, O.%
+, Bringmann, L\BPBI F.%
+\BCBL {}\ \BBA {} Schuurman, N\BPBI K.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2022}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {The Challenge of Generating Causal Hypotheses Using
+  Network Models} {The challenge of generating causal hypotheses using network
+  models}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Structural Equation Modeling: A Multidisciplinary
+  Journal}{0}{0}{1-18}.
+\newblock
+\begin{APACrefDOI} \doi{10.1080/10705511.2022.2056039} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Spirtes%
+}{%
+Spirtes%
+}{%
+{\protect \APACyear {1993}}%
+}]{%
+spirtes1993}
+\APACinsertmetastar {%
+spirtes1993}%
+\begin{APACrefauthors}%
+Spirtes, P.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1993}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Directed cyclic graphs, conditional independence, and
+  non-recursive linear structural equation models} {Directed cyclic graphs,
+  conditional independence, and non-recursive linear structural equation
+  models}.{\BBCQ}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Spirtes%
+}{%
+Spirtes%
+}{%
+{\protect \APACyear {1994}}%
+}]{%
+spirtes1994}
+\APACinsertmetastar {%
+spirtes1994}%
+\begin{APACrefauthors}%
+Spirtes, P.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1994}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Conditional independence in directed cyclic graphical
+  models for feedback} {Conditional independence in directed cyclic graphical
+  models for feedback}.{\BBCQ}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Spirtes%
+\ \BBA {} Glymour%
+}{%
+Spirtes%
+\ \BBA {} Glymour%
+}{%
+{\protect \APACyear {1991}}%
+}]{%
+spirtes_algorithm_1991}
+\APACinsertmetastar {%
+spirtes_algorithm_1991}%
+\begin{APACrefauthors}%
+Spirtes, P.%
+\BCBT {}\ \BBA {} Glymour, C.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{1991}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {An {Algorithm} for {Fast} {Recovery} of {Sparse}
+  {Causal} {Graphs}} {An {Algorithm} for {Fast} {Recovery} of {Sparse} {Causal}
+  {Graphs}}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Social Science Computer Review}{9}{1}{62--72}.
+\newblock
+\APACrefnote{Publisher: SAGE Publications Inc}
+\newblock
+\begin{APACrefDOI} \doi{10.1177/089443939100900106} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Spirtes%
+, Glymour%
+, Scheines%
+\BCBL {}\ \BBA {} Heckerman%
+}{%
+Spirtes%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2000}}%
+}]{%
+spirtes2000}
+\APACinsertmetastar {%
+spirtes2000}%
+\begin{APACrefauthors}%
+Spirtes, P.%
+, Glymour, C\BPBI N.%
+, Scheines, R.%
+\BCBL {}\ \BBA {} Heckerman, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{2000}.
+\newblock
+\APACrefbtitle {Causation, prediction, and search} {Causation, prediction, and
+  search}.
+\newblock
+\APACaddressPublisher{}{MIT press}.
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Strobl%
+}{%
+Strobl%
+}{%
+{\protect \APACyear {2019}}%
+}]{%
+strobl2019}
+\APACinsertmetastar {%
+strobl2019}%
+\begin{APACrefauthors}%
+Strobl, E\BPBI V.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2019}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {A constraint-based algorithm for causal discovery with
+  cycles, latent variables and selection bias} {A constraint-based algorithm
+  for causal discovery with cycles, latent variables and selection
+  bias}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{International Journal of Data Science and
+  Analytics}{8}{1}{33--56}.
+\newblock
+\begin{APACrefDOI} \doi{10.1007/s41060-018-0158-2} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\bibitem [\protect \citeauthoryear {%
+Wittenborn%
+, Rahmandad%
+, Rick%
+\BCBL {}\ \BBA {} Hosseinichimeh%
+}{%
+Wittenborn%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2016}}%
+}]{%
+wittenborn_2016}
+\APACinsertmetastar {%
+wittenborn_2016}%
+\begin{APACrefauthors}%
+Wittenborn, A\BPBI K.%
+, Rahmandad, H.%
+, Rick, J.%
+\BCBL {}\ \BBA {} Hosseinichimeh, N.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2016}{}{}.
+\newblock
+{\BBOQ}\APACrefatitle {Depression as a systemic syndrome: mapping the feedback
+  loops of major depressive disorder} {Depression as a systemic syndrome:
+  mapping the feedback loops of major depressive disorder}.{\BBCQ}
+\newblock
+\APACjournalVolNumPages{Psychological Medicine}{46}{3}{551–562}.
+\newblock
+\begin{APACrefDOI} \doi{10.1017/S0033291715002044} \end{APACrefDOI}
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}
