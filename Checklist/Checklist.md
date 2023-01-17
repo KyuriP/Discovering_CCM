@@ -123,7 +123,7 @@ title-block-banner-color: "#F5FFFA"
 +---------------+--------------------+------------------------------------------+
 | week12        | Work on empirical  | - Try running the algorithm(s).          |
 |               | analysis           | - Trouble-shooting the code.             |
-|               | & Consultancy      |                                          |
+|               | & Consultancy      | - Send a draft (peer feedback)           |
 +---------------+--------------------+------------------------------------------+
 | week13        | Work on empirical  | - Review the empirical results.          |
 |               | analysis &         | - Update the results section.            |
