@@ -11,6 +11,8 @@ source("code/R/equivset_fnc.R")
 source("code/R/data_generating_fnc.R")
 source("code/R/eval_metric_fnc.R")
 
+# for reproducibility
+set.seed(12345)
 
 ## ========================
 ## Model 1) 4 nodes - sparse
@@ -151,6 +153,7 @@ data5p <- gen_dat(B5, N =1e6, seed = 123)
 ## Estimate GGM
 ggm5p <- qgraph(cor(data5p), layout = layout5, theme="colorblind")
 
+layout(t(1:3))
 ## Run CCD algorithm
 ccd_5p <- ccdKP(df=data5p, dataType = "continuous", alpha = 0.05)
 mat5p <- CreateAdjMat(ccd_5p, 5)
@@ -205,7 +208,7 @@ true5p_high <- qgraph(t(B5_high), layout=layout5, labels = colnames(B5_high), th
 # equilibrium check
 equilibrium_check(B5_high)
 # generate data
-data5p_high <- gen_dat(B5_high, N =1e6, seed = 1)
+data5p_high <- gen_dat(B5_high, N =1e6, seed = 123)
 
 ## Estimate GGM
 ggm5p_high <- qgraph(cor(data5p_high), layout = layout5, theme="colorblind")
