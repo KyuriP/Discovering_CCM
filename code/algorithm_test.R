@@ -12,7 +12,7 @@ source("code/R/data_generating_fnc.R")
 source("code/R/eval_metric_fnc.R")
 
 # for reproducibility
-set.seed(12345)
+#set.seed(12345)
 
 ## ========================
 ## Model 1) 4 nodes - sparse
@@ -38,8 +38,7 @@ true4p <- qgraph(t(B4), layout=layout4, labels = colnames(B4), theme="colorblind
 # equilibrium check
 equilibrium_check(B4)
 # generate data
-data4p <- gen_dat(B4, N =1e6, seed = 1)
-
+data4p <- gen_dat(B4, N =1e6, seed = 12345)
 ## Estimate GGM
 ggm4p <- qgraph(cor(data4p), layout=layout4, theme="colorblind")
 
@@ -62,7 +61,7 @@ suffStat_4p$C = cor(data4p)
 suffStat_4p$n = 1000
 
 res4p <- fci(suffStat_4p,indepTest=gaussCItest,
-             alpha = 0.05, p=p, doPdsep = FALSE, labels = colnames(data4p))
+             alpha = 0.05, doPdsep = FALSE, labels = colnames(data4p))
 
 pag_fci4p <- plotAG(res4p@amat)
 
@@ -148,7 +147,7 @@ true5p <- qgraph(t(B5), layout=layout5, labels = colnames(B5), theme="colorblind
 # equilibrium check
 equilibrium_check(B5)
 # generate data
-data5p <- gen_dat(B5, N =1e6, seed = 123)
+data5p <- gen_dat(B5, N =1e6, seed = 1)
 
 ## Estimate GGM
 ggm5p <- qgraph(cor(data5p), layout = layout5, theme="colorblind")
@@ -208,7 +207,7 @@ true5p_high <- qgraph(t(B5_high), layout=layout5, labels = colnames(B5_high), th
 # equilibrium check
 equilibrium_check(B5_high)
 # generate data
-data5p_high <- gen_dat(B5_high, N =1e6, seed = 123)
+data5p_high <- gen_dat(B5_high, N =1e6, seed = 1)
 
 ## Estimate GGM
 ggm5p_high <- qgraph(cor(data5p_high), layout = layout5, theme="colorblind")
