@@ -88,7 +88,7 @@ true4p_high <- qgraph(t(B4_high), layout=layout4, labels = colnames(B4_high), th
 # equilibrium check
 equilibrium_check(B4_high)
 # generate data
-data4p_high <- gen_dat(B4_high, N =1e6, seed = 1)
+data4p_high <- gen_dat(B4_high, N =1e6, seed = 12345)
 
 ## Estimate GGM
 ggm4p_high <- qgraph(t(cor(data4p_high)), layout=layout4, theme="colorblind")
