@@ -58,7 +58,7 @@ pag_ccd4p <- plotPAG(ccd_4p, mat4p)
 ## Run FCI algorithm
 suffStat_4p = list()
 suffStat_4p$C = cor(data4p)
-suffStat_4p$n = 1000
+suffStat_4p$n = 1e6
 
 res4p <- fci(suffStat_4p,indepTest=gaussCItest,
              alpha = 0.05, doPdsep = FALSE, labels = colnames(data4p))
@@ -109,7 +109,7 @@ pag_ccd4pH <- plotPAG(ccd_4p_high, mat4p_high)
 ## Run FCI algorithm
 suffStat_4phigh = list()
 suffStat_4phigh$C = cor(data4p_high)
-suffStat_4phigh$n = 1000
+suffStat_4phigh$n = 1e6
 
 res4p_high <- fci(suffStat_4phigh,indepTest=gaussCItest,
              alpha = 0.05, doPdsep = FALSE, labels = colnames(data4p_high))
@@ -169,7 +169,7 @@ pag_ccd5p <- plotPAG(ccd_5p, mat5p)
 ## Run FCI algorithm
 suffStat_5p = list()
 suffStat_5p$C = cor(data5p)
-suffStat_5p$n = 1000
+suffStat_5p$n = 1e6
 
 res5p <- fci(suffStat_5p,indepTest=gaussCItest,
              alpha = 0.05, doPdsep = FALSE, labels = colnames(data5p))
@@ -229,7 +229,7 @@ pag_ccd5pH <- plotPAG(ccd_5p_high, mat5p_high)
 ## Run FCI algorithm
 suffStat_5phigh = list()
 suffStat_5phigh$C = cor(data5p_high)
-suffStat_5phigh$n = 1000
+suffStat_5phigh$n = 1e6
 
 res5p_high <- fci(suffStat_5phigh,indepTest=gaussCItest,
              alpha = 0.05, doPdsep = FALSE, labels = colnames(data5p_high))
@@ -291,7 +291,7 @@ pag_ccd6p <- plotPAG(ccd_6p, mat6p)
 ## Run FCI algorithm
 suffStat_6p = list()
 suffStat_6p$C = cor(data6p)
-suffStat_6p$n = 1000
+suffStat_6p$n = 1e6
 
 res6p <- fci(suffStat_6p,indepTest=gaussCItest,
                   alpha = 0.05, doPdsep = FALSE, labels = colnames(data6p))
@@ -347,7 +347,7 @@ pag_ccd6pH <- plotPAG(ccd_6p_high, mat6p_high)
 ## Run FCI algorithm
 suffStat_6phigh = list()
 suffStat_6phigh$C = cor(data6p_high)
-suffStat_6phigh$n = 1000
+suffStat_6phigh$n = 1e6
 
 res6p_high <- fci(suffStat_6phigh,indepTest=gaussCItest,
              alpha = 0.05, doPdsep = FALSE, labels = colnames(data6p_high))
@@ -358,6 +358,294 @@ pag_fci6pH <- plotAG(res6p_high@amat)
 G6p_high = cci(suffStat_6phigh, gaussCItest, alpha=0.05, p=ncol(data6p_high)) 
 dimnames(G6p_high$maag) <- list(colnames(data6p_high), colnames(data6p_high)) # give the labels
 pag_cci6pH <- plotAG(G6p_high$maag)
+
+
+
+## ========================
+## Model 7-1) 4 nodes with a LV - sparse
+## ========================
+# specify B matrix
+B4_LV = matrix(c(0, 0, 0, 0, -0.4,
+              0, 0, 0.6, 0, 0,
+              0, 0.6, 0, 0.9, 0,
+              0, 0, 0, 0, -1,
+              0, 0, 0, 0, 0), 5, 5, byrow = T)
+
+colnames(B4_LV) <- c("X1", "X2", "X3", "X4", "L1")
+# specify layout
+layout4LV = matrix(c(-1,1,
+                   -1,0,
+                   1,0,
+                   1,1,
+                   0, 1.5),5,2,byrow = T)
+## True graph
+true4pLV <- qgraph(t(B4_LV), layout=layout4LV, labels = colnames(B4_LV), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B4_LV)
+# generate data
+data4pLV <- gen_dat(B4_LV, N =1e6, seed = 123)[,-5]
+## Estimate GGM
+ggm4pLV <- qgraph(cor(data4pLV), layout=layout4, theme="colorblind")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_4pLV <- ccdKP(df=data4pLV, dataType = "continuous", alpha = 0.05)
+mat4pLV <- CreateAdjMat(ccd_4pLV, 4)
+# Estimate PAG
+pag_ccd4pLV <- plotPAG(ccd_4pLV, mat4pLV)
+
+## Run FCI algorithm
+suffStat_4pLV = list()
+suffStat_4pLV$C = cor(data4pLV)
+suffStat_4pLV$n = 1e6
+
+res4pLV <- fci(suffStat_4pLV,indepTest=gaussCItest,
+             alpha = 0.05, doPdsep = FALSE, labels = colnames(data4pLV))
+
+pag_fci4pLV <- plotAG(res4pLV@amat)
+
+## Run CCI algorithm
+G4pLV = cci(suffStat_4pLV, gaussCItest, alpha=0.05, p=ncol(data4pLV)) 
+dimnames(G4pLV$maag) <- list(colnames(data4pLV), colnames(data4pLV)) # give the labels
+pag_cci4pLV <- plotAG(G4pLV$maag)
+
+
+
+## ========================
+## Model 7-2) 4 nodes with a LV - sparse
+## ========================
+# specify B matrix
+B4_LV2 = matrix(c(0, 0, 0, 0, 1,
+                 0, 0, 0.6, 0, 1,
+                 0, 0.6, 0, 0.9, 0,
+                 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0), 5, 5, byrow = T)
+
+colnames(B4_LV2) <- c("X1", "X2", "X3", "X4", "L1")
+# specify layout
+layout4LV2 = matrix(c(-1,1,
+                     -1,0,
+                     1,0,
+                     1,1,
+                     -2, 0.5),5,2,byrow = T)
+## True graph
+true4pLV2 <- qgraph(t(B4_LV2), layout=layout4LV2, labels = colnames(B4_LV2), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B4_LV2)
+# generate data
+data4pLV2 <- gen_dat(B4_LV2, N =1e6, seed = 123)[,-5]
+## Estimate GGM
+ggm4pLV2 <- qgraph(cor(data4pLV2), layout=layout4, theme="colorblind")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_4pLV2 <- ccdKP(df=data4pLV2, dataType = "continuous", alpha = 0.05)
+mat4pLV2 <- CreateAdjMat(ccd_4pLV2, 4)
+# Estimate PAG
+pag_ccd4pLV2 <- plotPAG(ccd_4pLV2, mat4pLV2)
+
+## Run FCI algorithm
+suffStat_4pLV2 = list()
+suffStat_4pLV2$C = cor(data4pLV2)
+suffStat_4pLV2$n = 1e6
+
+res4pLV2 <- fci(suffStat_4pLV2,indepTest=gaussCItest,
+               alpha = 0.05, doPdsep = FALSE, labels = colnames(data4pLV2))
+
+pag_fci4pLV2 <- plotAG(res4pLV2@amat)
+
+## Run CCI algorithm
+G4pLV2 = cci(suffStat_4pLV2, gaussCItest, alpha=0.05, p=ncol(data4pLV2)) 
+dimnames(G4pLV2$maag) <- list(colnames(data4pLV2), colnames(data4pLV2)) # give the labels
+pag_cci4pLV2 <- plotAG(G4pLV2$maag)
+
+
+## ========================
+## Model 8-1) 5 nodes with a LV - sparse
+## ========================
+# specify B matrix
+
+B5_lv = matrix(c(0, 0, 0, 0, 0, 1,
+              0, 0, 0.4, 0, 0, 1,
+              0, 0, 0, 0.5, 0,0,
+              0, 0.7, 0, 0, 1.5,0,
+              0, 0, 0, 0, 0,0,
+              0,0,0,0,0,0), 6, 6, byrow = T)
+
+colnames(B5_lv) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+# specify layout
+layout5_lv = matrix(c(0,1,
+                   0,0,
+                   1,-1,
+                   2,0,
+                   2,1,
+                   -1, 0.5),6,2,byrow = T)
+
+true5p_lv <- qgraph(t(B5_lv), layout=layout5_lv, labels = colnames(B5_lv), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B5_lv)
+# generate data and exclude the LV
+data5pLV <- gen_dat(B5_lv, N =1e6, seed = 123)[,-6]
+
+
+## Estimate GGM
+ggm5pLV <- qgraph(cor(data5pLV), layout = layout5, theme="colorblind")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_5pLV <- ccdKP(df=data5pLV, dataType = "continuous", alpha = 0.05)
+mat5pLV <- CreateAdjMat(ccd_5pLV, 5)
+
+## Estimate PAG
+pag_ccd5pLV <- plotPAG(ccd_5pLV, mat5pLV)
+
+## Run FCI algorithm
+suffStat_5pLV = list()
+suffStat_5pLV$C = cor(data5pLV)
+suffStat_5pLV$n = 1e6
+
+res5pLV <- fci(suffStat_5pLV,indepTest=gaussCItest,
+                  alpha = 0.05, doPdsep = FALSE, labels = colnames(data5pLV))
+
+pag_fci5pLV <- plotAG(res5pLV@amat)
+
+## Run CCI algorithm
+G5pLV = cci(suffStat_5pLV, gaussCItest, alpha=0.05, p=ncol(data5pLV)) 
+dimnames(G5pLV$maag) <- list(colnames(data5pLV), colnames(data5pLV)) # give the labels
+pag_cci5pLV <- plotAG(G5pLV$maag)
+
+
+
+## ========================
+## Model 8-2) 5 nodes with a LV - sparse
+## ========================
+# specify B matrix
+
+B5_lv2 = matrix(c(0, 0, 0, 0, 0, 1,
+                 0, 0, 0, 0, 0, 1,
+                 0, 0.5, 0, 0, 0.6, 0,
+                 1, 0, 0, 0, 0.5, 0,
+                 0, 0, 0, 0.5, 0,0,
+                 0,0,0,0,0,0), 6, 6, byrow = T)
+
+colnames(B5_lv2) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+# specify layout
+layout5_lv2 = matrix(c(0,1,
+                      0,0,
+                      1,0.5,
+                      2,1,
+                      2,0,
+                      -1, 0.5),6,2,byrow = T)
+
+true5p_lv2 <- qgraph(t(B5_lv2), layout=layout5_lv2, labels = colnames(B5_lv2), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B5_lv2)
+# generate data and exclude the LV
+data5pLV2 <- gen_dat(B5_lv2, N =1e6, seed = 12345)[,-6]
+
+
+## Estimate GGM
+ggm5pLV2 <- qgraph(cor(data5pLV2), layout = layout5, theme="colorblind")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_5pLV2 <- ccdKP(df=data5pLV2, dataType = "continuous", alpha = 0.05)
+mat5pLV2 <- CreateAdjMat(ccd_5pLV2, 5)
+## Estimate PAG
+pag_ccd5pLV2 <- plotPAG(ccd_5pLV2, mat5pLV2)
+
+## Run FCI algorithm
+suffStat_5pLV2 = list()
+suffStat_5pLV2$C = cor(data5pLV2)
+suffStat_5pLV2$n = 1e6
+
+res5pLV2 <- fci(suffStat_5pLV2,indepTest=gaussCItest,
+               alpha = 0.05, doPdsep = FALSE, labels = colnames(data5pLV2))
+
+pag_fci5pLV2 <- plotAG(res5pLV2@amat)
+
+## Run CCI algorithm
+G5pLV2 = cci(suffStat_5pLV2, gaussCItest, alpha=0.05, p=ncol(data5pLV2)) 
+dimnames(G5pLV2$maag) <- list(colnames(data5pLV2), colnames(data5pLV2)) # give the labels
+pag_cci5pLV2 <- plotAG(G5pLV2$maag)
+
+
+
+## ========================
+## Model 9) 10 nodes with a LV - sparse
+## ========================
+# specify B matrix
+
+B10_lv = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
+                  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 11, 11, byrow = T)
+
+colnames(B10_lv) <- c(paste("X", 1:10, sep=""), "L1")
+
+# specify layout
+layout10LV = matrix(c(0,1,
+                      2,1,
+                      1,0,
+                      2,-1,
+                      3,0,
+                      4, -1,
+                      5, 0,
+                      6, -1,
+                      4, 1,
+                      7, 1,
+                      8, 0),11,2,byrow = T)
+
+true10pLV <- qgraph(t(B10_lv), layout = layout10LV, labels = colnames(B10_lv), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B10_lv)
+# generate data and exclude the LV
+data10pLV <- gen_dat(B10_lv, N =1e6, seed = 123)[,-11]
+
+
+## Estimate GGM
+ggm10pLV <- qgraph(cor(data10pLV), layout = layout10LV, theme="colorblind")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_10pLV <- ccdKP(df=data10pLV, dataType = "continuous", alpha = 0.05)
+mat10pLV <- CreateAdjMat(ccd_10pLV, 10)
+## Estimate PAG
+pag_ccd10pLV <- plotPAG(ccd_10pLV, mat10pLV)
+
+## Run FCI algorithm
+suffStat_10pLV = list()
+suffStat_10pLV$C = cor(data10pLV)
+suffStat_10pLV$n = 1e6
+
+res10pLV <- fci(suffStat_10pLV,indepTest=gaussCItest,
+                alpha = 0.05, doPdsep = FALSE, labels = colnames(data10pLV))
+
+pag_fci10pLV <- plotAG(res10pLV@amat)
+
+## Run CCI algorithm
+G10pLV = cci(suffStat_10pLV, gaussCItest, alpha=0.05, p=ncol(data10pLV)) 
+dimnames(G10pLV$maag) <- list(colnames(data10pLV), colnames(data10pLV)) # give the labels
+pag_cci10pLV <- plotAG(G10pLV$maag)
+
+
 
 
 #####################
@@ -400,6 +688,22 @@ fci_mcdep$graph$getUnderLines()
 matfci_mcdep <- CreateAdjMat(fci_mcdep, ncol(depression))
 plotPAG(fci_mcdep, matfci_mcdep)
 
+
+# cant use discrete test with pcalg
+# # disCItest not working (n is too small)
+# suffStat <- list(dm = depression, nlev = rep(4, length(depression)), adaptDF = FALSE)
+# Gdepression = cci(suffStat, disCItest, alpha=0.05, p=ncol(depression)) 
+# 
+# # not working with gaussCItest well
+# ## Run CCI on depression symptoms
+# suffStat_dep = list()
+# suffStat_dep$C = cor(depression)
+# suffStat_dep$n = 1e5 #nrow(depression)
+# 
+# Gdepression = cci(suffStat_dep, gaussCItest, alpha=0.05, p=ncol(depression)) 
+# dimnames(Gdepression$maag) <- list(colnames(depression), colnames(depression)) # give the labels
+# pag_ccidep <- plotAG(Gdepression$maag) # plot looks dirty
+# 
 
 ## run ccd on ocd symptoms
 ccd_mcnally_ocd <- ccdKP(df=ocd, dataType = "discrete", depth = -1) 

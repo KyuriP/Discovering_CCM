@@ -65,3 +65,6 @@ plotAG(G_mcdep$maag)
 
 G_mcocd = cci(suffStat_mcnallyocd, disCItest, alpha=0.05, p=ncol(ocd)) 
 plotAG(G_mcocd$maag)
+
+
+

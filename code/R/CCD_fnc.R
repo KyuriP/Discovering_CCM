@@ -203,7 +203,7 @@ loadDiscreteData <- function(df){
                   nodname, cate_list)
     node_list$add(nodi)
 
-    # Substitute a new categorial value
+    # Substitute a new categorical value
     cate <- data.frame(cate)
     new_col <- sapply(df[,i],function(x,cate)
       as.integer(which(cate[,1] == x)),cate=cate)
