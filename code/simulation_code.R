@@ -83,7 +83,7 @@ pag_cci5psparse <- cci_5psparse %>%
 # CCD
 res_ccd5psparse <- mat_5psparse %>% 
   map(~precision_recall(truepag_5psparse, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_ccd5psparse <- mat_5psparse %>% 
   map_dbl(~uncertainty(.x))
@@ -96,7 +96,7 @@ mean(SHD_ccd5psparse)
 # FCI
 res_fci5psparse <- fci_5psparse %>% 
   map(~precision_recall(truepag_5psparse, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_fci5psparse <- fci_5psparse %>% 
   map_dbl(~uncertainty(.x))
@@ -109,7 +109,7 @@ mean(SHD_fci5psparse)
 # CCI
 res_cci5psparse <- cci_5psparse %>% 
   map(~precision_recall(truepag_5psparse, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_cci5psparse <- cci_5psparse %>% 
   map_dbl(~uncertainty(.x))
@@ -198,7 +198,7 @@ pag_cci5pdense <- cci_5pdense %>%
 # CCD
 res_ccd5pdense <- mat_5pdense %>% 
   map(~precision_recall(truepag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_ccd5pdense <- mat_5pdense %>% 
   map_dbl(~uncertainty(.x))
@@ -211,7 +211,7 @@ mean(SHD_ccd5pdense)
 # FCI
 res_fci5pdense <- fci_5pdense %>% 
   map(~precision_recall(truepag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_fci5pdense <- fci_5pdense%>% 
   map_dbl(~uncertainty(.x))
@@ -224,7 +224,7 @@ mean(SHD_fci5pdense)
 # CCI
 res_cci5pdense <- cci_5pdense %>% 
   map(~precision_recall(truepag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_cci5pdense <- cci_5pdense %>% 
   map_dbl(~uncertainty(.x))
@@ -332,7 +332,7 @@ pag_cci10psparse <- cci_10psparse %>%
 # CCD
 res_ccd10psparse <- mat_10psparse %>% 
   map(~precision_recall(truepag_10psparse, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_ccd10psparse <- mat_10psparse %>% 
   map_dbl(~uncertainty(.x))
@@ -345,7 +345,7 @@ mean(SHD_ccd10psparse)
 # FCI
 res_fci10psparse <- fci_10psparse %>% 
   map(~precision_recall(truepag_10psparse, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_fci10psparse <- fci_10psparse%>% 
   map_dbl(~uncertainty(.x))
@@ -358,7 +358,7 @@ mean(SHD_fci10psparse)
 # CCI
 res_cci10psparse <- cci_10psparse %>% 
   map(~precision_recall(truepag_10psparse, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_cci10psparse <- cci_10psparse %>% 
   map_dbl(~uncertainty(.x))
@@ -464,7 +464,7 @@ pag_cci10pdense  <- cci_10pdense  %>%
 # CCD
 res_ccd10pdense  <- mat_10pdense  %>% 
   map(~precision_recall(truepag_10pdense, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_ccd10pdense  <- mat_10pdense  %>% 
   map_dbl(~uncertainty(.x))
@@ -477,7 +477,7 @@ mean(SHD_ccd10pdense )
 # FCI
 res_fci10pdense  <- fci_10pdense  %>% 
   map(~precision_recall(truepag_10pdense, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_fci10pdense <- fci_10pdense %>% 
   map_dbl(~uncertainty(.x))
@@ -490,7 +490,7 @@ mean(SHD_fci10pdense)
 # CCI
 res_cci10pdense <- cci_10pdense %>% 
   map(~precision_recall(truepag_10pdense, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_cci10pdense <- cci_10pdense %>% 
   map_dbl(~uncertainty(.x))
@@ -581,7 +581,7 @@ pag_cci5pLV2  <- cci_5pLV2  %>%
 # CCD
 res_ccd5pLV2  <- mat_5pLV2  %>% 
   map(~precision_recall(truepag_5pLV2, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_ccd5pLV2  <- mat_5pLV2  %>% 
   map_dbl(~uncertainty(.x))
@@ -594,7 +594,7 @@ mean(SHD_ccd5pLV2 )
 # FCI
 res_fci5pLV2  <- fci_5pLV2  %>% 
   map(~precision_recall(truepag_5pLV2, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_fci5pLV2 <- fci_5pLV2 %>% 
   map_dbl(~uncertainty(.x))
@@ -607,7 +607,7 @@ mean(SHD_fci5pLV2)
 # CCI
 res_cci5pLV2 <- cci_5pLV2 %>% 
   map(~precision_recall(truepag_5pLV2, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_cci5pLV2 <- cci_5pLV2 %>% 
   map_dbl(~uncertainty(.x))
@@ -720,7 +720,7 @@ pag_cci10pLV   <- cci_10pLV %>%
 # CCD
 res_ccd10pLV   <- mat_10pLV  %>% 
   map(~precision_recall(truepag_10pLV, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_ccd10pLV  <- mat_10pLV  %>% 
   map_dbl(~uncertainty(.x))
@@ -733,7 +733,7 @@ mean(SHD_ccd10pLV)
 # FCI
 res_fci10pLV <- fci_10pLV  %>% 
   map(~precision_recall(truepag_10pLV, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_fci10pLV <- fci_10pLV %>% 
   map_dbl(~uncertainty(.x))
@@ -746,7 +746,7 @@ mean(SHD_fci10pLV)
 # CCI
 res_cci10pLV <- cci_10pLV %>% 
   map(~precision_recall(truepag_10pLV, .x)) %>% 
-  do.call("cbind", .) %>% as.data.frame() %>% t()
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 uncer_cci10pLV <- cci_10pLV %>% 
   map_dbl(~uncertainty(.x))
@@ -755,3 +755,7 @@ mean(uncer_cci10pLV, na.rm=T)
 SHD_cci10pLV<- cci_10pLV %>% 
   map_dbl(~SHD(truepag_10pLV, .x))
 mean(SHD_cci10pLV)
+
+
+## check the running time
+# system.time

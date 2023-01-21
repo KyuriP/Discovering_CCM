@@ -48,7 +48,7 @@ precision_recall <- function(truepag, estimatedpag){
 
 uncertainty <- function(estimatedpag){
   p <- ncol(estimatedpag)
-  if (1 %in% estimatedpag) n_circ <- sum(estimatedpag == 0) else n_circ = NA
+  n_circ <- sum(estimatedpag == 0) 
   uncertainty_rate <- n_circ / (p * (p-1)) # total number of possible edgeendpoint = choose(p,2) * 2 
   return(uncertainty_rate)
 }
