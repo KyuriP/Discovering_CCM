@@ -1,4 +1,8 @@
-## simulate data 1000 times
+## load functions & packages
+source("../code/R/CCD_fnc.R")
+source("../code/R/plot_fnc.R")
+source("../code/R/data_generating_fnc.R")
+source("../code/eval_metrics.R")
 
 library(magrittr)
 library(purrr)
@@ -8,6 +12,8 @@ library(dplyr)
 install_github("KyuriP/CCI_KP")
 library(CCI.KP)
 
+## simulate data 1000 times ## 
+set.seed(123)
 ## ====================
 ## 5p - sparse
 ## ====================
@@ -21,6 +27,13 @@ B5sparse = matrix(c(0, 0, 0, 0, 0,
                  0, 0, 0, 0, 0), 5, 5, byrow = T)
 
 colnames(B5sparse) <- c("X1", "X2", "X3", "X4", "X5")
+
+# specify layout
+layout5 = matrix(c(0,1,
+                   0,0,
+                   1,-1,
+                   2,0,
+                   2,1),5,2,byrow = T)
 
 true5psparse <- qgraph(t(B5sparse), layout=layout5, labels = colnames(B5sparse), theme="colorblind")
 
@@ -57,7 +70,7 @@ ccd_5psparse <- simdata_5psparse %>%
 mat_5psparse <- ccd_5psparse %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 
-pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse, plotPAG)
+# pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse, plotPAG)
 
 
 ## Run FCI algorithm
@@ -66,16 +79,16 @@ fci_5psparse <- simdata_5psparse %>%
            alpha = 0.05, doPdsep = FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
       )
 
-pag_fci5psparse <- fci_5psparse %>% 
-  map(~plotAG(.x))
+# pag_fci5psparse <- fci_5psparse %>% 
+#   map(~plotAG(.x))
 
 ## Run CCI algorithm
 cci_5psparse <- simdata_5psparse %>% 
   map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
       )
 
-pag_cci5psparse <- cci_5psparse %>% 
-  map(~plotAG(.x))
+# pag_cci5psparse <- cci_5psparse %>% 
+#   map(~plotAG(.x))
 
 
 
@@ -172,7 +185,7 @@ ccd_5pdense <- simdata_5pdense %>%
 mat_5pdense <- ccd_5pdense %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 
-pag_ccd5pdense <- map2(ccd_5pdense, mat_5pdense, plotPAG)
+# pag_ccd5pdense <- map2(ccd_5pdense, mat_5pdense, plotPAG)
 
 
 ## Run FCI algorithm
@@ -181,16 +194,16 @@ fci_5pdense <- simdata_5pdense %>%
            alpha = 0.05, doPdsep = FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
-pag_fci5pdense <- fci_5pdense %>% 
-  map(~plotAG(.x))
+# pag_fci5pdense <- fci_5pdense %>% 
+#   map(~plotAG(.x))
 
 ## Run CCI algorithm
 cci_5pdense <- simdata_5pdense %>% 
   map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
 
-pag_cci5pdense <- cci_5pdense %>% 
-  map(~plotAG(.x))
+# pag_cci5pdense <- cci_5pdense %>% 
+#   map(~plotAG(.x))
 
 
 
@@ -306,7 +319,7 @@ ccd_10psparse <- simdata_10psparse %>%
 mat_10psparse <- ccd_10psparse %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 
-pag_ccd10psparse <- map2(ccd_10psparse, mat_10psparse, plotPAG)
+# pag_ccd10psparse <- map2(ccd_10psparse, mat_10psparse, plotPAG)
 
 
 ## Run FCI algorithm
@@ -315,16 +328,16 @@ fci_10psparse <- simdata_10psparse %>%
            alpha = 0.05, doPdsep = FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
-pag_fci10psparse <- fci_10psparse %>% 
-  map(~plotAG(.x))
+# pag_fci10psparse <- fci_10psparse %>% 
+#   map(~plotAG(.x))
 
 ## Run CCI algorithm
 cci_10psparse <- simdata_10psparse %>% 
   map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
 
-pag_cci10psparse <- cci_10psparse %>% 
-  map(~plotAG(.x))
+# pag_cci10psparse <- cci_10psparse %>% 
+#   map(~plotAG(.x))
 
 
 
@@ -438,7 +451,7 @@ ccd_10pdense <- simdata_10pdense  %>%
 mat_10pdense  <- ccd_10pdense  %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 
-pag_ccd10pdense  <- map2(ccd_10pdense , mat_10pdense , plotPAG)
+# pag_ccd10pdense  <- map2(ccd_10pdense , mat_10pdense , plotPAG)
 
 
 ## Run FCI algorithm
@@ -447,16 +460,16 @@ fci_10pdense <- simdata_10pdense  %>%
            alpha = 0.05, doPdsep = FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
-pag_fci10pdense <- fci_10pdense  %>% 
-  map(~plotAG(.x))
+# pag_fci10pdense <- fci_10pdense  %>% 
+#   map(~plotAG(.x))
 
 ## Run CCI algorithm
 cci_10pdense  <- simdata_10pdense %>% 
   map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
 
-pag_cci10pdense  <- cci_10pdense  %>% 
-  map(~plotAG(.x))
+# pag_cci10pdense  <- cci_10pdense  %>% 
+#   map(~plotAG(.x))
 
 
 
@@ -555,7 +568,7 @@ ccd_5pLV2 <- simdata_5pLV2  %>%
 mat_5pLV2  <- ccd_5pLV2  %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 
-pag_ccd5pLV2  <- map2(ccd_5pLV2 , mat_5pLV2 , plotPAG)
+# pag_ccd5pLV2  <- map2(ccd_5pLV2 , mat_5pLV2 , plotPAG)
 
 
 ## Run FCI algorithm
@@ -564,16 +577,16 @@ fci_5pLV2 <- simdata_5pLV2  %>%
            alpha = 0.05, doPdsep = FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
-pag_fci5pLV2 <- fci_5pLV2  %>% 
-  map(~plotAG(.x))
+# pag_fci5pLV2 <- fci_5pLV2  %>% 
+#   map(~plotAG(.x))
 
 ## Run CCI algorithm
 cci_5pLV2  <- simdata_5pLV2 %>% 
   map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
 
-pag_cci5pLV2  <- cci_5pLV2  %>% 
-  map(~plotAG(.x))
+# pag_cci5pLV2  <- cci_5pLV2  %>% 
+#   map(~plotAG(.x))
 
 
 
@@ -694,7 +707,7 @@ ccd_10pLV  <- simdata_10pLV   %>%
 mat_10pLV   <- ccd_10pLV %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 
-pag_ccd10pLV <- map2(ccd_10pLV, mat_10pLV  , plotPAG)
+# pag_ccd10pLV <- map2(ccd_10pLV, mat_10pLV  , plotPAG)
 
 
 ## Run FCI algorithm
@@ -703,16 +716,16 @@ fci_10pLV  <- simdata_10pLV   %>%
            alpha = 0.05, doPdsep = FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
-pag_fci10pLV  <- fci_10pLV   %>% 
-  map(~plotAG(.x))
+# pag_fci10pLV  <- fci_10pLV   %>% 
+#   map(~plotAG(.x))
 
 ## Run CCI algorithm
 cci_10pLV  <- simdata_10pLV  %>% 
   map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
 
-pag_cci10pLV   <- cci_10pLV %>% 
-  map(~plotAG(.x))
+# pag_cci10pLV   <- cci_10pLV %>% 
+#   map(~plotAG(.x))
 
 
 
@@ -757,5 +770,3 @@ SHD_cci10pLV<- cci_10pLV %>%
 mean(SHD_cci10pLV)
 
 
-## check the running time
-# system.time

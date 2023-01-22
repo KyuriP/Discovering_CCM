@@ -1,3 +1,7 @@
+source("../code/simulation_code.R")
+library(dplyr)
+library(purrr)
+
 ## Precision & Recall
 # specify rownames
 # rows <- c(apply(expand.grid(c("ccd", "fci", "cci"), c("5p", "10p"), c("sparse", "dense")),1,paste, collapse="."),  apply(expand.grid(c("ccd", "fci", "cci"), c("5p_LV", "10p_LV")),1,paste, collapse="."))
@@ -24,7 +28,7 @@ uncertainties <- data.frame(uncer_ccd5psparse, uncer_fci5psparse, uncer_cci5pspa
 
 
 ## SHD
-SHD <- data.frame(SHD_ccd5psparse, SHD_fci5psparse, SHD_cci5psparse, SHD_ccd10psparse, SHD_fci10psparse, SHD_cci10psparse, SHD_ccd5pdense, SHD_fci5pdense, SHD_cci5pdense, SHD_ccd10pdense, SHD_fci10pdense, SHD_cci10pdense, SHD_ccd5pLV2, SHD_fci5pLV2, SHD_cci5pLV2, SHD_ccd10pLV, SHD_fci10pLV, SHD_cci10pLV) %>% 
+SHDs <- data.frame(SHD_ccd5psparse, SHD_fci5psparse, SHD_cci5psparse, SHD_ccd10psparse, SHD_fci10psparse, SHD_cci10psparse, SHD_ccd5pdense, SHD_fci5pdense, SHD_cci5pdense, SHD_ccd10pdense, SHD_fci10pdense, SHD_cci10pdense, SHD_ccd5pLV2, SHD_fci5pLV2, SHD_cci5pLV2, SHD_ccd10pLV, SHD_fci10pLV, SHD_cci10pLV) %>% 
   summarise(across(everything(), list(mean = mean, sd = sd))) %>%  tidyr::pivot_longer(cols = everything()) %>%
   mutate(algorithm = substr(stringr::str_split(name, "_", simplify = T)[,2], 1, 3),
          condition = substring(stringr::str_split(name, "_", simplify = T)[,2], 4, last = 1000000L), 
@@ -85,14 +89,14 @@ uncertainties %>%
   theme_classic() + MyTheme
 
 ## WITHOUT LV CONDITION: SHD
-SHD %>% 
+SHDs %>% 
   # exclude LV conditions
   filter(!grepl("LV", condition)) %>% 
   ggplot(aes(x= factor(condition, levels = c("5psparse", "5pdense", "10psparse", "10pdense")), y=mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
-  # in this case, N = 1000 (hence, sqrt(1000))
+  # in this case, N = 1000 (hence, sqrt(1000)) 
   geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(1000), ymax=mean+qnorm(0.975)*sd/sqrt(1000)), width=0.1) +
   labs(x="", y="", title = "", subtitle = "Without Latent Variable_SHD") +
   theme_classic() + MyTheme
@@ -142,7 +146,7 @@ uncertainties %>%
   theme_classic() + MyTheme
 
 ## WITH LV CONDITION: SHD
-SHD %>% 
+SHDs %>% 
   # exclude LV conditions
   filter(grepl("LV", condition)) %>% 
   ggplot(aes(x= factor(condition, levels = c("5pLV2", "10pLV")), y=mean, group = algorithm, colour = algorithm)) +
@@ -153,3 +157,7 @@ SHD %>%
   geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(1000), ymax=mean+qnorm(0.975)*sd/sqrt(1000)), width=0.1) +
   labs(x="", y="", title = "", subtitle = "With a Latent Variable_SHD") +
   theme_classic() + MyTheme
+
+
+
+

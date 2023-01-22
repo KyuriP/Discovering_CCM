@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap');
+
+body{ /* Normal  */
+  font-family: 'Lato', sans-serif;
+}
+
+td{  /* Table  */
+  font-size: 12px;
+}
+
+h1{ /* Header 1 */
+  font-size: 25px;
+  font-weight: bold;
+}
+
+h2{ /* Header 2 */
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+h3{ /* Header 3 */
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    background-color:  #158cba;
+}
+
+a {
+   color: #158cba;
+}
+
+
+
+h1.title{
+  font-size: 33px;
+  line-height: 1.3;
+}
+
+.subtitle{
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 0.7rem;
+}
+
+h2.anchored{
+  font-weight:bold;
+}
+
+
+
+h1{ /* Header 1 */
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  margin-top: 0rem;
+}
+
+h2{ /* Header 2 */
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+h3{ /* Header 3 */
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+
+/*summary{
+  cursor:pointer;
+  font-size: 15px;
+}
+
+pre{
+  font-size: 12px;
+}*/
+
+
+u.dotted{
+  border-bottom: 1px dashed #999;
+  text-decoration: none;
+}
+
+body {
+  line-hight: 1.8;
+}

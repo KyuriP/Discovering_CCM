@@ -1,0 +1,647 @@
+---
+title: "Simulation Result"
+subtitle: "Comparison of Causal Discovery Agorithms"
+author: "Kyuri Park"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+format: 
+  html:
+    theme: Yeti
+    css: style.css
+    toc: true
+    # toc-location: left
+    smooth-scroll: true
+    number-sections: true
+    code-fold: true
+    code-overflow: scroll
+    code-summary: "See code here."
+    embed-resources: true
+    highlight: tango
+    fig-responsive: true
+    code-block-bg: rgba(233,236,239,.65)
+editor: visual
+# bibliography: references.bib
+# csl: "apa.csl"
+# link-citations: yes
+execute:
+    warning: false
+    message: false
+crossref:
+  fig-title: '**Figure**'
+  fig-labels: arabic
+  title-delim: "**.**"
+---
+
+```{r setup, include=FALSE}
+# chunk settings
+knitr::opts_chunk$set(
+   message = FALSE,
+   warning = FALSE,
+   comment = NA,
+   fig.align = "center")
+
+# suppress ggplot warnings
+options(warn = -1) 
+
+## load libraries
+library(qgraph)
+library(pcalg)
+library(ggplot2)
+library(ggpubr)
+library(purrr)
+library(dplyr)
+
+source("../code/R/CCD_fnc.R")
+source("../code/R/plot_fnc.R")
+source("../code/R/data_generating_fnc.R")
+source("../code/eval_metrics.R")
+```
+
+```{r prep}
+#| include: false
+#| results: hide
+#| fig-show: hide
+#| cache: true
+# load simulation code
+source("../code/simulation_code.R")
+```
+
+# Simualtion Design
+
+## Sparse 5 nodes model
+```{r}
+#| label: fig-1
+#| fig-height: 3
+#| results: hide
+#| fig-cap: five nodes sparse case
+#| fig.align: center
+
+layout(t(1:2))
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B5sparse = matrix(c(0, 0, 0, 0, 0,
+                 1, 0, 0.8, 0, 0,
+                 0, 0, 0, 0.9, 0,
+                 0, 0.7, 0, 0, 1.5,
+                 0, 0, 0, 0, 0), 5, 5, byrow = T)
+
+colnames(B5sparse) <- c("X1", "X2", "X3", "X4", "X5")
+
+# specify layout
+layout5 = matrix(c(0,1,
+                   0,0,
+                   1,-1,
+                   2,0,
+                   2,1),5,2,byrow = T)
+
+true5psparse <- qgraph::qgraph(t(B5sparse), layout=layout5, labels = colnames(B5sparse), theme="colorblind", vsize = 10, asize = 10)
+title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+
+## True PAG
+truepag_5psparse <- matrix(c(
+       0, 2, 2, 0, 0,
+       3, 0, 3, 3, 3,
+       3, 3, 0, 3, 0,
+       0, 3, 3, 0, 3,
+       0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+dimnames(truepag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(truepag_5psparse)
+title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+```
+
+## Dense 5 nodes model
+```{r}
+#| label: fig-2
+#| fig-height: 3
+#| results: hide
+#| fig-cap: five nodes dense case
+#| fig.align: center
+
+layout(t(1:2))
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B5dense = matrix(c(0, 0, 0, 0, 0,
+                    1, 0, 0.8, 0, 0,
+                    0, 0, 0, 0.9, 0,
+                    0, 0.7, 0, 0, 1.5,
+                    1, 0, 0, 0, 0), 5, 5, byrow = T)
+
+colnames(B5dense) <- c("X1", "X2", "X3", "X4", "X5")
+
+true5pdense <- qgraph(t(B5dense), layout=layout5, labels = colnames(B5dense), theme="colorblind", vsize = 10, asize = 10)
+title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+
+
+## True PAG
+truepag_5pdense <- matrix(c(
+  0, 2, 2, 0, 2,
+  3, 0, 3, 3, 3,
+  3, 3, 0, 3, 0,
+  0, 3, 3, 0, 3,
+  3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+dimnames(truepag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(truepag_5pdense)
+title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+```
+
+## Sparse 10 nodes model
+```{r}
+#| label: fig-3
+#| fig-height: 3
+#| results: hide
+#| fig-cap: ten nodes sparse case
+#| fig.align: center
+
+layout(t(1:2))
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                  0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 
+                  0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 
+                  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                  0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 
+                  0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0, 
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 10, 10, byrow = T)
+
+dimnames(B10sparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+
+# specify layout
+layout10 = matrix(c(0,1,
+                      2,1,
+                      1,0,
+                      2,-1,
+                      3,0,
+                      4, -1,
+                      5, 0,
+                      6, -1,
+                      4, 1,
+                      7, 1),10,2,byrow = T)
+
+true10psparse <- qgraph(t(B10sparse), layout = layout10, labels = colnames(B10sparse), theme="colorblind", vsize = 10, asize = 10)
+title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+
+
+## True PAG
+truepag_10psparse <- matrix(c(
+         0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
+         3, 3, 0, 2, 0, 0, 0, 0, 0, 0, 
+         0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
+         0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 
+         0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 
+         0, 0, 0, 0, 0, 2, 0, 3, 3, 0, 
+         0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 
+         0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
+         0, 0, 0, 0, 0, 0, 0, 0, 2, 0), 10, 10, byrow = T)
+
+dimnames(truepag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(truepag_10psparse)
+title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+```
+
+
+## Dense 10 nodes model
+```{r}
+#| label: fig-4
+#| fig-height: 3
+#| results: hide
+#| fig-cap: ten nodes dense case
+#| fig.align: center
+
+layout(t(1:2))
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                     0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 
+                     0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 
+                     0, 0.4, 0, 1, 0, 0, 0, 0, 0, 0, 
+                     0, 0, 0, 0, 0.9, 0, 0.5, 0, 0, 0, 
+                     0, 0, 0, 0, 0, 0, 0, 1, 0.8, 1, 
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 
+                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 10, 10, byrow = T)
+
+colnames(B10dense) <- c(paste("X", 1:10, sep=""))
+
+# specify layout
+layout10 = matrix(c(0,1,
+                    2,1,
+                    1,0,
+                    2,-1,
+                    3,0,
+                    4, -1,
+                    5, 0,
+                    6, -1,
+                    4, 1,
+                    7, 1),10,2,byrow = T)
+
+true10pdense <- qgraph(t(B10dense), layout = layout10, labels = colnames(B10dense), theme="colorblind", vsize = 10, asize = 10)
+title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+
+
+## True PAG
+truepag_10pdense <- matrix(c(
+  0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 
+  3, 3, 0, 2, 0, 2, 0, 0, 0, 0, 
+  0, 3, 3, 0, 3, 3, 0, 0, 0, 0, 
+  0, 3, 0, 3, 0, 3, 3, 0, 0, 0, 
+  0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 
+  0, 0, 0, 0, 0, 2, 0, 3, 3, 3, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
+  0, 0, 0, 0, 0, 0, 2, 2, 2, 0), 10, 10, byrow = T)
+
+dimnames(truepag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(truepag_10pdense)
+title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+```
+
+
+## 5 nodes with a LV model
+```{r}
+#| label: fig-5
+#| fig-height: 3
+#| results: hide
+#| fig-cap: five nodes with a LV case
+#| fig.align: center
+
+layout(t(1:2))
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B5_lv2 = matrix(c(0, 0, 0, 0, 0, 1,
+                  0, 0, 0, 0, 0, 1,
+                  0, 0.5, 0, 0, 0.6, 0,
+                  1, 0, 0, 0, 0.5, 0,
+                  0, 0, 0, 0.5, 0,0,
+                  0,0,0,0,0,0), 6, 6, byrow = T)
+
+colnames(B5_lv2) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+# specify layout
+layout5_lv2 = matrix(c(0,1,
+                       0,0,
+                       1,0.5,
+                       2,1,
+                       2,0,
+                       -1, 0.5),6,2,byrow = T)
+
+true5p_lv2 <- qgraph(t(B5_lv2), layout=layout5_lv2, labels = colnames(B5_lv2), theme="colorblind", vsize = 10, asize = 10)
+title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+
+
+## True PAG
+truepag_5pLV2 <- matrix(c(
+  0, 2, 2, 0, 0,
+  2, 0, 3, 3, 3,
+  2, 3, 0, 3, 0,
+  0, 3, 3, 0, 3,
+  0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+dimnames(truepag_5pLV2) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(truepag_5pLV2)
+title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+```
+
+
+
+## 10 nodes with a LV model
+```{r}
+#| label: fig-6
+#| fig-height: 3
+#| results: hide
+#| fig-cap: ten nodes with a LV case
+#| fig.align: center
+
+layout(t(1:2))
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B10_lv = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
+                  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 11, 11, byrow = T)
+
+colnames(B10_lv) <- c(paste("X", 1:10, sep=""), "L1")
+
+# specify layout
+layout10LV = matrix(c(0,1,
+                      2,1,
+                      1,0,
+                      2,-1,
+                      3,0,
+                      4, -1,
+                      5, 0,
+                      6, -1,
+                      4, 1,
+                      7, 1,
+                      8, 0),11,2,byrow = T)
+
+true10pLV <- qgraph(t(B10_lv), layout = layout10LV, labels = colnames(B10_lv), theme="colorblind", vsize = 10, asize = 10)
+title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+
+
+## True PAG
+truepag_10pLV <- matrix(c(
+  0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
+  3, 3, 0, 2, 0, 2, 0, 0, 0, 0, 
+  0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
+  0, 0, 0, 3, 0, 3, 3, 0, 0, 0, 
+  0, 0, 3, 3, 3, 0, 3, 0, 0, 0, 
+  0, 0, 0, 0, 2, 2, 0, 3, 3, 0, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
+  0, 0, 0, 0, 0, 0, 0, 2, 2, 0), 10, 10, byrow = T)
+
+dimnames(truepag_10pLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(truepag_10pLV)
+title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+```
+
+
+
+<hr>
+# Simulation Result
+```{r}
+## Precision & Recall
+# compute the average precision and sd
+results <- list(res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10psparse, res_fci10psparse, res_cci10psparse, res_ccd5pdense, res_fci5pdense, res_cci5pdense, res_ccd10pdense, res_fci10pdense, res_cci10pdense, res_ccd5pLV2, res_fci5pLV2, res_cci5pLV2, res_ccd10pLV,  res_fci10pLV, res_cci10pLV) %>% 
+  map(~
+  # think about how to deal with NAs or do I want to define sth. else instead of NAs.
+  na.omit(.x) %>% 
+  summarise(across(everything(.x), list(mean = mean, sd = sd)))
+) %>% bind_rows() %>% 
+  mutate(algorithm = rep(c("ccd", "fci", "cci"), 6),
+         condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", "5p_LV", "10p_LV"), each=3)) %>% 
+  # brings the algorithm and condition names first
+  relocate(where(is.character), .before = where(is.numeric))
+
+## Uncertainty
+uncertainties <- data.frame(uncer_ccd5psparse, uncer_fci5psparse, uncer_cci5psparse, uncer_ccd10psparse, uncer_fci10psparse, uncer_cci10psparse, uncer_ccd5pdense, uncer_fci5pdense, uncer_cci5pdense, uncer_ccd10pdense, uncer_fci10pdense, uncer_cci10pdense, uncer_ccd5pLV2, uncer_fci5pLV2, uncer_cci5pLV2, uncer_ccd10pLV, uncer_fci10pLV, uncer_cci10pLV) %>% 
+  summarise(across(everything(), list(mean = mean, sd = sd))) %>% tidyr::pivot_longer(everything()) %>%
+  mutate(algorithm = substr(stringr::str_split(name, "_", simplify = T)[,2], 1, 3),
+         condition = substring(stringr::str_split(name, "_", simplify = T)[,2], 4, last = 1000000L), 
+         statistics = stringr::str_split(name, "_", simplify = T)[,3]
+  )%>% dplyr::select(-name) %>% tidyr::pivot_wider(names_from= statistics, values_from=value)
+
+
+## SHD
+SHDs <- data.frame(SHD_ccd5psparse, SHD_fci5psparse, SHD_cci5psparse, SHD_ccd10psparse, SHD_fci10psparse, SHD_cci10psparse, SHD_ccd5pdense, SHD_fci5pdense, SHD_cci5pdense, SHD_ccd10pdense, SHD_fci10pdense, SHD_cci10pdense, SHD_ccd5pLV2, SHD_fci5pLV2, SHD_cci5pLV2, SHD_ccd10pLV, SHD_fci10pLV, SHD_cci10pLV) %>% 
+  summarise(across(everything(), list(mean = mean, sd = sd))) %>%  tidyr::pivot_longer(cols = everything()) %>%
+  mutate(algorithm = substr(stringr::str_split(name, "_", simplify = T)[,2], 1, 3),
+         condition = substring(stringr::str_split(name, "_", simplify = T)[,2], 4, last = 1000000L), 
+         statistics = stringr::str_split(name, "_", simplify = T)[,3]
+  ) %>% dplyr::select(-name) %>% tidyr::pivot_wider(names_from= statistics, values_from=value)
+```
+
+```{r}
+#| label: fig-7
+#| fig-height: 15
+#| fig-width: 8
+#| results: hide
+#| fig-cap: Simuation results
+#| fig.align: center
+
+## Plot the results
+library(ggplot2)
+## Specify my custom theme
+MyTheme <-  theme(plot.title = element_text(face = "bold", size=13, hjust = 0.5),
+                  plot.subtitle = element_text(face = "italic"),
+                  axis.text=element_text(face = "bold"),
+                  legend.text = element_text(face = "bold", size=12))
+
+## ========================
+## WITHOUT LV CONDITION
+## ========================
+
+## WITHOUT LV CONDITION: PRECISION
+p1 <- results %>% 
+  # exclude LV conditions
+  filter(!grepl("LV", condition)) %>% 
+ggplot(aes(x= factor(condition, levels = c("5p_sparse", "5p_dense", "10p_sparse", "10p_dense")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000))
+  geom_errorbar(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(1000), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "Without a Latent Variable Condition", subtitle = "Without LV_PRECISION") +
+  theme_classic() + MyTheme
+
+## WITHOUT LV CONDITION: RECALL
+p2 <- results %>% 
+  # exclude LV conditions
+  filter(!grepl("LV", condition)) %>% 
+  ggplot(aes(x= factor(condition, levels = c("5p_sparse", "5p_dense", "10p_sparse", "10p_dense")), y=average_recall_mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000))
+  geom_errorbar(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(1000), ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "", subtitle = "Without LV_RECALL") +
+  theme_classic() + MyTheme
+
+## WITHOUT LV CONDITION: UNCERTAINTY
+p3 <- uncertainties %>% 
+  # exclude LV conditions
+  filter(!grepl("LV", condition)) %>% 
+  ggplot(aes(x= factor(condition, levels = c("5psparse", "5pdense", "10psparse", "10pdense")), y=mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000))
+  geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(1000), ymax=mean+qnorm(0.975)*sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "", subtitle = "Without LV_UNCERTAINTY") +
+  theme_classic() + MyTheme
+
+## WITHOUT LV CONDITION: SHD
+p4 <- SHDs %>% 
+  # exclude LV conditions
+  filter(!grepl("LV", condition)) %>% 
+  ggplot(aes(x= factor(condition, levels = c("5psparse", "5pdense", "10psparse", "10pdense")), y=mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000)) 
+  geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(1000), ymax=mean+qnorm(0.975)*sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "", subtitle = "Without LV_SHD") +
+  theme_classic() + MyTheme
+
+
+## ========================
+## WITH LV CONDITION
+## ========================
+
+## WITH LV CONDITION: PRECISION
+p5 <- results %>% 
+  # exclude LV conditions
+  filter(grepl("LV", condition)) %>% 
+  ggplot(aes(x= factor(condition, levels = c("5p_LV", "10p_LV")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000))
+  geom_errorbar(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(1000), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "With a Latent Variable Condition", subtitle = "With LV_PRECISION") +
+  theme_classic() + MyTheme
+
+## WITH LV CONDITION: RECALL
+p6 <- results %>% 
+  # exclude LV conditions
+  filter(grepl("LV", condition)) %>% 
+  ggplot(aes(x= factor(condition, levels = c("5p_LV", "10p_LV")), y=average_recall_mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000))
+  geom_errorbar(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(1000), ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "", subtitle = "With LV_RECALL") +
+  theme_classic() + MyTheme
+
+## WITH LV CONDITION: UNCERTAINTY
+p7 <- uncertainties %>% 
+  # exclude LV conditions
+  filter(grepl("LV", condition)) %>% 
+  ggplot(aes(x= factor(condition, levels = c("5pLV2", "10pLV")), y=mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000))
+  geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(1000), ymax=mean+qnorm(0.975)*sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "", subtitle = "With LV_UNCERTAINTY") +
+  theme_classic() + MyTheme
+
+## WITH LV CONDITION: SHD
+p8 <- SHDs %>% 
+  # exclude LV conditions
+ filter(grepl("LV", condition)) %>% 
+  ggplot(aes(x= factor(condition, levels = c("5pLV2", "10pLV")), y=mean, group = algorithm, colour = algorithm)) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  geom_line(aes(group = algorithm)) +
+  geom_point() +
+  # in this case, N = 1000 (hence, sqrt(1000))
+  geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(1000), ymax=mean+qnorm(0.975)*sd/sqrt(1000)), width=0.1) +
+  labs(x="", y="", title = "", subtitle = "With LV_SHD") +
+  theme_classic() + MyTheme
+
+# combine plots
+ggarrange(p1, p5, p2, p6, p3, p7, p4, p8,
+                    ncol = 2, nrow = 4, common.legend = TRUE, legend = "bottom")
+```
+
+
+
+<hr>
+
+# Empirical Example
+
+```{r}
+#| label: empirical-data
+
+# empirical data 408 rows by 26 columns (p = 26)
+mcnally <- read.csv("../data/McNally.csv") 
+# check the data
+#glimpse(mcnally)
+skimr::skim(mcnally)
+
+# separate dep / ocd symptoms
+depression <- mcnally[,1:16]
+ocd <- mcnally[,17:26]
+```
+
+```{r}
+#| label: running-algo-emp
+#| message: false
+#| results: hide
+
+## run ccd algorithm on entire mcnally (discrete)
+ccd_mcnally <- ccdKP(df=mcnally, dataType = "discrete") 
+matccd_mcnally <- CreateAdjMat(ccd_mcnally, p = 26)
+
+## run fci algorithm on entire mcnally (discrete)
+fci_mcnally <- tetradrunner(algoId = 'fci', df = mcnally,
+                          dataType = 'discrete')
+matfci_mcnally <- CreateAdjMat(fci_mcnally, p = ncol(mcnally))
+
+## run ccd on depression symptoms
+ccd_mcnally_dep <- ccdKP(df=depression, dataType = "discrete") 
+mat_mcnally_dep <- CreateAdjMat(ccd_mcnally_dep, p = ncol(depression))
+
+## run fci on depression symptoms
+fci_mcdep <- tetradrunner(algoId = 'fci', df = depression,
+                          dataType = 'discrete')
+matfci_mcdep <- CreateAdjMat(fci_mcdep, p = ncol(depression))
+
+## run ccd on ocd symptoms
+ccd_mcnally_ocd <- ccdKP(df=ocd, dataType = "discrete") 
+mat_mcnally_ocd <- CreateAdjMat(ccd_mcnally_ocd, p = ncol(ocd))
+
+## run fci on ocd symptoms
+fci_mcocd <- tetradrunner(algoId = 'fci', df = ocd,
+                          dataType = 'discrete')
+matfci_mcocd <- CreateAdjMat(fci_mcocd, p = ncol(ocd))
+```
+
+```{r}
+#| label: fig-8
+#| results: hide
+#| fig-width: 12
+#| fig-cap: CCD PAG on entire McNally data
+
+## CCD PAG for the entire Mcnally
+plotPAG(ccd_mcnally, matccd_mcnally) 
+```
+
+```{r}
+#| label: fig-9
+#| results: hide
+#| fig-width: 12
+#| fig-cap: FCI PAG on entire McNally data
+
+## FCI PAG for the entire Mcnally
+plotPAG(fci_mcnally, matfci_mcnally) 
+```
+
+```{r}
+#| label: fig-10
+#| results: hide
+#| layout-ncol: 2
+#| fig-cap: Separate PAGs on depression and OCD symptoms
+#| fig-subcap: 
+#|   - "CCD PAG_depression symptoms"
+#|   - "FCI PAG_depression symptoms"
+#|   - "CCD PAG_OCD symptoms"
+#|   - "FCI PAG_OCD symptoms"
+
+## CCD PAG for the depression symptoms
+plotPAG(ccd_mcnally_dep, mat_mcnally_dep) 
+
+## FCI PAG for the depression symptoms
+plotPAG(fci_mcdep, matfci_mcdep)
+
+## CCD PAG for the ocd symptoms
+plotPAG(ccd_mcnally_ocd, mat_mcnally_ocd) 
+
+## FCI PAG for the ocd symptoms
+plotPAG(fci_mcocd, matfci_mcocd)
+```
+
+
+
+
+
+
+
+# Session info
+
+```{r}
+#| code-fold: false
+sessionInfo()
+```
