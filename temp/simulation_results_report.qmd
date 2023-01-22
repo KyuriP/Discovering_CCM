@@ -70,13 +70,10 @@ source("../code/simulation_code.R")
 
 ## Sparse 5 nodes model
 ```{r}
-#| label: fig-1
-#| fig-height: 3
 #| results: hide
-#| fig-cap: five nodes sparse case
 #| fig.align: center
+#| layout-ncol: 2
 
-layout(t(1:2))
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
 B5sparse = matrix(c(0, 0, 0, 0, 0,
@@ -94,8 +91,8 @@ layout5 = matrix(c(0,1,
                    2,0,
                    2,1),5,2,byrow = T)
 
-true5psparse <- qgraph::qgraph(t(B5sparse), layout=layout5, labels = colnames(B5sparse), theme="colorblind", vsize = 10, asize = 10)
-title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+true5psparse <- qgraph::qgraph(t(B5sparse), layout=layout5, labels = colnames(B5sparse), theme="colorblind", vsize = 8, asize = 5)
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 ## True PAG
 truepag_5psparse <- matrix(c(
@@ -106,18 +103,15 @@ truepag_5psparse <- matrix(c(
        0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
 dimnames(truepag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 plotAG(truepag_5psparse)
-title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## Dense 5 nodes model
 ```{r}
-#| label: fig-2
-#| fig-height: 3
 #| results: hide
-#| fig-cap: five nodes dense case
 #| fig.align: center
+#| layout-ncol: 2
 
-layout(t(1:2))
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
 B5dense = matrix(c(0, 0, 0, 0, 0,
@@ -128,8 +122,8 @@ B5dense = matrix(c(0, 0, 0, 0, 0,
 
 colnames(B5dense) <- c("X1", "X2", "X3", "X4", "X5")
 
-true5pdense <- qgraph(t(B5dense), layout=layout5, labels = colnames(B5dense), theme="colorblind", vsize = 10, asize = 10)
-title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+true5pdense <- qgraph(t(B5dense), layout=layout5, labels = colnames(B5dense), theme="colorblind", vsize = 8, asize = 5)
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
 ## True PAG
@@ -141,18 +135,15 @@ truepag_5pdense <- matrix(c(
   3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
 dimnames(truepag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 plotAG(truepag_5pdense)
-title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## Sparse 10 nodes model
 ```{r}
-#| label: fig-3
-#| fig-height: 3
 #| results: hide
-#| fig-cap: ten nodes sparse case
 #| fig.align: center
+#| layout-ncol: 2
 
-layout(t(1:2))
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
 B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -180,8 +171,8 @@ layout10 = matrix(c(0,1,
                       4, 1,
                       7, 1),10,2,byrow = T)
 
-true10psparse <- qgraph(t(B10sparse), layout = layout10, labels = colnames(B10sparse), theme="colorblind", vsize = 10, asize = 10)
-title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+true10psparse <- qgraph(t(B10sparse), layout = layout10, labels = colnames(B10sparse), theme="colorblind", vsize = 8, asize = 5)
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
 ## True PAG
@@ -199,19 +190,16 @@ truepag_10psparse <- matrix(c(
 
 dimnames(truepag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
 plotAG(truepag_10psparse)
-title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 
 ## Dense 10 nodes model
 ```{r}
-#| label: fig-4
-#| fig-height: 3
 #| results: hide
-#| fig-cap: ten nodes dense case
 #| fig.align: center
+#| layout-ncol: 2
 
-layout(t(1:2))
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
 B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -239,8 +227,8 @@ layout10 = matrix(c(0,1,
                     4, 1,
                     7, 1),10,2,byrow = T)
 
-true10pdense <- qgraph(t(B10dense), layout = layout10, labels = colnames(B10dense), theme="colorblind", vsize = 10, asize = 10)
-title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+true10pdense <- qgraph(t(B10dense), layout = layout10, labels = colnames(B10dense), theme="colorblind", vsize = 8, asize = 5)
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
 ## True PAG
@@ -258,19 +246,17 @@ truepag_10pdense <- matrix(c(
 
 dimnames(truepag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
 plotAG(truepag_10pdense)
-title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 
 ## 5 nodes with a LV model
 ```{r}
-#| label: fig-5
-#| fig-height: 3
 #| results: hide
-#| fig-cap: five nodes with a LV case
 #| fig.align: center
+#| layout-ncol: 2
 
-layout(t(1:2))
+
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
 B5_lv2 = matrix(c(0, 0, 0, 0, 0, 1,
@@ -289,8 +275,8 @@ layout5_lv2 = matrix(c(0,1,
                        2,0,
                        -1, 0.5),6,2,byrow = T)
 
-true5p_lv2 <- qgraph(t(B5_lv2), layout=layout5_lv2, labels = colnames(B5_lv2), theme="colorblind", vsize = 10, asize = 10)
-title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+true5p_lv2 <- qgraph(t(B5_lv2), layout=layout5_lv2, labels = colnames(B5_lv2), theme="colorblind", vsize = 8, asize = 5)
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
 ## True PAG
@@ -302,20 +288,18 @@ truepag_5pLV2 <- matrix(c(
   0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
 dimnames(truepag_5pLV2) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 plotAG(truepag_5pLV2)
-title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 
 
 ## 10 nodes with a LV model
 ```{r}
-#| label: fig-6
-#| fig-height: 3
 #| results: hide
-#| fig-cap: ten nodes with a LV case
 #| fig.align: center
+#| layout-ncol: 2
 
-layout(t(1:2))
+
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
 B10_lv = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -345,8 +329,8 @@ layout10LV = matrix(c(0,1,
                       7, 1,
                       8, 0),11,2,byrow = T)
 
-true10pLV <- qgraph(t(B10_lv), layout = layout10LV, labels = colnames(B10_lv), theme="colorblind", vsize = 10, asize = 10)
-title("True DCG",  font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.2)
+true10pLV <- qgraph(t(B10_lv), layout = layout10LV, labels = colnames(B10_lv), theme="colorblind", vsize = 8, asize = 5)
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
 ## True PAG
@@ -364,7 +348,7 @@ truepag_10pLV <- matrix(c(
 
 dimnames(truepag_10pLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
 plotAG(truepag_10pLV)
-title(main = "True PAG", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.8)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 
