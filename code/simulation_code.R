@@ -770,3 +770,54 @@ SHD_cci10pLV<- cci_10pLV %>%
 mean(SHD_cci10pLV)
 
 
+##################
+## Running time ##
+##################
+#remotes::install_github("joshuaulrich/microbenchmark")
+library(microbenchmark)
+
+times <- microbenchmark(
+  ccd_5psparse = ccdKP(df=simdata_5psparse[[1]], dataType = "continuous", alpha = 0.05),
+  fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = FALSE, labels = colnames(simdata_5psparse[[1]])),
+  cci_5psparse = cci(list(C = cor(simdata_5psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5psparse[[1]])),
+  
+  ccd_5pdense = ccdKP(df=simdata_5pdense[[1]], dataType = "continuous", alpha = 0.05),
+  fci_5pdense = fci(list(C = cor(simdata_5pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = FALSE, labels = colnames(simdata_5pdense[[1]])),
+  cci_5pdense = cci(list(C = cor(simdata_5pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pdense[[1]])),
+  
+  ccd_10psparse = ccdKP(df=simdata_10psparse[[1]], dataType = "continuous", alpha = 0.05),
+  fci_10psparse = fci(list(C = cor(simdata_10psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = FALSE, labels = colnames(simdata_10psparse[[1]])),
+  cci_10psparse = cci(list(C = cor(simdata_10psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10psparse[[1]])),
+  
+  ccd_10pdense = ccdKP(df=simdata_10pdense[[1]], dataType = "continuous", alpha = 0.05),
+  fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = FALSE, labels = colnames(simdata_10pdense[[1]])),
+  cci_10pdense = cci(list(C = cor(simdata_10pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pdense[[1]])),
+  
+  ccd_5pLV = ccdKP(df=simdata_5pLV2[[1]], dataType = "continuous", alpha = 0.05),
+  fci_5pLV = fci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3),indepTest=gaussCItest,
+                  alpha = 0.05, doPdsep = FALSE, labels = colnames(simdata_5pLV2[[1]])),
+  cci_5pLV = cci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLV2[[1]])),
+  
+  ccd_10pLV = ccdKP(df=simdata_10pLV[[1]], dataType = "continuous", alpha = 0.05),
+  fci_10pLV = fci(list(C = cor(simdata_10pLV[[1]]), n = 1e3),indepTest=gaussCItest,
+                alpha = 0.05, doPdsep = FALSE, labels = colnames(simdata_10pLV[[1]])),
+  cci_10pLV = cci(list(C = cor(simdata_10pLV[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLV[[1]]))
+)
+
+
+times <- times %>% 
+  mutate(algorithm = substr(expr, 1, 3),
+         condition = stringr::str_split(expr, "_", simplify=T)[,2])
+
+## plot the results
+times %>%  
+  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLV", "10pLV")), y = log(time), col= factor(algorithm))) +
+  geom_boxplot(position = "dodge",   outlier.size = 0.8, outlier.alpha = 0.2) + theme_classic() +
+  # scale_x_discrete(name ="Condition", 
+  #                  labels=c("", "5p-sparse", "", "","5p-dense","","", "10p-sparse","","","10p-dense","","","5p-LV","","","10p-LV","")) + 
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", subtitle = "Time in milliseconds (ms)") + 
+  theme(axis.text.x = element_text(face = "bold", angle=40, margin = margin(t = 13)))
+  
+  
+  

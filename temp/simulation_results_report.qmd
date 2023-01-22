@@ -61,6 +61,7 @@ source("../code/eval_metrics.R")
 #| results: hide
 #| fig-show: hide
 #| cache: true
+
 # load simulation code
 source("../code/simulation_code.R")
 ```
@@ -536,6 +537,26 @@ ggarrange(p1, p5, p2, p6, p3, p7, p4, p8,
                     ncol = 2, nrow = 4, common.legend = TRUE, legend = "bottom")
 ```
 
+```{r}
+#| label: fig-8
+#| fig-width: 8
+#| results: hide
+#| fig-cap: Algorithm running time
+#| fig.align: center
+
+## plot the results
+times %>%  
+  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLV", "10pLV")), y = log(time), col= factor(algorithm))) +
+  geom_boxplot(position = "dodge",   outlier.size = 0.8, outlier.alpha = 0.2) + theme_classic() +
+  # scale_x_discrete(name ="Condition", 
+  #                  labels=c("", "5p-sparse", "", "","5p-dense","","", "10p-sparse","","","10p-dense","","","5p-LV","","","10p-LV","")) + 
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  labs(y = " log(ms)", x = "", title = "Algorithm Running Time", subtitle = "Time in milliseconds (ms)") + 
+  theme(axis.text.x = element_text(face = "bold", margin = margin(t = 13), size=10),
+        legend.position="bottom",
+        legend.text = element_text(face = "bold"))
+```
+
 
 
 <hr>
@@ -590,7 +611,7 @@ matfci_mcocd <- CreateAdjMat(fci_mcocd, p = ncol(ocd))
 ```
 
 ```{r}
-#| label: fig-8
+#| label: fig-9
 #| results: hide
 #| fig-width: 12
 #| fig-cap: CCD PAG on entire McNally data
@@ -600,7 +621,7 @@ plotPAG(ccd_mcnally, matccd_mcnally)
 ```
 
 ```{r}
-#| label: fig-9
+#| label: fig-10
 #| results: hide
 #| fig-width: 12
 #| fig-cap: FCI PAG on entire McNally data
@@ -610,7 +631,7 @@ plotPAG(fci_mcnally, matfci_mcnally)
 ```
 
 ```{r}
-#| label: fig-10
+#| label: fig-11
 #| results: hide
 #| layout-ncol: 2
 #| fig-cap: Separate PAGs on depression and OCD symptoms
@@ -632,9 +653,6 @@ plotPAG(ccd_mcnally_ocd, mat_mcnally_ocd)
 ## FCI PAG for the ocd symptoms
 plotPAG(fci_mcocd, matfci_mcocd)
 ```
-
-
-
 
 
 
