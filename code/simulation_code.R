@@ -49,7 +49,7 @@ simdata_5psparse <- replicate(n=1000,
 # data5psparse <- gen_dat(B5sparse, N =1e6, seed = 123)
 
 # ## Estimate GGM
-# ggm5p <- qgraph(cor(data5psparse), layout = layout5, theme="colorblind")
+# ggm5p <- qgraph(cor(data5psparse), layout = layout5, theme="colorblind", graph = "pcor")
 # 
 # layout(t(1:3))
 
@@ -162,7 +162,7 @@ simdata_5pdense <- replicate(n=1000,
 # data5pdense <- gen_dat(B5dense, N =1e6, seed = 12345)
 # 
 # ## Estimate GGM
-# ggm5pdense <- qgraph(cor(data5pdense), layout = layout5, theme="colorblind")
+# ggm5pdense <- qgraph(cor(data5pdense), layout = layout5, theme="colorblind", graph = "pcor")
 # 
 # layout(t(1:3))
 
@@ -292,7 +292,7 @@ simdata_10psparse <- replicate(n=1000,
 # data10psparse <- gen_dat(B10sparse, N =1e6, seed = 123)
 # 
 # ## Estimate GGM
-# ggm10psparse <- qgraph(cor(data10psparse), layout = layout10, theme="colorblind")
+# ggm10psparse <- qgraph(cor(data10psparse), layout = layout10, theme="colorblind", graph = "pcor")
 # layout(t(1:3))
 
 ## True PAG
@@ -424,7 +424,7 @@ simdata_10pdense <- replicate(n=1000,
                                simplify = FALSE)
 
 # ## Estimate GGM
-# ggm10pdense <- qgraph(cor(data10pdense), layout = layout10, theme="colorblind")
+# ggm10pdense <- qgraph(cor(data10pdense), layout = layout10, theme="colorblind", graph = "pcor")
 # layout(t(1:3))
 
 ## True PAG
@@ -679,7 +679,7 @@ simdata_10pLV <- replicate(n=1000,
 # data10pLV <- gen_dat(B10_lv, N =1e6, seed = 123)[,-11]
 # 
 # ## Estimate GGM
-# ggm10pLV <- qgraph(cor(data10pLV), layout = layout10LV, theme="colorblind")
+# ggm10pLV <- qgraph(cor(data10pLV), layout = layout10LV, theme="colorblind", graph = "pcor")
 # 
 # layout(t(1:3))
 

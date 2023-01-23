@@ -40,7 +40,7 @@ equilibrium_check(B4)
 # generate data
 data4p <- gen_dat(B4, N =1e6, seed = 12345)
 ## Estimate GGM
-ggm4p <- qgraph(cor(data4p), layout=layout4, theme="colorblind")
+ggm4p <- qgraph(cor(data4p), layout=layout4, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -91,7 +91,7 @@ equilibrium_check(B4_high)
 data4p_high <- gen_dat(B4_high, N =1e6, seed = 12345)
 
 ## Estimate GGM
-ggm4p_high <- qgraph(t(cor(data4p_high)), layout=layout4, theme="colorblind")
+ggm4p_high <- qgraph(t(cor(data4p_high)), layout=layout4, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -150,7 +150,7 @@ equilibrium_check(B5)
 data5p <- gen_dat(B5, N =1e6, seed = 1)
 
 ## Estimate GGM
-ggm5p <- qgraph(cor(data5p), layout = layout5, theme="colorblind")
+ggm5p <- qgraph(cor(data5p), layout = layout5, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -210,7 +210,7 @@ equilibrium_check(B5_high)
 data5p_high <- gen_dat(B5_high, N =1e6, seed = 1)
 
 ## Estimate GGM
-ggm5p_high <- qgraph(cor(data5p_high), layout = layout5, theme="colorblind")
+ggm5p_high <- qgraph(cor(data5p_high), layout = layout5, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -272,7 +272,7 @@ equilibrium_check(B6)
 data6p <- gen_dat(B6, N =1e6, seed = 123)
 
 ## GGM
-ggm6p <- qgraph(cor(data6p), layout = layout6, theme="colorblind")
+ggm6p <- qgraph(cor(data6p), layout = layout6, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -328,7 +328,7 @@ equilibrium_check(B6_high)
 data6p_high<- gen_dat(B6_high, N =1e6, seed = 123)
 
 ## Estimate GGM
-ggm6p_high <- qgraph(cor(data6p_high), layout = layout6, theme="colorblind")
+ggm6p_high <- qgraph(cor(data6p_high), layout = layout6, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -387,7 +387,7 @@ equilibrium_check(B4_LV)
 # generate data
 data4pLV <- gen_dat(B4_LV, N =1e6, seed = 123)[,-5]
 ## Estimate GGM
-ggm4pLV <- qgraph(cor(data4pLV), layout=layout4, theme="colorblind")
+ggm4pLV <- qgraph(cor(data4pLV), layout=layout4, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -439,7 +439,7 @@ equilibrium_check(B4_LV2)
 # generate data
 data4pLV2 <- gen_dat(B4_LV2, N =1e6, seed = 123)[,-5]
 ## Estimate GGM
-ggm4pLV2 <- qgraph(cor(data4pLV2), layout=layout4, theme="colorblind")
+ggm4pLV2 <- qgraph(cor(data4pLV2), layout=layout4, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -495,7 +495,7 @@ data5pLV <- gen_dat(B5_lv, N =1e6, seed = 123)[,-6]
 
 
 ## Estimate GGM
-ggm5pLV <- qgraph(cor(data5pLV), layout = layout5, theme="colorblind")
+ggm5pLV <- qgraph(cor(data5pLV), layout = layout5, theme="colorblind",graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -553,7 +553,7 @@ data5pLV2 <- gen_dat(B5_lv2, N =1e6, seed = 12345)[,-6]
 
 
 ## Estimate GGM
-ggm5pLV2 <- qgraph(cor(data5pLV2), layout = layout5, theme="colorblind")
+ggm5pLV2 <- qgraph(cor(data5pLV2), layout = layout5, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
@@ -621,7 +621,7 @@ data10pLV <- gen_dat(B10_lv, N =1e6, seed = 123)[,-11]
 
 
 ## Estimate GGM
-ggm10pLV <- qgraph(cor(data10pLV), layout = layout10LV, theme="colorblind")
+ggm10pLV <- qgraph(cor(data10pLV), layout = layout10LV, theme="colorblind", graph = "pcor")
 
 layout(t(1:3))
 ## Run CCD algorithm
