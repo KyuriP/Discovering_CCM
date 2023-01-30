@@ -78,14 +78,20 @@ ccd_5psparse <- simdata_5psparse %>%
 mat_5psparse <- ccd_5psparse %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
+# save(ccd_5psparse, file="data/ccd_5psparse.RData")
+# load("data/ccd_5psparse.RData")
+
 # pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse, plotPAG)
 
 
 ## Run FCI algorithm
 fci_5psparse <- simdata_5psparse %>% 
   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
       )
+
+# save(fci_5psparse, file="data/fci_5psparse.RData")
+# load("data/fci_5psparse.RData")
 
 # pag_fci5psparse <- fci_5psparse %>% 
 #   map(~plotAG(.x))
@@ -94,6 +100,9 @@ fci_5psparse <- simdata_5psparse %>%
 cci_5psparse <- simdata_5psparse %>% 
   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
       )
+
+# save(cci_5psparse, file="data/cci_5psparse.RData")
+# load("data/cci_5psparse.RData")
 
 # pag_cci5psparse <- cci_5psparse %>% 
 #   map(~plotAG(.x))
@@ -213,6 +222,9 @@ ccd_5pdense <- simdata_5pdense %>%
 mat_5pdense <- ccd_5pdense %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
+# save(ccd_5pdense, file="data/ccd_5pdense.RData")
+# load("data/ccd_5pdense.RData")
+
 # pag_ccd5pdense <- map2(ccd_5pdense, mat_5pdense, plotPAG)
 
 
@@ -222,6 +234,10 @@ fci_5pdense <- simdata_5pdense %>%
            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
   )
 
+# save(fci_5pdense, file="data/fci_5pdense.RData")
+# load("data/fci_5pdense.RData")
+
+
 # pag_fci5pdense <- fci_5pdense %>% 
 #   map(~plotAG(.x))
 
@@ -229,6 +245,9 @@ fci_5pdense <- simdata_5pdense %>%
 cci_5pdense <- simdata_5pdense %>% 
   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
+
+# save(cci_5pdense, file="data/cci_5pdense.RData")
+# load("data/cci_5pdense.RData")
 
 # pag_cci5pdense <- cci_5pdense %>% 
 #   map(~plotAG(.x))
@@ -373,6 +392,9 @@ ccd_10psparse <- simdata_10psparse %>%
 mat_10psparse <- ccd_10psparse %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
+# save(ccd_10psparse, file="data/ccd_10psparse.RData")
+# load("data/ccd_10psparse.RData")
+
 # pag_ccd10psparse <- map2(ccd_10psparse, mat_10psparse, plotPAG)
 
 
@@ -382,6 +404,9 @@ fci_10psparse <- simdata_10psparse %>%
            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
+# save(fci_10psparse, file="data/fci_10psparse.RData")
+# load("data/fci_10psparse.RData")
+
 # pag_fci10psparse <- fci_10psparse %>% 
 #   map(~plotAG(.x))
 
@@ -389,6 +414,9 @@ fci_10psparse <- simdata_10psparse %>%
 cci_10psparse <- simdata_10psparse %>% 
   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
+
+# save(cci_10psparse, file="data/cci_10psparse.RData")
+# load("data/cci_10psparse.RData")
 
 # pag_cci10psparse <- cci_10psparse %>% 
 #   map(~plotAG(.x))
@@ -534,6 +562,9 @@ ccd_10pdense <- simdata_10pdense  %>%
 mat_10pdense  <- ccd_10pdense  %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
+# save(ccd_10pdense, file="data/ccd_10pdense.RData")
+# load("data/ccd_10pdense.RData")
+
 # pag_ccd10pdense  <- map2(ccd_10pdense , mat_10pdense , plotPAG)
 
 
@@ -543,6 +574,9 @@ fci_10pdense <- simdata_10pdense  %>%
            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
+# save(fci_10pdense, file="data/fci_10pdense.RData")
+# load("data/fci_10pdense.RData")
+
 # pag_fci10pdense <- fci_10pdense  %>% 
 #   map(~plotAG(.x))
 
@@ -550,6 +584,9 @@ fci_10pdense <- simdata_10pdense  %>%
 cci_10pdense  <- simdata_10pdense %>% 
   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
+
+# save(cci_10pdense, file="data/cci_10pdense.RData")
+# load("data/cci_10pdense.RData")
 
 # pag_cci10pdense  <- cci_10pdense  %>% 
 #   map(~plotAG(.x))
@@ -576,7 +613,7 @@ SHD_ccd10pdense  <- mat_10pdense %>%
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
-mean(SHD_ccd10pdense)
+colMeans(SHD_ccd10pdense)
 
 # FCI
 res_fci10pdense  <- fci_10pdense  %>% 
@@ -678,6 +715,9 @@ ccd_5pLV2 <- simdata_5pLV2  %>%
 mat_5pLV2  <- ccd_5pLV2  %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
+# save(ccd_5pLV2, file="data/ccd_5pLV2.RData")
+# load("data/ccd_5pLV2.RData")
+
 # pag_ccd5pLV2  <- map2(ccd_5pLV2 , mat_5pLV2 , plotPAG)
 
 
@@ -687,6 +727,9 @@ fci_5pLV2 <- simdata_5pLV2  %>%
            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
+# save(fci_5pLV2, file="data/fci_5pLV2.RData")
+# load("data/fci_5pLV2.RData")
+
 # pag_fci5pLV2 <- fci_5pLV2  %>% 
 #   map(~plotAG(.x))
 
@@ -694,6 +737,9 @@ fci_5pLV2 <- simdata_5pLV2  %>%
 cci_5pLV2  <- simdata_5pLV2 %>% 
   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
+
+# save(cci_5pLV2, file="data/cci_5pLV2.RData")
+# load("data/fci_5pLV2.RData")
 
 # pag_cci5pLV2  <- cci_5pLV2  %>% 
 #   map(~plotAG(.x))
@@ -843,6 +889,9 @@ ccd_10pLV  <- simdata_10pLV   %>%
 mat_10pLV   <- ccd_10pLV %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
+# save(ccd_10pLV, file="data/ccd_10pLV.RData")
+# load("data/ccd_10pLV.RData")
+
 # pag_ccd10pLV <- map2(ccd_10pLV, mat_10pLV  , plotPAG)
 
 
@@ -852,6 +901,9 @@ fci_10pLV  <- simdata_10pLV   %>%
            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
   )
 
+# save(fci_10pLV, file="data/fci_10pLV.RData")
+# load("data/fci_10pLV.RData")
+
 # pag_fci10pLV  <- fci_10pLV   %>% 
 #   map(~plotAG(.x))
 
@@ -859,6 +911,9 @@ fci_10pLV  <- simdata_10pLV   %>%
 cci_10pLV  <- simdata_10pLV  %>% 
   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
   )
+
+# save(cci_10pLV, file="data/cci_10pLV.RData")
+# load("data/fci_10pLV.RData")
 
 # pag_cci10pLV   <- cci_10pLV %>% 
 #   map(~plotAG(.x))
@@ -938,11 +993,11 @@ library(microbenchmark)
 
 times <- microbenchmark(
   ccd_5psparse = ccdKP(df=simdata_5psparse[[1]], dataType = "continuous", alpha = 0.05),
-  fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_5psparse[[1]])),
+  fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5psparse[[1]])),
   cci_5psparse = cci(list(C = cor(simdata_5psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5psparse[[1]])),
   
   ccd_5pdense = ccdKP(df=simdata_5pdense[[1]], dataType = "continuous", alpha = 0.05),
-  fci_5pdense = fci(list(C = cor(simdata_5pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_5pdense[[1]])),
+  fci_5pdense = fci(list(C = cor(simdata_5pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pdense[[1]])),
   cci_5pdense = cci(list(C = cor(simdata_5pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pdense[[1]])),
   
   ccd_10psparse = ccdKP(df=simdata_10psparse[[1]], dataType = "continuous", alpha = 0.05),
@@ -950,17 +1005,17 @@ times <- microbenchmark(
   cci_10psparse = cci(list(C = cor(simdata_10psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10psparse[[1]])),
   
   ccd_10pdense = ccdKP(df=simdata_10pdense[[1]], dataType = "continuous", alpha = 0.05),
-  fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_10pdense[[1]])),
+  fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pdense[[1]])),
   cci_10pdense = cci(list(C = cor(simdata_10pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pdense[[1]])),
   
   ccd_5pLV = ccdKP(df=simdata_5pLV2[[1]], dataType = "continuous", alpha = 0.05),
   fci_5pLV = fci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3),indepTest=gaussCItest,
-                  alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_5pLV2[[1]])),
+                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLV2[[1]])),
   cci_5pLV = cci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLV2[[1]])),
   
   ccd_10pLV = ccdKP(df=simdata_10pLV[[1]], dataType = "continuous", alpha = 0.05),
   fci_10pLV = fci(list(C = cor(simdata_10pLV[[1]]), n = 1e3),indepTest=gaussCItest,
-                alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_10pLV[[1]])),
+                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLV[[1]])),
   cci_10pLV = cci(list(C = cor(simdata_10pLV[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLV[[1]]))
 )
 

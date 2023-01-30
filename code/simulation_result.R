@@ -1,4 +1,4 @@
-source("../code/simulation_code.R")
+source("code/simulation_code.R")
 library(dplyr)
 library(purrr)
 
