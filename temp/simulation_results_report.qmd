@@ -425,7 +425,7 @@ SHDs <- bind_rows("ccd_5p-sparse" = SHD_ccd5psparse, "fci_5p-sparse" = SHD_fci5p
 
 ```{r}
 #| label: fig-6
-#| fig-height: 14
+#| fig-height: 12
 #| fig-width: 8
 #| fig-cap: Simuation results_varying sample sizes
 #| fig.align: center
