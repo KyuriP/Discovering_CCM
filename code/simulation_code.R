@@ -11,7 +11,7 @@ library(dplyr)
 library(qgraph)
 
 ## slightly modified CCI package
-install_github("KyuriP/CCI_KP")
+#install_github("KyuriP/CCI_KP")
 library(CCI.KP)
 
 ## simulate data 1000 times ## 
@@ -593,7 +593,6 @@ mat_10pdense  <- ccd_10pdense  %>%
 #   map(~plotAG(.x))
 
 
-
 ## evaluation
 # CCD
 res_ccd10pdense  <- mat_10pdense  %>% 
@@ -994,31 +993,31 @@ colMeans(SHD_cci10pLV)
 library(microbenchmark)
 
 times <- microbenchmark(
-  ccd_5psparse = ccdKP(df=simdata_5psparse[[1]], dataType = "continuous", alpha = 0.05),
-  fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5psparse[[1]])),
-  cci_5psparse = cci(list(C = cor(simdata_5psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5psparse[[1]])),
+  ccd_5psparse = ccdKP(df=simdata_5psparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5psparse[[1]][[1]])),
+  cci_5psparse = cci(list(C = cor(simdata_5psparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5psparse[[1]][[1]])),
 
-  ccd_5pdense = ccdKP(df=simdata_5pdense[[1]], dataType = "continuous", alpha = 0.05),
-  fci_5pdense = fci(list(C = cor(simdata_5pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pdense[[1]])),
-  cci_5pdense = cci(list(C = cor(simdata_5pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pdense[[1]])),
+  ccd_5pdense = ccdKP(df=simdata_5pdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_5pdense = fci(list(C = cor(simdata_5pdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pdense[[1]][[1]])),
+  cci_5pdense = cci(list(C = cor(simdata_5pdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pdense[[1]][[1]])),
 
-  ccd_10psparse = ccdKP(df=simdata_10psparse[[1]], dataType = "continuous", alpha = 0.05),
-  fci_10psparse = fci(list(C = cor(simdata_10psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_10psparse[[1]])),
-  cci_10psparse = cci(list(C = cor(simdata_10psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10psparse[[1]])),
+  ccd_10psparse = ccdKP(df=simdata_10psparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_10psparse = fci(list(C = cor(simdata_10psparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_10psparse[[1]][[1]])),
+  cci_10psparse = cci(list(C = cor(simdata_10psparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10psparse[[1]][[1]])),
 
-  ccd_10pdense = ccdKP(df=simdata_10pdense[[1]], dataType = "continuous", alpha = 0.05),
-  fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pdense[[1]])),
-  cci_10pdense = cci(list(C = cor(simdata_10pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pdense[[1]])),
+  ccd_10pdense = ccdKP(df=simdata_10pdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pdense[[1]][[1]])),
+  cci_10pdense = cci(list(C = cor(simdata_10pdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pdense[[1]][[1]])),
 
-  ccd_5pLV = ccdKP(df=simdata_5pLV2[[1]], dataType = "continuous", alpha = 0.05),
-  fci_5pLV = fci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3),indepTest=gaussCItest,
-                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLV2[[1]])),
-  cci_5pLV = cci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLV2[[1]])),
+  ccd_5pLV = ccdKP(df=simdata_5pLV2[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_5pLV = fci(list(C = cor(simdata_5pLV2[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
+                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLV2[[1]][[1]])),
+  cci_5pLV = cci(list(C = cor(simdata_5pLV2[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLV2[[1]][[1]])),
 
-  ccd_10pLV = ccdKP(df=simdata_10pLV[[1]], dataType = "continuous", alpha = 0.05),
-  fci_10pLV = fci(list(C = cor(simdata_10pLV[[1]]), n = 1e3),indepTest=gaussCItest,
-                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLV[[1]])),
-  cci_10pLV = cci(list(C = cor(simdata_10pLV[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLV[[1]]))
+  ccd_10pLV = ccdKP(df=simdata_10pLV[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_10pLV = fci(list(C = cor(simdata_10pLV[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
+                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLV[[1]][[1]])),
+  cci_10pLV = cci(list(C = cor(simdata_10pLV[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLV[[1]][[1]]))
 )
 
 

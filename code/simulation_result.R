@@ -61,38 +61,51 @@ MyTheme <-  theme(plot.title = element_blank(),
                   legend.text = element_text(face = "bold"))
 
 ## ========================
-## 5p-sparse-condition
+## precision plots
 ## ========================
+precision_plots <- c(unique(results$condition)) %>% 
+  map(~
 results %>% 
-  filter(condition == "5p_sparse" & grepl("average_precision", metric)) %>% 
+  filter(condition == .x & grepl("average_precision", metric)) %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
-  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
   geom_line(aes(group = algorithm)) +
   geom_point() +
-  # in this case, N = 1000 (hence, sqrt(1000))
-  geom_errorbar(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(1000), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(1000)), width=0.1) +
-  labs(x="", y="", title = "", subtitle = "5p - sparse") +
-  theme_classic() + MyTheme
-
-## ======================
-## 5p-sparse-condition
-## ======================
-## precision
-results %>% 
-  filter(condition == "5p_sparse" & grepl("average_precision", metric)) %>% 
-  tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
+  #geom_errorbar(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N)), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))), width=0.1) +
+  geom_ribbon(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N)), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))), alpha=0.2,lwd=0) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  labs(x="N", y="", title = "", subtitle = .x) +
+  theme_classic() + MyTheme
+)
+
+## ========================
+## recall plots
+## ========================
+recall_plots <- c(unique(results$condition)) %>% 
+  map(~
+results %>% 
+  filter(condition == .x & grepl("average_recall", metric)) %>% 
+  tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
+  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
   geom_line(aes(group = algorithm)) +
   geom_point() +
-  geom_errorbar(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N)), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))), width=0.1) +
-  labs(x="", y="", title = "", subtitle = "5p - sparse") +
+  #geom_errorbar(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N)), ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))), width=0.1) +
+  geom_ribbon(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N)), ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))), alpha=0.2,lwd=0) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  labs(x="N", y="", title = "", subtitle = .x) +
   theme_classic() + MyTheme
+)
 
+## ========================
+## uncertainty plots
+## ========================
 ## uncertainty (uncertainty rate of fci and cci are exactly the same!)
+uncertainty_plots <- c(unique(uncertainties$condition)) %>% 
+  map(~
 uncertainties %>%
-  filter(condition == "5p-sparse") %>% 
+  filter(condition == .x) %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=mean, group = algorithm, colour = algorithm, fill=algorithm)) +
   geom_line(aes(group = algorithm)) +
@@ -101,12 +114,17 @@ uncertainties %>%
   geom_ribbon(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), alpha=0.2,lwd=0) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  labs(x="", y="", title = "", subtitle = "UNCERTAINTY - 5p sparse") +
+  labs(x="N", y="", title = "", subtitle = paste0("UNCERTAINTY -", .x)) +
   theme_classic() + MyTheme
+)
 
-## SHD
+## ========================
+## SHD plots
+## ========================
+SHD_plots <- c(unique(SHDs$condition)) %>% 
+  map(~
 SHDs %>%
-  filter(condition == "5p-sparse") %>% 
+  filter(condition == .x) %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=mean, group = algorithm, colour = algorithm, fill = algorithm)) +
   geom_line(aes(group = algorithm)) +
@@ -115,9 +133,9 @@ SHDs %>%
   geom_ribbon(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), alpha=0.2,lwd=0) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  labs(x="N", y="", title = "", subtitle = "SHD - 5p sparse") +
+  labs(x="N", y="", title = "", paste0("SHD -", .x)) +
   theme_classic() + MyTheme
-
+)
 ################################################################################
 ## WITHOUT LV CONDITION: PRECISION
 results %>% 
