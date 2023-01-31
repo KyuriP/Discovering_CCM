@@ -1,8 +1,8 @@
 ## load functions & packages
-source("code/R/CCD_fnc.R")
-source("code/R/plot_fnc.R")
-source("code/R/data_generating_fnc.R")
-source("code/eval_metrics.R")
+# source("code/R/CCD_fnc.R")
+# source("code/R/plot_fnc.R")
+# source("code/R/data_generating_fnc.R")
+# source("code/eval_metrics.R")
 
 library(magrittr)
 library(purrr)
@@ -72,9 +72,9 @@ dimnames(truepag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=
 plotAG(truepag_5psparse)
 
 ## Run CCD algorithm
-ccd_5psparse <- simdata_5psparse %>% 
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-      ) 
+# ccd_5psparse <- simdata_5psparse %>% 
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#       ) 
 mat_5psparse <- ccd_5psparse %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
@@ -84,11 +84,11 @@ mat_5psparse <- ccd_5psparse %>%
 # pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse, plotPAG)
 
 
-## Run FCI algorithm
-fci_5psparse <- simdata_5psparse %>% 
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
-      )
+# ## Run FCI algorithm
+# fci_5psparse <- simdata_5psparse %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
+#       )
 
 # save(fci_5psparse, file="data/fci_5psparse.RData")
 # load("data/fci_5psparse.RData")
@@ -97,9 +97,9 @@ fci_5psparse <- simdata_5psparse %>%
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-cci_5psparse <- simdata_5psparse %>% 
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-      )
+# cci_5psparse <- simdata_5psparse %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#       )
 
 # save(cci_5psparse, file="data/cci_5psparse.RData")
 # load("data/cci_5psparse.RData")
@@ -131,6 +131,7 @@ colMeans(SHD_ccd5psparse)
 res_fci5psparse <- fci_5psparse %>% 
   map_depth(2, ~precision_recall(truepag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+
 # UNCERTAINTY
 uncer_fci5psparse <- fci_5psparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -216,9 +217,9 @@ plotAG(truepag_5pdense)
 
 
 ## Run CCD algorithm
-ccd_5pdense <- simdata_5pdense %>% 
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-  ) 
+# ccd_5pdense <- simdata_5pdense %>% 
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   ) 
 mat_5pdense <- ccd_5pdense %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
@@ -229,10 +230,10 @@ mat_5pdense <- ccd_5pdense %>%
 
 
 ## Run FCI algorithm
-fci_5pdense <- simdata_5pdense %>% 
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
-  )
+# fci_5pdense <- simdata_5pdense %>% 
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
+#   )
 
 # save(fci_5pdense, file="data/fci_5pdense.RData")
 # load("data/fci_5pdense.RData")
@@ -242,9 +243,9 @@ fci_5pdense <- simdata_5pdense %>%
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-cci_5pdense <- simdata_5pdense %>% 
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_5pdense <- simdata_5pdense %>% 
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_5pdense, file="data/cci_5pdense.RData")
 # load("data/cci_5pdense.RData")
@@ -386,9 +387,9 @@ plotAG(truepag_10psparse)
 
 
 ## Run CCD algorithm
-ccd_10psparse <- simdata_10psparse %>% 
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-  ) 
+# ccd_10psparse <- simdata_10psparse %>% 
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   ) 
 mat_10psparse <- ccd_10psparse %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
@@ -399,10 +400,10 @@ mat_10psparse <- ccd_10psparse %>%
 
 
 ## Run FCI algorithm
-fci_10psparse <- simdata_10psparse %>% 
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_10psparse <- simdata_10psparse %>% 
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_10psparse, file="data/fci_10psparse.RData")
 # load("data/fci_10psparse.RData")
@@ -411,9 +412,9 @@ fci_10psparse <- simdata_10psparse %>%
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-cci_10psparse <- simdata_10psparse %>% 
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_10psparse <- simdata_10psparse %>% 
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_10psparse, file="data/cci_10psparse.RData")
 # load("data/cci_10psparse.RData")
@@ -556,9 +557,9 @@ plotAG(truepag_10pdense)
 
 
 ## Run CCD algorithm
-ccd_10pdense <- simdata_10pdense  %>% 
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-  ) 
+# ccd_10pdense <- simdata_10pdense  %>% 
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   ) 
 mat_10pdense  <- ccd_10pdense  %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
@@ -569,10 +570,10 @@ mat_10pdense  <- ccd_10pdense  %>%
 
 
 ## Run FCI algorithm
-fci_10pdense <- simdata_10pdense  %>% 
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_10pdense <- simdata_10pdense  %>% 
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_10pdense, file="data/fci_10pdense.RData")
 # load("data/fci_10pdense.RData")
@@ -581,9 +582,9 @@ fci_10pdense <- simdata_10pdense  %>%
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-cci_10pdense  <- simdata_10pdense %>% 
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_10pdense  <- simdata_10pdense %>% 
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_10pdense, file="data/cci_10pdense.RData")
 # load("data/cci_10pdense.RData")
@@ -709,9 +710,9 @@ plotAG(truepag_5pLV2)
 
 
 ## Run CCD algorithm
-ccd_5pLV2 <- simdata_5pLV2  %>% 
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-  ) 
+# ccd_5pLV2 <- simdata_5pLV2  %>% 
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   ) 
 mat_5pLV2  <- ccd_5pLV2  %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
@@ -722,10 +723,10 @@ mat_5pLV2  <- ccd_5pLV2  %>%
 
 
 ## Run FCI algorithm
-fci_5pLV2 <- simdata_5pLV2  %>% 
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_5pLV2 <- simdata_5pLV2  %>% 
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_5pLV2, file="data/fci_5pLV2.RData")
 # load("data/fci_5pLV2.RData")
@@ -734,12 +735,12 @@ fci_5pLV2 <- simdata_5pLV2  %>%
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-cci_5pLV2  <- simdata_5pLV2 %>% 
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_5pLV2  <- simdata_5pLV2 %>% 
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_5pLV2, file="data/cci_5pLV2.RData")
-# load("data/fci_5pLV2.RData")
+# load("data/cci_5pLV2.RData")
 
 # pag_cci5pLV2  <- cci_5pLV2  %>% 
 #   map(~plotAG(.x))
@@ -883,9 +884,9 @@ plotAG(truepag_10pLV)
 
 
 ## Run CCD algorithm
-ccd_10pLV  <- simdata_10pLV   %>% 
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-  ) 
+# ccd_10pLV  <- simdata_10pLV   %>% 
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   ) 
 mat_10pLV   <- ccd_10pLV %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
@@ -896,10 +897,10 @@ mat_10pLV   <- ccd_10pLV %>%
 
 
 ## Run FCI algorithm
-fci_10pLV  <- simdata_10pLV   %>% 
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_10pLV  <- simdata_10pLV   %>% 
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_10pLV, file="data/fci_10pLV.RData")
 # load("data/fci_10pLV.RData")
@@ -908,12 +909,12 @@ fci_10pLV  <- simdata_10pLV   %>%
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-cci_10pLV  <- simdata_10pLV  %>% 
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_10pLV  <- simdata_10pLV  %>% 
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_10pLV, file="data/cci_10pLV.RData")
-# load("data/fci_10pLV.RData")
+# load("data/cci_10pLV.RData")
 
 # pag_cci10pLV   <- cci_10pLV %>% 
 #   map(~plotAG(.x))
@@ -989,30 +990,31 @@ colMeans(SHD_cci10pLV)
 ## Running time ##
 ##################
 #remotes::install_github("joshuaulrich/microbenchmark")
+
 library(microbenchmark)
 
 times <- microbenchmark(
   ccd_5psparse = ccdKP(df=simdata_5psparse[[1]], dataType = "continuous", alpha = 0.05),
   fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5psparse[[1]])),
   cci_5psparse = cci(list(C = cor(simdata_5psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5psparse[[1]])),
-  
+
   ccd_5pdense = ccdKP(df=simdata_5pdense[[1]], dataType = "continuous", alpha = 0.05),
   fci_5pdense = fci(list(C = cor(simdata_5pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pdense[[1]])),
   cci_5pdense = cci(list(C = cor(simdata_5pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pdense[[1]])),
-  
+
   ccd_10psparse = ccdKP(df=simdata_10psparse[[1]], dataType = "continuous", alpha = 0.05),
   fci_10psparse = fci(list(C = cor(simdata_10psparse[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_10psparse[[1]])),
   cci_10psparse = cci(list(C = cor(simdata_10psparse[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10psparse[[1]])),
-  
+
   ccd_10pdense = ccdKP(df=simdata_10pdense[[1]], dataType = "continuous", alpha = 0.05),
   fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pdense[[1]])),
   cci_10pdense = cci(list(C = cor(simdata_10pdense[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pdense[[1]])),
-  
+
   ccd_5pLV = ccdKP(df=simdata_5pLV2[[1]], dataType = "continuous", alpha = 0.05),
   fci_5pLV = fci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3),indepTest=gaussCItest,
                 alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLV2[[1]])),
   cci_5pLV = cci(list(C = cor(simdata_5pLV2[[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLV2[[1]])),
-  
+
   ccd_10pLV = ccdKP(df=simdata_10pLV[[1]], dataType = "continuous", alpha = 0.05),
   fci_10pLV = fci(list(C = cor(simdata_10pLV[[1]]), n = 1e3),indepTest=gaussCItest,
                 alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLV[[1]])),
@@ -1020,19 +1022,18 @@ times <- microbenchmark(
 )
 
 
-times <- times %>% 
+times <- times %>%
   mutate(algorithm = substr(expr, 1, 3),
          condition = stringr::str_split(expr, "_", simplify=T)[,2])
 
 ## plot the results
-times %>%  
+times %>%
   ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLV", "10pLV")), y = log(time), col= factor(algorithm))) +
   geom_boxplot(position = "dodge",   outlier.size = 0.8, outlier.alpha = 0.2) + theme_classic() +
-  # scale_x_discrete(name ="Condition", 
-  #                  labels=c("", "5p-sparse", "", "","5p-dense","","", "10p-sparse","","","10p-dense","","","5p-LV","","","10p-LV","")) + 
+  # scale_x_discrete(name ="Condition",
+  #                  labels=c("", "5p-sparse", "", "","5p-dense","","", "10p-sparse","","","10p-dense","","","5p-LV","","","10p-LV","")) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", subtitle = "Time in milliseconds (ms)") + 
+  labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", subtitle = "Time in milliseconds (ms)") +
   theme(axis.text.x = element_text(face = "bold", angle=40, margin = margin(t = 13)))
-  
-  
-  
+
+
