@@ -11,6 +11,10 @@ source("code/R/equivset_fnc.R")
 source("code/R/data_generating_fnc.R")
 source("code/R/eval_metric_fnc.R")
 
+## slightly modified CCI package
+#install_github("KyuriP/CCI_KP")
+library(CCI.KP)
+
 # for reproducibility
 #set.seed(12345)
 
@@ -61,7 +65,7 @@ suffStat_4p$C = cor(data4p)
 suffStat_4p$n = 1e6
 
 res4p <- fci(suffStat_4p,indepTest=gaussCItest,
-             alpha = 0.05, doPdsep = FALSE, labels = colnames(data4p))
+             alpha = 0.05, labels = colnames(data4p), selectionBias = FALSE, rules = rep(TRUE, 10))
 
 pag_fci4p <- plotAG(res4p@amat)
 
@@ -294,7 +298,7 @@ suffStat_6p$C = cor(data6p)
 suffStat_6p$n = 1e6
 
 res6p <- fci(suffStat_6p,indepTest=gaussCItest,
-                  alpha = 0.05, doPdsep = FALSE, labels = colnames(data6p))
+                  alpha = 0.05, labels = colnames(data6p), selectionBias = FALSE)
 
 pag_fci6p <- plotAG(res6p@amat)
 
@@ -349,8 +353,9 @@ suffStat_6phigh = list()
 suffStat_6phigh$C = cor(data6p_high)
 suffStat_6phigh$n = 1e6
 
+# selection bias = FALSE (Mooij --> absence of selection bias assumed to use FCI for cyclci structure)
 res6p_high <- fci(suffStat_6phigh,indepTest=gaussCItest,
-             alpha = 0.05, doPdsep = FALSE, labels = colnames(data6p_high))
+             alpha = 0.05, labels = colnames(data6p_high), selectionBias = FALSE, rules = rep(TRUE, 10))
 
 pag_fci6pH <- plotAG(res6p_high@amat)
 
@@ -412,9 +417,58 @@ dimnames(G4pLV$maag) <- list(colnames(data4pLV), colnames(data4pLV)) # give the 
 pag_cci4pLV <- plotAG(G4pLV$maag)
 
 
+## ========================
+## Model 7-2) 4 nodes with a LV - dense
+## ========================
+# specify B matrix
+B4_LVdense = matrix(c(0, 0, 0, 0, 0.4,
+                 0.8, 0, 0.6, 0, 0.6,
+                 0, 0.6, 0, 0.9, 0,
+                 0, 0, 0, 0, 0,
+                 0, 0, 0, 0, 0), 5, 5, byrow = T)
+
+colnames(B4_LVdense) <- c("X1", "X2", "X3", "X4", "L1")
+# specify layout
+layout4LVdense = matrix(c(-1,1,
+                     -1,0,
+                     1,0,
+                     1,1,
+                     -2, 0.5),5,2,byrow = T)
+## True graph
+true4pdenseLV <- qgraph(t(B4_LVdense), layout=layout4LVdense, labels = colnames(B4_LVdense), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B4_LVdense)
+# generate data
+data4pLVdense <- gen_dat(B4_LVdense, N =1e6, seed = 123)[,-5]
+## Estimate GGM
+ggm4pLVdense <- qgraph(cor(data4pLVdense), layout=layout4, theme="colorblind", graph = "pcor")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_4pLVdense <- ccdKP(df=data4pLVdense, dataType = "continuous", alpha = 0.05)
+mat4pLVdense <- CreateAdjMat(ccd_4pLVdense, 4)
+# Estimate PAG
+pag_ccd4pLVdense <- plotPAG(ccd_4pLVdense, mat4pLVdense)
+
+## Run FCI algorithm
+suffStat_4pLVdense = list()
+suffStat_4pLVdense$C = cor(data4pLVdense)
+suffStat_4pLVdense$n = 1e6
+
+res4pLVdense <- fci(suffStat_4pLVdense,indepTest=gaussCItest,
+               alpha = 0.05, labels = colnames(data4pLV), selectionBias = FALSE)
+
+pag_fci4pLVdense <- plotAG(res4pLVdense@amat)
+
+## Run CCI algorithm
+G4pLVdense = cci(suffStat_4pLVdense, gaussCItest, alpha=0.05, p=ncol(data4pLVdense)) 
+dimnames(G4pLVdense$maag) <- list(colnames(data4pLVdense), colnames(data4pLVdense)) # give the labels
+pag_cci4pLVdense <- plotAG(G4pLVdense$maag)
 
 ## ========================
-## Model 7-2) 4 nodes with a LV - sparse
+## Model 7-3) 4 nodes with a LV - sparse
 ## ========================
 # specify B matrix
 B4_LV2 = matrix(c(0, 0, 0, 0, 1,
@@ -454,7 +508,7 @@ suffStat_4pLV2$C = cor(data4pLV2)
 suffStat_4pLV2$n = 1e6
 
 res4pLV2 <- fci(suffStat_4pLV2,indepTest=gaussCItest,
-               alpha = 0.05, doPdsep = FALSE, labels = colnames(data4pLV2))
+               alpha = 0.05, selectionBias = FALSE, labels = colnames(data4pLV2))
 
 pag_fci4pLV2 <- plotAG(res4pLV2@amat)
 
@@ -521,9 +575,67 @@ dimnames(G5pLV$maag) <- list(colnames(data5pLV), colnames(data5pLV)) # give the 
 pag_cci5pLV <- plotAG(G5pLV$maag)
 
 
+## ========================
+## Model 8-2) 5 nodes with a LV - dense
+## ========================
+# specify B matrix
+
+B5_lv_dense = matrix(c(0, 0, 0, 0, 0, 1,
+                 0.7, 0, 0.4, 0, 0, 1,
+                 0, 0, 0, 0.5, 0,0,
+                 0, 0.7, 0, 0, 1.5,0,
+                 0.6, 0, 0, 0, 0,0,
+                 0,0,0,0,0,0), 6, 6, byrow = T)
+
+colnames(B5_lv_dense) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+# specify layout
+layout5_lv = matrix(c(0,1,
+                      0,0,
+                      1,-1,
+                      2,0,
+                      2,1,
+                      -1, 0.5),6,2,byrow = T)
+
+true5p_lvdense <- qgraph(t(B5_lv_dense), layout=layout5_lv, labels = colnames(B5_lv_dense), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B5_lv_dense)
+# generate data and exclude the LV
+data5pLVdense <- gen_dat(B5_lv_dense, N =1e6, seed = 123)[,-6]
+
+
+## Estimate GGM
+ggm5pLVdense <- qgraph(cor(data5pLVdense), layout = layout5, theme="colorblind",graph = "pcor")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_5pLVdense <- ccdKP(df=data5pLVdense, dataType = "continuous", alpha = 0.05)
+mat5pLVdense <- CreateAdjMat(ccd_5pLVdense, 5)
+
+## Estimate PAG
+pag_ccd5pLVdense <- plotPAG(ccd_5pLVdense, mat5pLVdense)
+
+## Run FCI algorithm
+suffStat_5pLVdense = list()
+suffStat_5pLVdense$C = cor(data5pLVdense)
+suffStat_5pLVdense$n = 1e6
+
+res5pLVdense <- fci(suffStat_5pLVdense,indepTest=gaussCItest,
+               alpha = 0.05, doPdsep = FALSE, labels = colnames(data5pLVdense))
+
+pag_fci5pLVdense <- plotAG(res5pLVdense@amat)
+
+## Run CCI algorithm
+G5pLVdense = cci(suffStat_5pLVdense, gaussCItest, alpha=0.05, p=ncol(data5pLVdense)) 
+dimnames(G5pLVdense$maag) <- list(colnames(data5pLVdense), colnames(data5pLVdense)) # give the labels
+pag_cci5pLVdense <- plotAG(G5pLVdense$maag)
+
+
+
 
 ## ========================
-## Model 8-2) 5 nodes with a LV - sparse
+## Model 8-3) 5 nodes with a LV - sparse
 ## ========================
 # specify B matrix
 
@@ -580,7 +692,7 @@ pag_cci5pLV2 <- plotAG(G5pLV2$maag)
 
 
 ## ========================
-## Model 9) 10 nodes with a LV - sparse
+## Model 9-1) 10 nodes with a LV - sparse
 ## ========================
 # specify B matrix
 
@@ -645,6 +757,72 @@ G10pLV = cci(suffStat_10pLV, gaussCItest, alpha=0.05, p=ncol(data10pLV))
 dimnames(G10pLV$maag) <- list(colnames(data10pLV), colnames(data10pLV)) # give the labels
 pag_cci10pLV <- plotAG(G10pLV$maag)
 
+
+## ========================
+## Model 9-2) 10 nodes with a LV - dense
+## ========================
+# specify B matrix
+
+B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
+                  0, 0, 0.5, 1, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0.5, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0.3, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 11, 11, byrow = T)
+
+colnames(B10_lvdense) <- c(paste("X", 1:10, sep=""), "L1")
+
+# specify layout
+layout10LV = matrix(c(0,1,
+                      2,1,
+                      1,0,
+                      2,-1,
+                      3,0,
+                      4, -1,
+                      5, 0,
+                      6, -1,
+                      4, 1,
+                      7, 1,
+                      8, 0),11,2,byrow = T)
+
+true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV, labels = colnames(B10_lv), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B10_lvdense)
+# generate data and exclude the LV
+data10pLVdense <- gen_dat(B10_lvdense, N =1e6, seed = 123)[,-11]
+
+
+## Estimate GGM
+ggm10pLVdense <- qgraph(cor(data10pLVdense), layout = layout10LV, theme="colorblind", graph = "pcor")
+
+layout(t(1:3))
+## Run CCD algorithm
+ccd_10pLVdense <- ccdKP(df=data10pLVdense, dataType = "continuous", alpha = 0.05)
+mat10pLVdense <- CreateAdjMat(ccd_10pLVdense, 10)
+## Estimate PAG
+pag_ccd10pLVdense <- plotPAG(ccd_10pLVdense, mat10pLVdense)
+
+## Run FCI algorithm
+suffStat_10pLVdense = list()
+suffStat_10pLVdense$C = cor(data10pLVdense)
+suffStat_10pLVdense$n = 1e6
+
+res10pLVdense <- fci(suffStat_10pLVdense,indepTest=gaussCItest,
+                alpha = 0.05, doPdsep = FALSE, labels = colnames(data10pLVdense))
+
+pag_fci10pLVdense <- plotAG(res10pLVdense@amat)
+
+## Run CCI algorithm
+G10pLVdense = cci(suffStat_10pLVdense, gaussCItest, alpha=0.05, p=ncol(data10pLVdense)) 
+dimnames(G10pLVdense$maag) <- list(colnames(data10pLVdense), colnames(data10pLVdense)) # give the labels
+pag_cci10pLVdense <- plotAG(G10pLVdense$maag)
 
 
 
