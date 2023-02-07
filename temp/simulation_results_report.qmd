@@ -68,12 +68,18 @@ load("../data/cci_10psparse.RData")
 load("../data/ccd_10pdense.RData")
 load("../data/fci_10pdense.RData")
 load("../data/cci_10pdense.RData")
-load("../data/ccd_5pLV2.RData")
-load("../data/fci_5pLV2.RData")
-load("../data/cci_5pLV2.RData")
-load("../data/ccd_10pLV.RData")
-load("../data/fci_10pLV.RData")
-load("../data/cci_10pLV.RData")
+load("../data/ccd_5pLVsparse.RData")
+load("../data/fci_5pLVsparse.RData")
+load("../data/cci_5pLVsparse.RData")
+load("../data/ccd_5pLVdense.RData")
+load("../data/fci_5pLVdense.RData")
+load("../data/cci_5pLVdense.RData")
+load("../data/ccd_10pLVsparse.RData")
+load("../data/fci_10pLVsparse.RData")
+load("../data/cci_10pLVsparse.RData")
+load("../data/ccd_10pLVdense.RData")
+load("../data/fci_10pLVdense.RData")
+load("../data/cci_10pLVdense.RData")
 
 # load functions 
 source("../code/R/CCD_fnc.R")
@@ -81,6 +87,7 @@ source("../code/R/plot_fnc.R")
 source("../code/R/data_generating_fnc.R")
 source("../code/eval_metrics.R")
 source("../code/simulation_code.R")
+
 ```
 
 # Simualtion Design
@@ -269,7 +276,7 @@ plotAG(truepag_10pdense)
 title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
-## 5 nodes with a LV model
+## 5 nodes with a LV sparse model
 
 ```{r}
 #| results: hide
@@ -279,39 +286,86 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B5_lv2 = matrix(c(0, 0, 0, 0, 0, 1,
-                  0, 0, 0, 0, 0, 1,
-                  0, 0.5, 0, 0, 0.6, 0,
-                  1, 0, 0, 0, 0.5, 0,
-                  0, 0, 0, 0.5, 0,0,
-                  0,0,0,0,0,0), 6, 6, byrow = T)
+B5_lv = matrix(c(0, 0, 0, 0, 0, 1,
+                 0, 0, 0.4, 0, 0, 1,
+                 0, 0, 0, 0.5, 0,0,
+                 0, 0.7, 0, 0, 1.5,0,
+                 0, 0, 0, 0, 0,0,
+                 0,0,0,0,0,0), 6, 6, byrow = T)
 
-colnames(B5_lv2) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+colnames(B5_lv) <- c("X1", "X2", "X3", "X4", "X5", "L1")
 # specify layout
-layout5_lv2 = matrix(c(0,1,
-                       0,0,
-                       1,0.5,
-                       2,1,
-                       2,0,
-                       -1, 0.5),6,2,byrow = T)
+layout5_lv = matrix(c(0,1,
+                      0,0,
+                      1,-1,
+                      2,0,
+                      2,1,
+                      -1, 0.5),6,2,byrow = T)
 
-true5p_lv2 <- qgraph(t(B5_lv2), layout=layout5_lv2, labels = colnames(B5_lv2), theme="colorblind", vsize = 8, asize = 5)
+true5p_lv <- qgraph(t(B5_lv), layout=layout5_lv, labels = colnames(B5_lv), theme="colorblind")
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
 ## True PAG
-truepag_5pLV2 <- matrix(c(
+truepag_5pLV <- matrix(c(
   0, 2, 2, 0, 0,
   2, 0, 3, 3, 3,
   2, 3, 0, 3, 0,
   0, 3, 3, 0, 3,
   0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
-dimnames(truepag_5pLV2) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pLV2)
+
+dimnames(truepag_5pLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(truepag_5pLV)
 title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
-## 10 nodes with a LV model
+
+## 5 nodes with a LV dense model
+
+```{r}
+#| results: hide
+#| fig.align: center
+#| layout-ncol: 2
+
+
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
+                       0, 0, 0.4, 0, 0, 1,
+                       0, 0, 0, 0.5, 0,0,
+                       0, 0.7, 0, 0, 1.5,0,
+                       0.6, 0, 0, 0, 0,0,
+                       0,0,0,0,0,0), 6, 6, byrow = T)
+
+colnames(B5_lvdense) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+# specify layout
+layout5_lv = matrix(c(0,1,
+                      0,0,
+                      1,-1,
+                      2,0,
+                      2,1,
+                      -1, 0.5),6,2,byrow = T)
+
+true5p_lvdense <- qgraph(t(B5_lvdense), layout=layout5_lv, labels = colnames(B5_lvdense), theme="colorblind")
+
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+
+
+## True PAG
+truepag_5pLVdense <- matrix(c(
+  0, 2, 2, 0, 2,
+  2, 0, 3, 3, 3,
+  2, 3, 0, 3, 0,
+  0, 3, 3, 0, 3,
+  3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+
+dimnames(truepag_5pLVdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(truepag_5pLVdense)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+```
+
+
+## 10 nodes with a LV sparse model
 
 ```{r}
 #| results: hide
@@ -370,6 +424,67 @@ plotAG(truepag_10pLV)
 title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
+## 10 nodes with a LV dense model
+
+```{r}
+#| results: hide
+#| fig.align: center
+#| layout-ncol: 2
+
+
+par(oma=c(0, 0, 4, 0))
+## Specify B matrix
+B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
+                  0, 0, 0.6, 1, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0.6, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 11, 11, byrow = T)
+
+colnames(B10_lvdense) <- c(paste("X", 1:10, sep=""), "L1")
+
+# specify layout
+layout10LV = matrix(c(0,1,
+                      2,1,
+                      1,0,
+                      2,-1,
+                      3,0,
+                      4, -1,
+                      5, 0,
+                      6, -1,
+                      4, 1,
+                      7, 1,
+                      8, 0),11,2,byrow = T)
+
+true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV, labels = colnames(B10_lvdense), theme="colorblind")
+
+title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+
+
+## True PAG
+truepag_10pLVdense <- matrix(c(
+  0, 2, 2, 0, 0, 0, 0, 0, 0, 0,
+  3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
+  3, 3, 0, 2, 2, 2, 0, 0, 0, 0, 
+  0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
+  0, 0, 3, 3, 0, 3, 3, 0, 0, 0, 
+  0, 0, 3, 3, 3, 0, 3, 0, 0, 0, 
+  0, 0, 0, 0, 2, 2, 0, 3, 3, 3, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
+  0, 0, 0, 0, 0, 0, 2, 2, 2, 0), 10, 10, byrow = T)
+
+dimnames(truepag_10pLVdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(truepag_10pLVdense)
+title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+```
+
 <hr>
 
 # Simulation Result
@@ -377,7 +492,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```{r}
 ## Precision & Recall
 # compute the average precision and sd
-results <- list(res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10psparse, res_fci10psparse, res_cci10psparse, res_ccd5pdense, res_fci5pdense, res_cci5pdense, res_ccd10pdense, res_fci10pdense, res_cci10pdense, res_ccd5pLV2, res_fci5pLV2, res_cci5pLV2, res_ccd10pLV,  res_fci10pLV, res_cci10pLV) %>% 
+results <- list(res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10psparse, res_fci10psparse, res_cci10psparse, res_ccd5pdense, res_fci5pdense, res_cci5pdense, res_ccd10pdense, res_fci10pdense, res_cci10pdense, res_ccd5pLVsparse, res_fci5pLVsparse, res_cci5pLVsparse, res_ccd5pLVdense, res_fci5pLVdense, res_cci5pLVdense, res_ccd10pLVsparse, res_fci10pLVsparse, res_cci10pLVsparse, res_ccd10pdense,  res_fci10pLVdense, res_cci10pLVdense) %>% 
   # transpose df
   map(~ sjmisc::rotate_df(.x) %>%
   # add sample size (N) info
@@ -386,18 +501,19 @@ results <- list(res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10pspa
   #na.omit(.x) %>% 
   summarise(across(everything(.), list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T))))) %>% 
   bind_rows() %>% 
-  mutate(algorithm = rep(c("ccd", "fci", "cci"), 6),
-         condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", "5p_LV", "10p_LV"), each=3)) %>%
+  mutate(algorithm = rep(c("ccd", "fci", "cci"), 8),
+         condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", "5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense"), each=3)) %>%
   # brings the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric)) %>% 
-  # convert itto a long format
+  # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition), names_to = "metric", values_to = "value") %>% 
-  # Add sample size column (N) & clean up the column name
+  # Add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(metric, "(?<=[N =])\\d+"),
          metric = stringr::str_replace_all(metric, "[0-9.]+|[N =]", "")) 
 
 ## Uncertainty
-uncertainties <- bind_rows("ccd_5p-sparse" = uncer_ccd5psparse, "fci_5p-sparse" = uncer_fci5psparse, "cci_5p-sparse"=uncer_cci5psparse, "ccd_10p-sparse"=uncer_ccd10psparse, "fci_10p-sparse" = uncer_fci10psparse, "cci_10p-sparse" = uncer_cci10psparse, "ccd_5p-dense"=uncer_ccd5pdense, "fci_5p-dense"=uncer_fci5pdense, "cci_5p-dense"=uncer_cci5pdense, "ccd_10p-dense"=uncer_ccd10pdense, "fci_10p-dense"=uncer_fci10pdense, "cci_10p-dense"=uncer_cci10pdense, "ccd_5p-LV"=uncer_ccd5pLV2, "fci_5p-LV"=uncer_fci5pLV2, "cci_5p-LV"=uncer_cci5pLV2, "ccd_10p-LV"=uncer_ccd10pLV, "fci_10p-LV"=uncer_fci10pLV, "cci_10p-LV"=uncer_cci10pLV, .id="id") %>% 
+uncertainties <- bind_rows("ccd_5p-sparse" = uncer_ccd5psparse, "fci_5p-sparse" = uncer_fci5psparse, "cci_5p-sparse"=uncer_cci5psparse, "ccd_10p-sparse"=uncer_ccd10psparse, "fci_10p-sparse" = uncer_fci10psparse, "cci_10p-sparse" = uncer_cci10psparse, "ccd_5p-dense"=uncer_ccd5pdense, "fci_5p-dense"=uncer_fci5pdense, "cci_5p-dense"=uncer_cci5pdense, "ccd_10p-dense"=uncer_ccd10pdense, "fci_10p-dense"=uncer_fci10pdense, "cci_10p-dense"=uncer_cci10pdense, "ccd_5p-LVsparse"=uncer_ccd5pLVsparse, "fci_5p-LVsparse"=uncer_fci5pLVsparse, "cci_5p-LVsparse"=uncer_cci5pLVsparse, "ccd_10p-LVsparse"=uncer_ccd10pLVsparse, "fci_10p-LVsparse"=uncer_fci10pLVsparse, "cci_10p-LVsparse"=uncer_cci10pLVsparse,
+"ccd_5p-LVdense"=uncer_ccd5pLVdense, "fci_5p-LVdense"=uncer_fci5pLVdense, "cci_5p-LVdense"=uncer_cci5pLVdense, "ccd_10p-LVdense"=uncer_ccd10pLVdense, "fci_10p-LVdense"=uncer_fci10pLVdense, "cci_10p-LVdense"=uncer_cci10pLVdense,.id="id") %>% 
   group_by(id) %>% 
   summarise_all(list(mean = mean, sd = sd)) %>%  
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
@@ -410,7 +526,8 @@ uncertainties <- bind_rows("ccd_5p-sparse" = uncer_ccd5psparse, "fci_5p-sparse" 
 
 
 ## SHD
-SHDs <- bind_rows("ccd_5p-sparse" = SHD_ccd5psparse, "fci_5p-sparse" = SHD_fci5psparse, "cci_5p-sparse"=SHD_cci5psparse, "ccd_10p-sparse"= SHD_ccd10psparse, "fci_10p-sparse" = SHD_fci10psparse, "cci_10p-sparse" = SHD_cci10psparse, "ccd_5p-dense"= SHD_ccd5pdense, "fci_5p-dense"=SHD_fci5pdense, "cci_5p-dense"=SHD_cci5pdense, "ccd_10p-dense"= SHD_ccd10pdense, "fci_10p-dense"=SHD_fci10pdense, "cci_10p-dense"=SHD_cci10pdense, "ccd_5p-LV"=SHD_ccd5pLV2, "fci_5p-LV"=SHD_fci5pLV2, "cci_5p-LV"=SHD_cci5pLV2, "ccd_10p-LV"=SHD_ccd10pLV, "fci_10p-LV"=SHD_fci10pLV, "cci_10p-LV"=SHD_cci10pLV, .id="id") %>% 
+SHDs <- bind_rows("ccd_5p-sparse" = SHD_ccd5psparse, "fci_5p-sparse" = SHD_fci5psparse, "cci_5p-sparse"=SHD_cci5psparse, "ccd_10p-sparse"= SHD_ccd10psparse, "fci_10p-sparse" = SHD_fci10psparse, "cci_10p-sparse" = SHD_cci10psparse, "ccd_5p-dense"= SHD_ccd5pdense, "fci_5p-dense"=SHD_fci5pdense, "cci_5p-dense"=SHD_cci5pdense, "ccd_10p-dense"= SHD_ccd10pdense, "fci_10p-dense"=SHD_fci10pdense, "cci_10p-dense"=SHD_cci10pdense, "ccd_5p-LVsparse"=SHD_ccd5pLVsparse, "fci_5p-LVsparse"=SHD_fci5pLVsparse, "cci_5p-LVsparse"=SHD_cci5pLVsparse, "ccd_10p-LVsparse"=SHD_ccd10pLVsparse, "fci_10p-LVsparse"=SHD_fci10pLVsparse, "cci_10p-LVsparse"=SHD_cci10pLVsparse, 
+"ccd_5p-LVdense"=SHD_ccd5pLVdense, "fci_5p-LVdense"=SHD_fci5pLVdense, "cci_5p-LVdense"=SHD_cci5pLVdense, "ccd_10p-LVdense"=SHD_ccd10pLVdense, "fci_10p-LVdense"=SHD_fci10pLVdense, "cci_10p-LVdense"=SHD_cci10pLVdense, .id="id") %>% 
   group_by(id) %>% 
   summarise_all(list(mean = mean, sd = sd)) %>%  
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
@@ -494,17 +611,18 @@ uncertainties %>%
   theme_classic() + MyTheme
 )
 
+
 ## ========================
-## SHD plots
+## SHD plots 
 ## ========================
 SHD_plots <- c(unique(SHDs$condition)) %>% 
-  map(~
+  map(~ 
 SHDs %>%
   filter(condition == .x) %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=mean, group = algorithm, colour = algorithm, fill = algorithm)) +
   geom_line(aes(group = algorithm)) +
-  geom_point() +
+  geom_point() + 
   #geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), width=0.1) +
   geom_ribbon(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), alpha=0.2,lwd=0) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -513,22 +631,27 @@ SHDs %>%
   theme_classic() + MyTheme
 )
 
+
+SHDs |> 
+  filter(condition == "10p-LVdense") |>
+  tidyr::pivot_wider(names_from = statistics, values_from = value)
+
 # combine plots
 # precision plot
 ggarrange(plotlist = precision_plots,
-                    ncol = 2, nrow = 3, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 2, nrow = 4, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Precision", face = "bold", size = 14, family = "Palatino"))
 # recall plot
 ggarrange(plotlist = recall_plots,
-                    ncol = 2, nrow = 3, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 2, nrow = 4, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Recall", face = "bold", size = 14, family = "Palatino"))
 # uncertainty plot
 ggarrange(plotlist = uncertainty_plots,
-                    ncol = 2, nrow = 3, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 2, nrow = 4, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Uncertainty", face = "bold", size = 14, family = "Palatino"))
 # shd plot
 ggarrange(plotlist = SHD_plots,
-                    ncol = 2, nrow = 3, common.legend = TRUE, legend = "bottom") %>% 
+                    ncol = 2, nrow = 4, common.legend = TRUE, legend = "bottom") %>% 
 annotate_figure(top = text_grob("SHD", face = "bold", size = 14, family = "Palatino"))
 ```
 
@@ -616,7 +739,7 @@ p5 <- results %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p_LV", "10p_LV")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p_LVsparse", "10p_LVsparse", "5p_LVdense", "10p_LVdense")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
@@ -631,7 +754,7 @@ p6 <- results %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p_LV", "10p_LV")), y=average_recall_mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p_LVsparse", "10p_LVsparse", "5p_LVdense", "10p_LVdense")), y=average_recall_mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
@@ -646,7 +769,7 @@ p7 <- uncertainties %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p-LV", "10p-LV")), y=mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p-LVsparse", "10p-LVsparse", "5p-LVdense", "10p-LVdense")), y=mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
@@ -661,7 +784,7 @@ p8 <- SHDs %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p-LV", "10p-LV")), y=mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p-LVsparse", "10p-LVsparse", "5p-LVdense", "10p-LVdense")), y=mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
@@ -684,13 +807,14 @@ ggarrange(p1, p5, p2, p6, p3, p7, p4, p8,
 #| fig.align: center
 
 ## plot the results
+
 times %>%
-  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLV", "10pLV")), y = log(time), col= factor(algorithm))) +
+  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLVsparse","5pLVdense", "10pLVsparse","10pLVdense")), y = log(time), col= factor(algorithm))) +
   geom_boxplot(position = "dodge",   outlier.size = 0.8, outlier.alpha = 0.2) + theme_classic() +
   # scale_x_discrete(name ="Condition",
   #                  labels=c("", "5p-sparse", "", "","5p-dense","","", "10p-sparse","","","10p-dense","","","5p-LV","","","10p-LV","")) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  labs(y = " log(ms)", x = "", title = "Algorithm Running Time", subtitle = "Time in milliseconds (ms)") +
+  labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", subtitle = "Time in milliseconds (ms)") +
   theme(axis.text.x = element_text(face = "bold", margin = margin(t = 13), size=10),
         legend.position="bottom",
         legend.text = element_text(face = "bold"))

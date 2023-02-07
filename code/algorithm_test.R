@@ -581,7 +581,7 @@ pag_cci5pLV <- plotAG(G5pLV$maag)
 # specify B matrix
 
 B5_lv_dense = matrix(c(0, 0, 0, 0, 0, 1,
-                 0.7, 0, 0.4, 0, 0, 1,
+                 0, 0, 0.4, 0, 0, 1,
                  0, 0, 0, 0.5, 0,0,
                  0, 0.7, 0, 0, 1.5,0,
                  0.6, 0, 0, 0, 0,0,

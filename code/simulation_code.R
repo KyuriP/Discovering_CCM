@@ -9,6 +9,7 @@ library(purrr)
 library(furrr)
 library(dplyr)
 library(qgraph)
+library(ggplot2)
 
 ## slightly modified CCI package
 #install_github("KyuriP/CCI_KP")
@@ -659,36 +660,54 @@ colMeans(SHD_cci10pdense)
 
 
 ## ====================
-## 5p with LV 
+## 5p with LV sparse
 ## ====================
 # specify B matrix
 
-B5_lv2 = matrix(c(0, 0, 0, 0, 0, 1,
-                  0, 0, 0, 0, 0, 1,
-                  0, 0.5, 0, 0, 0.6, 0,
-                  1, 0, 0, 0, 0.5, 0,
-                  0, 0, 0, 0.5, 0,0,
-                  0,0,0,0,0,0), 6, 6, byrow = T)
+B5_lvsparse = matrix(c(0, 0, 0, 0, 0, 1,
+                 0, 0, 0.4, 0, 0, 1,
+                 0, 0, 0, 0.5, 0,0,
+                 0, 0.7, 0, 0, 1.5,0,
+                 0, 0, 0, 0, 0,0,
+                 0,0,0,0,0,0), 6, 6, byrow = T)
 
-colnames(B5_lv2) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+colnames(B5_lvsparse) <- c("X1", "X2", "X3", "X4", "X5", "L1")
 # specify layout
-layout5_lv2 = matrix(c(0,1,
-                       0,0,
-                       1,0.5,
-                       2,1,
-                       2,0,
-                       -1, 0.5),6,2,byrow = T)
+layout5_lv = matrix(c(0,1,
+                      0,0,
+                      1,-1,
+                      2,0,
+                      2,1,
+                      -1, 0.5),6,2,byrow = T)
 
-true5p_lv2 <- qgraph(t(B5_lv2), layout=layout5_lv2, labels = colnames(B5_lv2), theme="colorblind")
+true5p_lvsparse <- qgraph(t(B5_lvsparse), layout=layout5_lv, labels = colnames(B5_lvsparse), theme="colorblind")
+ 
+# B5_lv2 = matrix(c(0, 0, 0, 0, 0, 1,
+#                   0, 0, 0, 0, 0, 1,
+#                   0, 0.5, 0, 0, 0.6, 0,
+#                   1, 0, 0, 0, 0.5, 0,
+#                   0, 0, 0, 0.5, 0,0,
+#                   0,0,0,0,0,0), 6, 6, byrow = T)
+# 
+# colnames(B5_lv2) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+# # specify layout
+# layout5_lv2 = matrix(c(0,1,
+#                        0,0,
+#                        1,0.5,
+#                        2,1,
+#                        2,0,
+#                        -1, 0.5),6,2,byrow = T)
+# 
+# true5p_lv2 <- qgraph(t(B5_lv2), layout=layout5_lv2, labels = colnames(B5_lv2), theme="colorblind")
 
 ## Data generating
 # equilibrium check
-equilibrium_check(B5_lv2)
+equilibrium_check(B5_lvsparse)
 
 # generate data (sample size as specified above)
-simdata_5pLV2 <- N %>% future_map(function(z) {
+simdata_5pLVsparse <- N %>% future_map(function(z) {
   replicate(n=1000,
-            expr = gen_dat(B5_lv2, N = z)[,-6],  
+            expr = gen_dat(B5_lvsparse, N = z)[,-6],  
             simplify = FALSE)
 }, .options = furrr_options(seed=123))
 
@@ -698,47 +717,48 @@ simdata_5pLV2 <- N %>% future_map(function(z) {
 
 
 ## True PAG
-truepag_5pLV2 <- matrix(c(
+truepag_5pLVsparse <- matrix(c(
   0, 2, 2, 0, 0,
   2, 0, 3, 3, 3,
   2, 3, 0, 3, 0,
   0, 3, 3, 0, 3,
   0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
-dimnames(truepag_5pLV2) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pLV2)
+
+dimnames(truepag_5pLVsparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(truepag_5pLVsparse)
 
 
 ## Run CCD algorithm
-# ccd_5pLV2 <- simdata_5pLV2  %>% 
+# ccd_5pLVsparse <- simdata_5pLVsparse  %>%
 #   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-#   ) 
-mat_5pLV2  <- ccd_5pLV2  %>% 
+#   )
+mat_5pLVsparse  <- ccd_5pLVsparse  %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
-# save(ccd_5pLV2, file="data/ccd_5pLV2.RData")
-# load("data/ccd_5pLV2.RData")
+# save(ccd_5pLVsparse, file="data/ccd_5pLVsparse.RData")
+# load("data/ccd_5pLV.RData")
 
 # pag_ccd5pLV2  <- map2(ccd_5pLV2 , mat_5pLV2 , plotPAG)
 
 
 ## Run FCI algorithm
-# fci_5pLV2 <- simdata_5pLV2  %>% 
+# fci_5pLVsparse <- simdata_5pLVsparse  %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
 #            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 
-# save(fci_5pLV2, file="data/fci_5pLV2.RData")
+# save(fci_5pLVsparse, file="data/fci_5pLVsparse.RData")
 # load("data/fci_5pLV2.RData")
 
 # pag_fci5pLV2 <- fci_5pLV2  %>% 
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-# cci_5pLV2  <- simdata_5pLV2 %>% 
+# cci_5pLVsparse  <- simdata_5pLVsparse %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
-
-# save(cci_5pLV2, file="data/cci_5pLV2.RData")
+# 
+# save(cci_5pLVsparse, file="data/cci_5pLVsparse.RData")
 # load("data/cci_5pLV2.RData")
 
 # pag_cci5pLV2  <- cci_5pLV2  %>% 
@@ -748,76 +768,229 @@ mat_5pLV2  <- ccd_5pLV2  %>%
 
 ## evaluation
 # CCD
-res_ccd5pLV2  <- mat_5pLV2  %>% 
-  map_depth(2, ~precision_recall(truepag_5pLV2, .x)) %>% 
+res_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
+  map_depth(2, ~precision_recall(truepag_5pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
-uncer_ccd5pLV2  <- mat_5pLV2  %>% 
+uncer_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average uncertainty
-colMeans(uncer_ccd5pLV2 , na.rm=T)
+colMeans(uncer_ccd5pLVsparse , na.rm=T)
 
 # SHD
-SHD_ccd5pLV2 <- mat_5pLV2 %>% 
-  map_depth(2, ~SHD(truepag_5pLV2, .x)) %>% 
+SHD_ccd5pLVsparse <- mat_5pLVsparse %>% 
+  map_depth(2, ~SHD(truepag_5pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
-colMeans(SHD_ccd5pLV2)
+colMeans(SHD_ccd5pLVsparse)
 
 # FCI
-res_fci5pLV2  <- fci_5pLV2  %>% 
-  map_depth(2, ~precision_recall(truepag_5pLV2, .x)) %>% 
+res_fci5pLVsparse  <- fci_5pLVsparse  %>% 
+  map_depth(2, ~precision_recall(truepag_5pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
-uncer_fci5pLV2 <- fci_5pLV2 %>% 
+uncer_fci5pLVsparse <- fci_5pLVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average uncertainty
-colMeans(uncer_fci5pLV2, na.rm=T)
+colMeans(uncer_fci5pLVsparse, na.rm=T)
 
 # SHD
-SHD_fci5pLV2 <- fci_5pLV2 %>% 
-  map_depth(2, ~SHD(truepag_5pLV2, .x)) %>% 
+SHD_fci5pLVsparse <- fci_5pLVsparse %>% 
+  map_depth(2, ~SHD(truepag_5pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
-colMeans(SHD_fci5pLV2)
+colMeans(SHD_fci5pLVsparse)
 
 # CCI
-res_cci5pLV2 <- cci_5pLV2 %>% 
-  map_depth(2, ~precision_recall(truepag_5pLV2, .x)) %>% 
+res_cci5pLVsparse <- cci_5pLVsparse %>% 
+  map_depth(2, ~precision_recall(truepag_5pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
-uncer_cci5pLV2 <- cci_5pLV2 %>% 
+uncer_cci5pLVsparse <- cci_5pLVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average unceratinty
-colMeans(uncer_cci5pLV2, na.rm=T)
+colMeans(uncer_cci5pLVsparse, na.rm=T)
 
 # SHD
-SHD_cci5pLV2 <- cci_5pLV2 %>% 
-  map_depth(2, ~SHD(truepag_5pLV2, .x)) %>% 
+SHD_cci5pLVsparse <- cci_5pLVsparse %>% 
+  map_depth(2, ~SHD(truepag_5pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
-colMeans(SHD_cci5pLV2)
-
+colMeans(SHD_cci5pLVsparse)
 
 
 ## ====================
-## 10p with LV
+## 5p with LV dense
 ## ====================
 # specify B matrix
 
-B10_lv = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
+                       0, 0, 0.4, 0, 0, 1,
+                       0, 0, 0, 0.5, 0,0,
+                       0, 0.7, 0, 0, 1.5,0,
+                       0.6, 0, 0, 0, 0,0,
+                       0,0,0,0,0,0), 6, 6, byrow = T)
+
+colnames(B5_lvdense) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+# specify layout
+layout5_lv = matrix(c(0,1,
+                      0,0,
+                      1,-1,
+                      2,0,
+                      2,1,
+                      -1, 0.5),6,2,byrow = T)
+
+true5p_lvdense <- qgraph(t(B5_lvdense), layout=layout5_lv, labels = colnames(B5_lvdense), theme="colorblind")
+
+
+## Data generating
+# equilibrium check
+equilibrium_check(B5_lvdense)
+
+# generate data (sample size as specified above)
+simdata_5pLVdense <- N %>% future_map(function(z) {
+  replicate(n=1000,
+            expr = gen_dat(B5_lvdense, N = z)[,-6],  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
+
+
+
+
+## True PAG
+truepag_5pLVdense <- matrix(c(
+  0, 2, 2, 0, 2,
+  2, 0, 3, 3, 3,
+  2, 3, 0, 3, 0,
+  0, 3, 3, 0, 3,
+  3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+
+dimnames(truepag_5pLVdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(truepag_5pLVdense)
+
+
+## Run CCD algorithm
+# ccd_5pLVdense <- simdata_5pLVdense  %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   )
+mat_5pLVdense  <- ccd_5pLVdense  %>% 
+  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+
+# save(ccd_5pLVdense, file="data/ccd_5pLVdense.RData")
+# load("data/ccd_5pLV.RData")
+
+# pag_ccd5pLV2  <- map2(ccd_5pLV2 , mat_5pLV2 , plotPAG)
+
+
+## Run FCI algorithm
+# fci_5pLVdense <- simdata_5pLVdense  %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#                     alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
+# 
+# save(fci_5pLVdense, file="data/fci_5pLVdense.RData")
+# load("data/fci_5pLV2.RData")
+
+# pag_fci5pLVdense <- fci_5pLVdense  %>%
+#   map_depth(2, ~plotAG(.x))
+
+## Run CCI algorithm
+# cci_5pLVdense  <- simdata_5pLVdense %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
+# 
+# save(cci_5pLVdense, file="data/cci_5pLVdense.RData")
+# load("data/cci_5pLV2.RData")
+
+# pag_cci5pLV2  <- cci_5pLV2  %>% 
+#   map(~plotAG(.x))
+
+
+
+## evaluation
+# CCD
+res_ccd5pLVdense  <- mat_5pLVdense  %>% 
+  map_depth(2, ~precision_recall(truepag_5pLVdense, .x)) %>% 
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+
+# UNCERTAINTY
+uncer_ccd5pLVdense  <- mat_5pLVdense  %>% 
+  map_depth(2, ~uncertainty(.x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average uncertainty
+colMeans(uncer_ccd5pLVdense , na.rm=T)
+
+# SHD
+SHD_ccd5pLVdense <- mat_5pLVdense %>% 
+  map_depth(2, ~SHD(truepag_5pLVdense, .x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average SHD
+colMeans(SHD_ccd5pLVdense)
+
+# FCI
+res_fci5pLVdense  <- fci_5pLVdense  %>% 
+  map_depth(2, ~precision_recall(truepag_5pLVdense, .x)) %>% 
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+
+# UNCERTAINTY
+uncer_fci5pLVdense <- fci_5pLVdense  %>% 
+  map_depth(2, ~uncertainty(.x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average uncertainty
+colMeans(uncer_fci5pLVdense , na.rm=T)
+
+# SHD
+SHD_fci5pLVdense  <- fci_5pLVdense  %>% 
+  map_depth(2, ~SHD(truepag_5pLVdense , .x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average SHD
+colMeans(SHD_fci5pLVdense )
+
+# CCI
+res_cci5pLVdense  <- cci_5pLVdense  %>% 
+  map_depth(2, ~precision_recall(truepag_5pLVdense , .x)) %>% 
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+
+# UNCERTAINTY
+uncer_cci5pLVdense  <- cci_5pLVdense  %>% 
+  map_depth(2, ~uncertainty(.x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average unceratinty
+colMeans(uncer_cci5pLVdense , na.rm=T)
+
+# SHD
+SHD_cci5pLVdense  <- cci_5pLVdense  %>% 
+  map_depth(2, ~SHD(truepag_5pLVdense , .x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average SHD
+colMeans(SHD_cci5pLVdense )
+
+
+
+## ====================
+## 10p with LV sparse
+## ====================
+# specify B matrix
+
+B10_lvsparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
@@ -829,7 +1002,7 @@ B10_lv = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 11, 11, byrow = T)
 
-colnames(B10_lv) <- c(paste("X", 1:10, sep=""), "L1")
+colnames(B10_lvsparse) <- c(paste("X", 1:10, sep=""), "L1")
 
 # specify layout
 layout10LV = matrix(c(0,1,
@@ -844,16 +1017,16 @@ layout10LV = matrix(c(0,1,
                       7, 1,
                       8, 0),11,2,byrow = T)
 
-true10pLV <- qgraph(t(B10_lv), layout = layout10LV, labels = colnames(B10_lv), theme="colorblind")
+true10pLVsparse <- qgraph(t(B10_lvsparse), layout = layout10LV, labels = colnames(B10_lvsparse), theme="colorblind")
 
 ## Data generating
 # equilibrium check
-equilibrium_check(B10_lv)
+equilibrium_check(B10_lvsparse)
 
 # generate data (sample size as specified above)
-simdata_10pLV <- N %>% future_map(function(z) {
+simdata_10pLVsparse <- N %>% future_map(function(z) {
   replicate(n=1000,
-            expr = gen_dat(B10_lv, N = z)[,-11],  
+            expr = gen_dat(B10_lvsparse, N = z)[,-11],  
             simplify = FALSE)
 }, .options = furrr_options(seed=123))
 
@@ -866,7 +1039,7 @@ simdata_10pLV <- N %>% future_map(function(z) {
 # layout(t(1:3))
 
 ## True PAG
-truepag_10pLV <- matrix(c(
+truepag_10pLVsparse <- matrix(c(
   0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
   3, 3, 0, 2, 0, 2, 0, 0, 0, 0, 
@@ -878,41 +1051,41 @@ truepag_10pLV <- matrix(c(
   0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
   0, 0, 0, 0, 0, 0, 0, 2, 2, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10pLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10pLV)
+dimnames(truepag_10pLVsparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(truepag_10pLVsparse)
 
 
 ## Run CCD algorithm
-# ccd_10pLV  <- simdata_10pLV   %>% 
+# ccd_10pLVsparse  <- simdata_10pLVsparse   %>%
 #   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-#   ) 
-mat_10pLV   <- ccd_10pLV %>% 
+#   )
+mat_10pLVsparse   <- ccd_10pLVsparse %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
-# save(ccd_10pLV, file="data/ccd_10pLV.RData")
+# save(ccd_10pLVsparse, file="data/ccd_10pLVsparse.RData")
 # load("data/ccd_10pLV.RData")
 
 # pag_ccd10pLV <- map2(ccd_10pLV, mat_10pLV  , plotPAG)
 
 
 ## Run FCI algorithm
-# fci_10pLV  <- simdata_10pLV   %>% 
+# fci_10pLVsparse  <- simdata_10pLVsparse   %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
 #            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 
-# save(fci_10pLV, file="data/fci_10pLV.RData")
+# save(fci_10pLVsparse, file="data/fci_10pLVsparse.RData")
 # load("data/fci_10pLV.RData")
 
 # pag_fci10pLV  <- fci_10pLV   %>% 
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
-# cci_10pLV  <- simdata_10pLV  %>% 
+# cci_10pLVsparse  <- simdata_10pLVsparse %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
 
-# save(cci_10pLV, file="data/cci_10pLV.RData")
+# save(cci_10pLVsparse, file="data/cci_10pLVsparse.RData")
 # load("data/cci_10pLV.RData")
 
 # pag_cci10pLV   <- cci_10pLV %>% 
@@ -922,67 +1095,240 @@ mat_10pLV   <- ccd_10pLV %>%
 
 ## evaluation
 # CCD
-res_ccd10pLV   <- mat_10pLV  %>% 
-  map_depth(2, ~precision_recall(truepag_10pLV, .x)) %>% 
+res_ccd10pLVsparse   <- mat_10pLVsparse  %>% 
+  map_depth(2, ~precision_recall(truepag_10pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
-uncer_ccd10pLV  <- mat_10pLV  %>% 
+uncer_ccd10pLVsparse  <- mat_10pLVsparse  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average uncertainty
-colMeans(uncer_ccd10pLV , na.rm=T)
+colMeans(uncer_ccd10pLVsparse , na.rm=T)
 
 # SHD
-SHD_ccd10pLV <- mat_10pLV %>% 
-  map_depth(2, ~SHD(truepag_10pLV, .x)) %>% 
+SHD_ccd10pLVsparse <- mat_10pLVsparse %>% 
+  map_depth(2, ~SHD(truepag_10pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
-colMeans(SHD_ccd10pLV)
+colMeans(SHD_ccd10pLVsparse)
 
 # FCI
-res_fci10pLV <- fci_10pLV  %>% 
-  map_depth(2, ~precision_recall(truepag_10pLV, .x)) %>% 
+res_fci10pLVsparse <- fci_10pLVsparse  %>% 
+  map_depth(2, ~precision_recall(truepag_10pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
-uncer_fci10pLV <- fci_10pLV %>% 
+uncer_fci10pLVsparse <- fci_10pLVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average uncertainty
-colMeans(uncer_fci10pLV, na.rm=T)
+colMeans(uncer_fci10pLVsparse, na.rm=T)
+
 
 # SHD
-SHD_fci10pLV <- fci_10pLV %>% 
-  map_depth(2, ~SHD(truepag_10pLV, .x)) %>% 
+SHD_fci10pLVsparse <- fci_10pLVsparse %>% 
+  map_depth(2, ~SHD(truepag_10pLVsparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
-colMeans(SHD_fci10pLV)
+colMeans(SHD_fci10pLVsparse)
+
+
+# CCI 
+res_cci10pLVsparse <- cci_10pLVsparse %>% 
+  map_depth(2, ~precision_recall(truepag_10pLVsparse, .x)) %>% 
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+
+
+# UNCERTAINTY
+uncer_cci10pLVsparse <- cci_10pLVsparse %>% 
+  map_depth(2, ~uncertainty(.x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average uncertainty
+colMeans(uncer_cci10pLVsparse, na.rm=T)
+
+# SHD
+SHD_cci10pLVsparse <- cci_10pLVsparse %>% 
+  map_depth(2, ~SHD(truepag_10pLVsparse, .x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average SHD
+colMeans(SHD_cci10pLVsparse)
+
+
+
+
+## ====================
+## 10p with LV dense
+## ====================
+# specify B matrix
+
+B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
+                  0, 0, 0.6, 1, 0, 0, 0, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 0,
+                  0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0.6, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 0,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2,
+                  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 11, 11, byrow = T)
+
+colnames(B10_lvdense) <- c(paste("X", 1:10, sep=""), "L1")
+
+# specify layout
+layout10LV = matrix(c(0, 1,
+                      2, 1,
+                      1, 0,
+                      2, -1,
+                      3, 0,
+                      4, -1,
+                      5, 0,
+                      6, -1,
+                      4, 1,
+                      7, 1,
+                      8, 0), 11, 2, byrow = T)
+
+true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV, labels = colnames(B10_lvdense), theme="colorblind")
+
+## Data generating
+# equilibrium check
+equilibrium_check(B10_lvdense)
+
+# generate data (sample size as specified above)
+simdata_10pLVdense <- N %>% future_map(function(z) {
+  replicate(n=1000,
+            expr = gen_dat(B10_lvdense, N = z)[,-11],  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
+
+
+
+## True PAG
+truepag_10pLVdense <- matrix(c(
+  0, 2, 2, 0, 0, 0, 0, 0, 0, 0,
+  3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
+  3, 3, 0, 2, 2, 2, 0, 0, 0, 0, 
+  0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
+  0, 0, 3, 3, 0, 3, 3, 0, 0, 0, 
+  0, 0, 3, 3, 3, 0, 3, 0, 0, 0, 
+  0, 0, 0, 0, 2, 2, 0, 3, 3, 3, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
+  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
+  0, 0, 0, 0, 0, 0, 2, 2, 2, 0), 10, 10, byrow = T)
+
+dimnames(truepag_10pLVdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(truepag_10pLVdense)
+
+
+## Run CCD algorithm
+# ccd_10pLVdense  <- simdata_10pLVdense   %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   )
+mat_10pLVdense   <- ccd_10pLVdense %>% 
+  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+
+# save(ccd_10pLVdense, file="data/ccd_10pLVdense.RData")
+# load("data/ccd_10pLV.RData")
+
+# pag_ccd10pLV <- map2(ccd_10pLV, mat_10pLV  , plotPAG)
+
+
+## Run FCI algorithm
+# fci_10pLVdense  <- simdata_10pLVdense   %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
+
+# save(fci_10pLVdense, file="data/fci_10pLVdense.RData")
+# load("data/fci_10pLV.RData")
+
+# pag_fci10pLV  <- fci_10pLV   %>% 
+#   map(~plotAG(.x))
+
+## Run CCI algorithm
+# cci_10pLVdense  <- simdata_10pLVdense  %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=0.05, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
+
+# save(cci_10pLVdense, file="data/cci_10pLVdense.RData")
+# load("data/cci_10pLV.RData")
+
+# pag_cci10pLV   <- cci_10pLV %>% 
+#   map(~plotAG(.x))
+
+
+
+## evaluation
+# CCD
+res_ccd10pLVdense   <- mat_10pLVdense  %>% 
+  map_depth(2, ~precision_recall(truepag_10pLVdense, .x)) %>% 
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+
+# UNCERTAINTY
+uncer_ccd10pLVdense  <- mat_10pLVdense %>% 
+  map_depth(2, ~uncertainty(.x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average uncertainty
+colMeans(uncer_ccd10pLVdense , na.rm=T)
+
+# SHD
+SHD_ccd10pLVdense <- mat_10pLVdense %>% 
+  map_depth(2, ~SHD(truepag_10pLVdense, .x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N)) 
+# average SHD
+colMeans(SHD_ccd10pLVdense)
+
+# FCI
+res_fci10pLVdense <- fci_10pLVdense  %>% 
+  map_depth(2, ~precision_recall(truepag_10pLVdense, .x)) %>% 
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+
+# UNCERTAINTY
+uncer_fci10pLVdense <- fci_10pLVdense %>% 
+  map_depth(2, ~uncertainty(.x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average uncertainty
+colMeans(uncer_fci10pLVdense, na.rm=T)
+
+# SHD
+SHD_fci10pLVdense <- fci_10pLVdense %>% 
+  map_depth(2, ~SHD(truepag_10pLVdense, .x)) %>% 
+  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
+  as.data.frame %>% rename_with(~ paste0("N = ", N))
+# average SHD
+colMeans(SHD_fci10pLVdense)
 
 # CCI
-res_cci10pLV <- cci_10pLV %>% 
-  map_depth(2, ~precision_recall(truepag_10pLV, .x)) %>% 
+res_cci10pLVdense <- cci_10pLVdense %>% 
+  map_depth(2, ~precision_recall(truepag_10pLVdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
-uncer_cci10pLV <- cci_10pLV %>% 
+uncer_cci10pLVdense <- cci_10pLVdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average uncertainty
-colMeans(uncer_cci10pLV, na.rm=T)
+colMeans(uncer_cci10pLVdense, na.rm=T)
+
 
 # SHD
-SHD_cci10pLV<- cci_10pLV %>% 
-  map_depth(2, ~SHD(truepag_10pLV, .x)) %>% 
+SHD_cci10pLVdense <- cci_10pLVdense %>% 
+  map_depth(2, ~SHD(truepag_10pLVdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
-colMeans(SHD_cci10pLV)
+colMeans(SHD_cci10pLVdense)
 
 
 ##################
@@ -1009,15 +1355,26 @@ times <- microbenchmark(
   fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pdense[[1]][[1]])),
   cci_10pdense = cci(list(C = cor(simdata_10pdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pdense[[1]][[1]])),
 
-  ccd_5pLV = ccdKP(df=simdata_5pLV2[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_5pLV = fci(list(C = cor(simdata_5pLV2[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
-                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLV2[[1]][[1]])),
-  cci_5pLV = cci(list(C = cor(simdata_5pLV2[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLV2[[1]][[1]])),
+  ccd_5pLVsparse = ccdKP(df=simdata_5pLVsparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_5pLVsparse = fci(list(C = cor(simdata_5pLVsparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
+                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLVsparse[[1]][[1]])),
+  cci_5pLVsparse = cci(list(C = cor(simdata_5pLVsparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLVsparse[[1]][[1]])),
 
-  ccd_10pLV = ccdKP(df=simdata_10pLV[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_10pLV = fci(list(C = cor(simdata_10pLV[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
-                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLV[[1]][[1]])),
-  cci_10pLV = cci(list(C = cor(simdata_10pLV[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLV[[1]][[1]]))
+  ccd_5pLVdense = ccdKP(df=simdata_5pLVdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_5pLVdense = fci(list(C = cor(simdata_5pLVdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
+                       alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLVdense[[1]][[1]])),
+  cci_5pLVdense = cci(list(C = cor(simdata_5pLVdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLVdense[[1]][[1]])),
+  
+  ccd_10pLVsparse = ccdKP(df=simdata_10pLVsparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_10pLVsparse = fci(list(C = cor(simdata_10pLVsparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
+                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLVsparse[[1]][[1]])),
+  cci_10pLVsparse = cci(list(C = cor(simdata_10pLVsparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLVsparse[[1]][[1]])),
+  
+  ccd_10pLVdense = ccdKP(df=simdata_10pLVdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
+  fci_10pLVdense = fci(list(C = cor(simdata_10pLVdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
+                        alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLVdense[[1]][[1]])),
+  cci_10pLVdense = cci(list(C = cor(simdata_10pLVdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLVdense[[1]][[1]]))
+  
 )
 
 
@@ -1027,7 +1384,7 @@ times <- times %>%
 
 ## plot the results
 times %>%
-  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLV", "10pLV")), y = log(time), col= factor(algorithm))) +
+  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLVsparse","5pLVdense", "10pLVsparse","10pLVdense")), y = log(time), col= factor(algorithm))) +
   geom_boxplot(position = "dodge",   outlier.size = 0.8, outlier.alpha = 0.2) + theme_classic() +
   # scale_x_discrete(name ="Condition",
   #                  labels=c("", "5p-sparse", "", "","5p-dense","","", "10p-sparse","","","10p-dense","","","5p-LV","","","10p-LV","")) +
