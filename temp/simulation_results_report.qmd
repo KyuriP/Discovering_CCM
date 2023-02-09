@@ -829,7 +829,7 @@ times %>%
         legend.text = element_text(family =  "Palatino"))
 
 # save the figure
-ggsave("figure/timeplots.pdf", width = 11, height=4, units = "in")
+# ggsave("figure/timeplots.pdf", width = 11, height=4, units = "in")
 ```
 
 <hr>
