@@ -24,9 +24,9 @@ Content Overview
   - <a href="#ccd" id="toc-ccd"><span class="toc-section-number">2.1</span>
     CCD</a> :heavy_check_mark:
   - <a href="#fci" id="toc-fci"><span class="toc-section-number">2.2</span>
-    FCI</a>
+    FCI</a> :heavy_check_mark:
   - <a href="#cci" id="toc-cci"><span class="toc-section-number">2.3</span>
-    CCI</a>
+    CCI</a> :heavy_check_mark:
   - <a href="#simulation" id="toc-simulation"><span
     class="toc-section-number">2.4</span> Simulation</a> :heavy_check_mark:
   - <a href="#emprical-example" id="toc-emprical-example"><span
@@ -68,7 +68,7 @@ Content Overview
 </thead>
 <tbody>
 <tr class="odd">
-<td>week4</td>
+<td> <s>week4</s> </td>
 <td>Work on simulation</td>
 <td><ul>
 <li>Run CCD, FCI, CCI on an example model.</li>
@@ -76,7 +76,7 @@ Content Overview
 </ul></td>
 </tr>
 <tr class="even">
-<td>week5</td>
+<td><s>week5</s></td>
 <td>Work on simulation</td>
 <td><ul>
 <li>Run CCD, FCI, CCI on an example model.</li>
@@ -84,7 +84,7 @@ Content Overview
 </ul></td>
 </tr>
 <tr class="odd">
-<td>week6</td>
+<td><s>week6</s></td>
 <td><p>Work on simulation</p>
 <p>Research seminar</p></td>
 <td><ul>
