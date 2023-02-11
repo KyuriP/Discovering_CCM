@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Kyuri Park">
-<meta name="dcterms.date" content="2023-01-16">
+<meta name="dcterms.date" content="2023-02-11">
 
 <title>Checklist</title>
 <style>
@@ -2625,7 +2625,7 @@ background: #4169E1;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 16, 2023</p>
+        <p class="date">February 11, 2023</p>
       </div>
     </div>
     
@@ -2640,32 +2640,35 @@ background: #4169E1;
    
   <ul>
   <li><a href="#content-overview" id="toc-content-overview" class="nav-link active" data-scroll-target="#content-overview">Content Overview</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="toc-section-number">1</span>  Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="toc-section-number">1</span>  Introduction</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="toc-section-number">2</span>  Background</a>
   <ul class="collapse">
-  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="toc-section-number">1.1</span>  Background</a>
-  <ul class="collapse">
-  <li><a href="#graphical-models" id="toc-graphical-models" class="nav-link" data-scroll-target="#graphical-models"><span class="toc-section-number">1.1.1</span>  Graphical Models</a></li>
-  <li><a href="#acylic-vs.-cyclic-graphs" id="toc-acylic-vs.-cyclic-graphs" class="nav-link" data-scroll-target="#acylic-vs.-cyclic-graphs"><span class="toc-section-number">1.1.2</span>  Acylic vs. Cyclic Graphs:</a></li>
-  <li><a href="#primer-on-constraint-based-methods" id="toc-primer-on-constraint-based-methods" class="nav-link" data-scroll-target="#primer-on-constraint-based-methods"><span class="toc-section-number">1.1.3</span>  Primer on Constraint-based Methods</a></li>
+  <li><a href="#graphical-models" id="toc-graphical-models" class="nav-link" data-scroll-target="#graphical-models"><span class="toc-section-number">2.1</span>  Graphical Models</a></li>
+  <li><a href="#acylic-vs.-cyclic-graphs" id="toc-acylic-vs.-cyclic-graphs" class="nav-link" data-scroll-target="#acylic-vs.-cyclic-graphs"><span class="toc-section-number">2.2</span>  Acylic vs. Cyclic Graphs:</a></li>
+  <li><a href="#primer-on-constraint-based-methods" id="toc-primer-on-constraint-based-methods" class="nav-link" data-scroll-target="#primer-on-constraint-based-methods"><span class="toc-section-number">2.3</span>  Primer on Constraint-based Methods</a></li>
   </ul></li>
-  </ul></li>
-  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods"><span class="toc-section-number">2</span>  Methods</a>
+  <li><a href="#causal-discovery-algorithms" id="toc-causal-discovery-algorithms" class="nav-link" data-scroll-target="#causal-discovery-algorithms"><span class="toc-section-number">3</span>  Causal Discovery Algorithms</a>
   <ul class="collapse">
-  <li><a href="#ccd" id="toc-ccd" class="nav-link" data-scroll-target="#ccd"><span class="toc-section-number">2.1</span>  CCD</a></li>
-  <li><a href="#fci" id="toc-fci" class="nav-link" data-scroll-target="#fci"><span class="toc-section-number">2.2</span>  FCI</a></li>
-  <li><a href="#cci" id="toc-cci" class="nav-link" data-scroll-target="#cci"><span class="toc-section-number">2.3</span>  CCI</a></li>
-  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="toc-section-number">2.4</span>  Simulation</a></li>
-  <li><a href="#emprical-example" id="toc-emprical-example" class="nav-link" data-scroll-target="#emprical-example"><span class="toc-section-number">2.5</span>  Emprical Example</a></li>
+  <li><a href="#ccd" id="toc-ccd" class="nav-link" data-scroll-target="#ccd"><span class="toc-section-number">3.1</span>  CCD</a></li>
+  <li><a href="#fci" id="toc-fci" class="nav-link" data-scroll-target="#fci"><span class="toc-section-number">3.2</span>  FCI</a></li>
+  <li><a href="#cci" id="toc-cci" class="nav-link" data-scroll-target="#cci"><span class="toc-section-number">3.3</span>  CCI</a></li>
   </ul></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="toc-section-number">3</span>  Results</a>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="toc-section-number">4</span>  Simulation</a>
   <ul class="collapse">
-  <li><a href="#simulation-study" id="toc-simulation-study" class="nav-link" data-scroll-target="#simulation-study"><span class="toc-section-number">3.1</span>  Simulation study <input type="checkbox" name="simulation"></a></li>
-  <li><a href="#empirical-application" id="toc-empirical-application" class="nav-link" data-scroll-target="#empirical-application"><span class="toc-section-number">3.2</span>  Empirical application <input type="checkbox" name="empirical"></a></li>
+  <li><a href="#simulation-design" id="toc-simulation-design" class="nav-link" data-scroll-target="#simulation-design"><span class="toc-section-number">4.1</span>  Simulation Design <input type="checkbox" name="simdesign" checked></a></li>
+  <li><a href="#data-generating-process" id="toc-data-generating-process" class="nav-link" data-scroll-target="#data-generating-process"><span class="toc-section-number">4.2</span>  Data Generating Process <input type="checkbox" name="datageneration" checked></a></li>
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics"><span class="toc-section-number">4.3</span>  Evaluation Metrics <input type="checkbox" name="evalmetrics" checked></a></li>
+  <li><a href="#simulation-results" id="toc-simulation-results" class="nav-link" data-scroll-target="#simulation-results"><span class="toc-section-number">4.4</span>  Simulation results</a></li>
   </ul></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="toc-section-number">4</span>  Discussion</a>
+  <li><a href="#emprical-example" id="toc-emprical-example" class="nav-link" data-scroll-target="#emprical-example"><span class="toc-section-number">5</span>  Emprical Example</a>
   <ul class="collapse">
-  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations"><span class="toc-section-number">4.1</span>  Limitations <input type="checkbox" name="limitations"></a></li>
-  <li><a href="#future-research" id="toc-future-research" class="nav-link" data-scroll-target="#future-research"><span class="toc-section-number">4.2</span>  Future research <input type="checkbox" name="future"></a></li>
+  <li><a href="#introduce-empirical-data-mcnally-2017" id="toc-introduce-empirical-data-mcnally-2017" class="nav-link" data-scroll-target="#introduce-empirical-data-mcnally-2017"><span class="toc-section-number">5.1</span>  Introduce empirical data (McNally 2017?) <input type="checkbox" name="mcnally"></a></li>
+  <li><a href="#empirical-analysis-results" id="toc-empirical-analysis-results" class="nav-link" data-scroll-target="#empirical-analysis-results"><span class="toc-section-number">5.2</span>  Empirical analysis results</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion"><span class="toc-section-number">6</span>  Discussion</a>
+  <ul class="collapse">
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations"><span class="toc-section-number">6.1</span>  Limitations <input type="checkbox" name="limitations"></a></li>
+  <li><a href="#future-research" id="toc-future-research" class="nav-link" data-scroll-target="#future-research"><span class="toc-section-number">6.2</span>  Future research <input type="checkbox" name="future"></a></li>
   </ul></li>
   <li><a href="#to-dos" id="toc-to-dos" class="nav-link" data-scroll-target="#to-dos">To-dos</a></li>
   </ul>
@@ -2688,89 +2691,91 @@ background: #4169E1;
 <li>Introduce the problem –&gt; What are we going to do? (RQ) <input type="checkbox" name="introprobs" checked></li>
 <li>Connection to the network theory/modeling? <input type="checkbox"></li>
 </ul>
-<section id="background" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="background"><span class="header-section-number">1.1</span> Background</h2>
-<section id="graphical-models" class="level3" data-number="1.1.1">
-<h3 data-number="1.1.1" class="anchored" data-anchor-id="graphical-models"><span class="header-section-number">1.1.1</span> Graphical Models</h3>
+</section>
+<section id="background" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Background</h1>
+<section id="graphical-models" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="graphical-models"><span class="header-section-number">2.1</span> Graphical Models</h2>
 <ul>
 <li>Provide the basic concepts of graphical models <input type="checkbox" name="intro-graph" checked></li>
 </ul>
 </section>
-<section id="acylic-vs.-cyclic-graphs" class="level3" data-number="1.1.2">
-<h3 data-number="1.1.2" class="anchored" data-anchor-id="acylic-vs.-cyclic-graphs"><span class="header-section-number">1.1.2</span> Acylic vs. Cyclic Graphs:</h3>
+<section id="acylic-vs.-cyclic-graphs" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="acylic-vs.-cyclic-graphs"><span class="header-section-number">2.2</span> Acylic vs. Cyclic Graphs:</h2>
 <ul>
 <li>Explain the required assumptions for constraint-based methods <input type="checkbox" name="intro-assump" checked></li>
 <li>Illustrate difficulties in estimating cyclic graphs compared to DAGs <input type="checkbox" name="cycleprob" checked></li>
 </ul>
 </section>
-<section id="primer-on-constraint-based-methods" class="level3" data-number="1.1.3">
-<h3 data-number="1.1.3" class="anchored" data-anchor-id="primer-on-constraint-based-methods"><span class="header-section-number">1.1.3</span> Primer on Constraint-based Methods</h3>
+<section id="primer-on-constraint-based-methods" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="primer-on-constraint-based-methods"><span class="header-section-number">2.3</span> Primer on Constraint-based Methods</h2>
 <ul>
 <li>Explain how constraint based methods work <input type="checkbox" name="primer" checked></li>
 </ul>
 </section>
 </section>
-</section>
-<section id="methods" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Methods</h1>
+<section id="causal-discovery-algorithms" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Causal Discovery Algorithms</h1>
 <ul>
 <li>Introduce three algorithms we are going to examine <input type="checkbox" name="intro-algo" checked></li>
 <li>Table of algorithm overview (assumptions / output representation) and explain the differences <input type="checkbox" name="overview-algo"></li>
-<li>Introduce empirical data (McNally 2017?) <input type="checkbox" name="mcnally"></li>
 </ul>
-<section id="ccd" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="ccd"><span class="header-section-number">2.1</span> CCD</h2>
+<section id="ccd" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="ccd"><span class="header-section-number">3.1</span> CCD</h2>
 <ul>
 <li>Output representation: Markov equivalence class of DCGs (PAG) <input type="checkbox" name="ccdoutput" checked></li>
 <li>CCD trace <input type="checkbox" name="ccdtrace" checked></li>
 </ul>
 </section>
-<section id="fci" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="fci"><span class="header-section-number">2.2</span> FCI</h2>
+<section id="fci" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="fci"><span class="header-section-number">3.2</span> FCI</h2>
 <ul>
 <li>Output representation: Markov equivalence class of MAG (PAG) <input type="checkbox" name="fcioutput"></li>
-<li>FCI trace <input type="checkbox" name="fcitrace"></li>
+<li>FCI trace <input type="checkbox" name="fcitrace" checked></li>
 </ul>
 </section>
-<section id="cci" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="cci"><span class="header-section-number">2.3</span> CCI</h2>
+<section id="cci" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="cci"><span class="header-section-number">3.3</span> CCI</h2>
 <ul>
 <li>Output representation: Markov equivalence class of MAAG (PAAG?) <input type="checkbox" name="ccioutput"></li>
-<li>CCI trace <input type="checkbox" name="ccitrace"></li>
+<li>CCI trace <input type="checkbox" name="ccitrace" checked></li>
 </ul>
 </section>
-<section id="simulation" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="simulation"><span class="header-section-number">2.4</span> Simulation</h2>
+</section>
+<section id="simulation" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Simulation</h1>
+<section id="simulation-design" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="simulation-design"><span class="header-section-number">4.1</span> Simulation Design <input type="checkbox" name="simdesign" checked></h2>
+</section>
+<section id="data-generating-process" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="data-generating-process"><span class="header-section-number">4.2</span> Data Generating Process <input type="checkbox" name="datageneration" checked></h2>
+</section>
+<section id="evaluation-metrics" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="evaluation-metrics"><span class="header-section-number">4.3</span> Evaluation Metrics <input type="checkbox" name="evalmetrics" checked></h2>
+</section>
+<section id="simulation-results" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="simulation-results"><span class="header-section-number">4.4</span> Simulation results</h2>
 <ul>
-<li>Simulation Design <input type="checkbox" name="simdesign" checked></li>
-<li>Data Generating Process <input type="checkbox" name="datageneration" checked></li>
-<li>Evaluation Metrics <input type="checkbox" name="evalmetrics" checked></li>
 <li>Needs to describe them all in more detail <input type="checkbox"></li>
 </ul>
 </section>
-<section id="emprical-example" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="emprical-example"><span class="header-section-number">2.5</span> Emprical Example</h2>
-<ul>
-<li>Describe the example data in detail. <input type="checkbox" name="intro_empirical"></li>
-</ul>
+</section>
+<section id="emprical-example" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Emprical Example</h1>
+<section id="introduce-empirical-data-mcnally-2017" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="introduce-empirical-data-mcnally-2017"><span class="header-section-number">5.1</span> Introduce empirical data (McNally 2017?) <input type="checkbox" name="mcnally"></h2>
+</section>
+<section id="empirical-analysis-results" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="empirical-analysis-results"><span class="header-section-number">5.2</span> Empirical analysis results</h2>
 </section>
 </section>
-<section id="results" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Results</h1>
-<section id="simulation-study" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="simulation-study"><span class="header-section-number">3.1</span> Simulation study <input type="checkbox" name="simulation"></h2>
+<section id="discussion" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Discussion</h1>
+<section id="limitations" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="limitations"><span class="header-section-number">6.1</span> Limitations <input type="checkbox" name="limitations"></h2>
 </section>
-<section id="empirical-application" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="empirical-application"><span class="header-section-number">3.2</span> Empirical application <input type="checkbox" name="empirical"></h2>
-</section>
-</section>
-<section id="discussion" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Discussion</h1>
-<section id="limitations" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="limitations"><span class="header-section-number">4.1</span> Limitations <input type="checkbox" name="limitations"></h2>
-</section>
-<section id="future-research" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="future-research"><span class="header-section-number">4.2</span> Future research <input type="checkbox" name="future"></h2>
+<section id="future-research" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="future-research"><span class="header-section-number">6.2</span> Future research <input type="checkbox" name="future"></h2>
 <hr>
 </section>
 </section>
@@ -2779,9 +2784,9 @@ background: #4169E1;
 <table class="table">
 <caption>Tentative Schedule</caption>
 <colgroup>
-<col style="width: 19%">
-<col style="width: 25%">
-<col style="width: 53%">
+<col style="width: 11%">
+<col style="width: 35%">
+<col style="width: 52%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -2918,8 +2923,8 @@ background: #4169E1;
 <tr class="even">
 <td>week19</td>
 <td><p class="r">
-Thesis Deadline
-</p>
+</p><p>Thesis Deadline</p>
+<p></p>
 <p>&amp; Work on slides</p></td>
 <td><ul>
 <li>Submit the thesis (May 8th, 15:00).</li>
@@ -2930,8 +2935,8 @@ Thesis Deadline
 <tr class="odd">
 <td>week20</td>
 <td><p class="r">
-Archive Deadline
-</p>
+</p><p>Archive Deadline</p>
+<p></p>
 <p>&amp; Work on poster</p></td>
 <td><ul>
 <li>Complete the archive (May 15th, 15:00).</li>
@@ -2942,8 +2947,8 @@ Archive Deadline
 <tr class="even">
 <td>week21</td>
 <td><p class="r">
-Thesis Defense
-</p></td>
+</p><p>Thesis Defense</p>
+<p></p></td>
 <td><ul>
 <li>Defense (May 22nd or 23rd)</li>
 <li>Good luck.</li>
