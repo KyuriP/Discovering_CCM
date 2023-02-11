@@ -56,36 +56,15 @@ library(purrr)
 library(dplyr)
 
 # load data
-load("../data/ccd_5psparse.RData")
-load("../data/fci_5psparse.RData")
-load("../data/cci_5psparse.RData")
-load("../data/ccd_5pdense.RData")
-load("../data/fci_5pdense.RData")
-load("../data/cci_5pdense.RData")
-load("../data/ccd_10psparse.RData")
-load("../data/fci_10psparse.RData")
-load("../data/cci_10psparse.RData")
-load("../data/ccd_10pdense.RData")
-load("../data/fci_10pdense.RData")
-load("../data/cci_10pdense.RData")
-load("../data/ccd_5pLVsparse.RData")
-load("../data/fci_5pLVsparse.RData")
-load("../data/cci_5pLVsparse.RData")
-load("../data/ccd_5pLVdense.RData")
-load("../data/fci_5pLVdense.RData")
-load("../data/cci_5pLVdense.RData")
-load("../data/ccd_10pLVsparse.RData")
-load("../data/fci_10pLVsparse.RData")
-load("../data/cci_10pLVsparse.RData")
-load("../data/ccd_10pLVdense.RData")
-load("../data/fci_10pLVdense.RData")
-load("../data/cci_10pLVdense.RData")
+fs::dir_ls("../data", regexp="*.RData") |>
+  map(~ load(.x, .GlobalEnv))
 
 # load functions 
 source("../code/R/CCD_fnc.R")
 source("../code/R/plot_fnc.R")
 source("../code/R/data_generating_fnc.R")
 source("../code/eval_metrics.R")
+source("../code/true_ancestral.R")
 source("../code/simulation_code.R")
 
 ```
@@ -101,7 +80,7 @@ source("../code/simulation_code.R")
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B5sparse = matrix(c(0, 0, 0, 0, 0,
+B5sparse <- matrix(c(0, 0, 0, 0, 0,
                  1, 0, 0.8, 0, 0,
                  0, 0, 0, 0.9, 0,
                  0, 0.7, 0, 0, 1.5,
@@ -110,7 +89,7 @@ B5sparse = matrix(c(0, 0, 0, 0, 0,
 colnames(B5sparse) <- c("X1", "X2", "X3", "X4", "X5")
 
 # specify layout
-layout5 = matrix(c(0,1,
+layout5 <- matrix(c(0,1,
                    0,0,
                    1,-1,
                    2,0,
@@ -119,16 +98,16 @@ layout5 = matrix(c(0,1,
 true5psparse <- qgraph::qgraph(t(B5sparse), layout=layout5, labels = colnames(B5sparse), theme="colorblind", vsize = 8, asize = 5)
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
-## True PAG
-truepag_5psparse <- matrix(c(
-       0, 2, 2, 0, 0,
-       3, 0, 3, 3, 3,
-       3, 3, 0, 3, 0,
-       0, 3, 3, 0, 3,
-       0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
-dimnames(truepag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5psparse)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+## True Ancestral Graph
+dcg_5psparse <- matrix(c(0,1,0,0,0,
+                       0,0,0,1,0,
+                       0,1,0,0,0,
+                       0,0,1,0,0,
+                       0,0,0,1,0), 5,5,byrow=T)
+trueag_5psparse <- true_ancestral(dcg_5psparse, gen_dat(B5sparse), gaussCItest)
+dimnames(trueag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5psparse)
+title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## Dense 5 nodes model
@@ -140,7 +119,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B5dense = matrix(c(0, 0, 0, 0, 0,
+B5dense <- matrix(c(0, 0, 0, 0, 0,
                     1, 0, 0.8, 0, 0,
                     0, 0, 0, 0.9, 0,
                     0, 0.7, 0, 0, 1.5,
@@ -152,16 +131,17 @@ true5pdense <- qgraph(t(B5dense), layout=layout5, labels = colnames(B5dense), th
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
-## True PAG
-truepag_5pdense <- matrix(c(
-  0, 2, 2, 0, 2,
-  3, 0, 3, 3, 3,
-  3, 3, 0, 3, 0,
-  0, 3, 3, 0, 3,
-  3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
-dimnames(truepag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pdense)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+## True Ancestral Graph
+dcg_5pdense <- matrix(c(0,1,0,0,1,
+                       0,0,0,1,0,
+                       0,1,0,0,0,
+                       0,0,1,0,0,
+                       0,0,0,1,0), 5,5,byrow=T)
+    
+trueag_5pdense <- true_ancestral(dcg_5pdense, gen_dat(B5dense), gaussCItest)
+dimnames(trueag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5pdense)
+title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## Sparse 10 nodes model
@@ -173,7 +153,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+B10sparse <- matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                   0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 
                   0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 
@@ -187,7 +167,7 @@ B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 dimnames(B10sparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
 
 # specify layout
-layout10 = matrix(c(0,1,
+layout10 <- matrix(c(0,1,
                       2,1,
                       1,0,
                       2,-1,
@@ -202,22 +182,22 @@ true10psparse <- qgraph(t(B10sparse), layout = layout10, labels = colnames(B10sp
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
-## True PAG
-truepag_10psparse <- matrix(c(
-         0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
-         0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
-         3, 3, 0, 2, 0, 0, 0, 0, 0, 0, 
-         0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
-         0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 
-         0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 
-         0, 0, 0, 0, 0, 2, 0, 3, 3, 0, 
-         0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 
-         0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-         0, 0, 0, 0, 0, 0, 0, 0, 2, 0), 10, 10, byrow = T)
-
-dimnames(truepag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10psparse)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+## True Ancestral Graph
+dcg_10psparse <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                          0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                          0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 0, 0, 1, 0), 10, 10, byrow = T)
+    
+trueag_10psparse <- true_ancestral(dcg_10psparse, gen_dat(B10sparse), gaussCItest)
+dimnames(trueag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10psparse)
+title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## Dense 10 nodes model
@@ -229,7 +209,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+B10dense <- matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                      0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 
                      0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 
@@ -243,7 +223,7 @@ B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 colnames(B10dense) <- c(paste("X", 1:10, sep=""))
 
 # specify layout
-layout10 = matrix(c(0,1,
+layout10 <- matrix(c(0,1,
                     2,1,
                     1,0,
                     2,-1,
@@ -258,22 +238,22 @@ true10pdense <- qgraph(t(B10dense), layout = layout10, labels = colnames(B10dens
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
-## True PAG
-truepag_10pdense <- matrix(c(
-  0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 
-  3, 3, 0, 2, 0, 2, 0, 0, 0, 0, 
-  0, 3, 3, 0, 3, 3, 0, 0, 0, 0, 
-  0, 3, 0, 3, 0, 3, 3, 0, 0, 0, 
-  0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 
-  0, 0, 0, 0, 0, 2, 0, 3, 3, 3, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 2, 2, 2, 0), 10, 10, byrow = T)
+## True Ancestral Graph
+dcg_10pdense <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 
+                       0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                       0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                       0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                       0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                       0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                       0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                       0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                       0, 0, 0, 0, 0, 0, 1, 1, 1, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10pdense)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+trueag_10pdense <- true_ancestral(dcg_10pdense, gen_dat(B10dense), gaussCItest)
+dimnames(trueag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10pdense)
+title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## 5 nodes with a LV sparse model
@@ -286,7 +266,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B5_lv = matrix(c(0, 0, 0, 0, 0, 1,
+B5_lv <- matrix(c(0, 0, 0, 0, 0, 1,
                  0, 0, 0.4, 0, 0, 1,
                  0, 0, 0, 0.5, 0,0,
                  0, 0.7, 0, 0, 1.5,0,
@@ -295,7 +275,7 @@ B5_lv = matrix(c(0, 0, 0, 0, 0, 1,
 
 colnames(B5_lv) <- c("X1", "X2", "X3", "X4", "X5", "L1")
 # specify layout
-layout5_lv = matrix(c(0,1,
+layout5_lv <- matrix(c(0,1,
                       0,0,
                       1,-1,
                       2,0,
@@ -306,17 +286,18 @@ true5p_lv <- qgraph(t(B5_lv), layout=layout5_lv, labels = colnames(B5_lv), theme
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
-## True PAG
-truepag_5pLV <- matrix(c(
-  0, 2, 2, 0, 0,
-  2, 0, 3, 3, 3,
-  2, 3, 0, 3, 0,
-  0, 3, 3, 0, 3,
-  0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_5psparseLV <- matrix(c(0, 2, 0, 0, 0, 
+                           2, 0, 0, 1, 0, 
+                           0, 1, 0, 0, 0,
+                           0, 0, 1, 0, 0,
+                           0, 0, 0, 1, 0), 5, 5, byrow = T)
 
-dimnames(truepag_5pLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pLV)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+trueag_5psparseLV <- true_ancestral(dcg_5psparseLV, gen_dat(B5_lv), gaussCItest)
+dimnames(trueag_5psparseLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5psparseLV)
+title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## 5 nodes with a LV dense model
@@ -329,7 +310,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
+B5_lvdense <- matrix(c(0, 0, 0, 0, 0, 1,
                        0, 0, 0.4, 0, 0, 1,
                        0, 0, 0, 0.5, 0,0,
                        0, 0.7, 0, 0, 1.5,0,
@@ -338,7 +319,7 @@ B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
 
 colnames(B5_lvdense) <- c("X1", "X2", "X3", "X4", "X5", "L1")
 # specify layout
-layout5_lv = matrix(c(0,1,
+layout5_lv <- matrix(c(0,1,
                       0,0,
                       1,-1,
                       2,0,
@@ -350,17 +331,18 @@ true5p_lvdense <- qgraph(t(B5_lvdense), layout=layout5_lv, labels = colnames(B5_
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
-## True PAG
-truepag_5pLVdense <- matrix(c(
-  0, 2, 2, 0, 2,
-  2, 0, 3, 3, 3,
-  2, 3, 0, 3, 0,
-  0, 3, 3, 0, 3,
-  3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_5pdenseLV <- matrix(c(0, 2, 0, 0, 1, 
+                          2, 0, 0, 1, 0, 
+                          0, 1, 0, 0, 0,
+                          0, 0, 1, 0, 0,
+                          0, 0, 0, 1, 0), 5, 5, byrow = T)
 
-dimnames(truepag_5pLVdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pLVdense)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+trueag_5pdenseLV <- true_ancestral(dcg_5pdenseLV, gen_dat(B5_lvdense), gaussCItest)
+dimnames(trueag_5pdenseLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5pdenseLV)
+title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## 10 nodes with a LV sparse model
@@ -373,7 +355,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B10_lv = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+B10_lv <- matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
@@ -388,7 +370,7 @@ B10_lv = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 colnames(B10_lv) <- c(paste("X", 1:10, sep=""), "L1")
 
 # specify layout
-layout10LV = matrix(c(0,1,
+layout10LV <- matrix(c(0,1,
                       2,1,
                       1,0,
                       2,-1,
@@ -404,22 +386,23 @@ true10pLV <- qgraph(t(B10_lv), layout = layout10LV, labels = colnames(B10_lv), t
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
-## True PAG
-truepag_10pLV <- matrix(c(
-  0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
-  3, 3, 0, 2, 0, 2, 0, 0, 0, 0, 
-  0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
-  0, 0, 0, 3, 0, 3, 3, 0, 0, 0, 
-  0, 0, 3, 3, 3, 0, 3, 0, 0, 0, 
-  0, 0, 0, 0, 2, 2, 0, 3, 3, 0, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 0, 2, 2, 0), 10, 10, byrow = T)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_10psparseLV <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 
+                            0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 0, 0, 2, 1, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10pLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10pLV)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+trueag_10psparseLV <- true_ancestral(dcg_10psparseLV, gen_dat(B10_lv), gaussCItest)
+dimnames(trueag_10psparseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10psparseLV)
+title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 ## 10 nodes with a LV dense model
@@ -432,7 +415,7 @@ title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 par(oma=c(0, 0, 4, 0))
 ## Specify B matrix
-B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+B10_lvdense <- matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0,
@@ -447,7 +430,7 @@ B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 colnames(B10_lvdense) <- c(paste("X", 1:10, sep=""), "L1")
 
 # specify layout
-layout10LV = matrix(c(0,1,
+layout10LV <- matrix(c(0,1,
                       2,1,
                       1,0,
                       2,-1,
@@ -464,22 +447,23 @@ true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV, labels = colnames(
 title("True DCG",  font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 
 
-## True PAG
-truepag_10pLVdense <- matrix(c(
-  0, 2, 2, 0, 0, 0, 0, 0, 0, 0,
-  3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
-  3, 3, 0, 2, 2, 2, 0, 0, 0, 0, 
-  0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
-  0, 0, 3, 3, 0, 3, 3, 0, 0, 0, 
-  0, 0, 3, 3, 3, 0, 3, 0, 0, 0, 
-  0, 0, 0, 0, 2, 2, 0, 3, 3, 3, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 2, 2, 2, 0), 10, 10, byrow = T)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_10pdenseLV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+                          0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                          0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 
+                          0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 1, 2, 1, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10pLVdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10pLVdense)
-title(main = "True PAG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
+trueag_10pdenseLV <- true_ancestral(dcg_10pdenseLV, gen_dat(B10_lvdense), gaussCItest)
+dimnames(trueag_10pdenseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10pdenseLV)
+title(main = "True PG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
 <hr>

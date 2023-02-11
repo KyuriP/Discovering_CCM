@@ -62,15 +62,15 @@ simdata_5psparse <- N %>% future_map(function(z) {
 # 
 # layout(t(1:3))
 
-## True PAG
-truepag_5psparse <- matrix(c(
-       0, 2, 2, 0, 0,
-       3, 0, 3, 3, 3,
-       3, 3, 0, 3, 0,
-       0, 3, 3, 0, 3,
-       0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
-dimnames(truepag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5psparse)
+## True Ancestral Graph
+dcg_5psparse <- matrix(c(0,1,0,0,0,
+                         0,0,0,1,0,
+                         0,1,0,0,0,
+                         0,0,1,0,0,
+                         0,0,0,1,0), 5,5,byrow=T)
+trueag_5psparse <- true_ancestral(dcg_5psparse, gen_dat(B5sparse), gaussCItest)
+dimnames(trueag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5psparse)
 
 ## Run CCD algorithm
 # ccd_5psparse <- simdata_5psparse %>% 
@@ -113,7 +113,7 @@ mat_5psparse <- ccd_5psparse %>%
 ## evaluation 
 # CCD
 res_ccd5psparse <- mat_5psparse %>% 
-  map_depth(2, ~precision_recall(truepag_5psparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_ccd5psparse <- mat_5psparse %>% 
@@ -124,13 +124,13 @@ colMeans(uncer_ccd5psparse, na.rm=T)
 
 # SHD
 SHD_ccd5psparse <- mat_5psparse %>% 
-  map_depth(2, ~SHD(truepag_5psparse, .x)) %>% do.call("cbind", .) %>% apply(., 2, unlist) %>%  as.data.frame %>% rename_with(~ paste0("N = ", N))
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% do.call("cbind", .) %>% apply(., 2, unlist) %>%  as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_ccd5psparse)
 
 # FCI
 res_fci5psparse <- fci_5psparse %>% 
-  map_depth(2, ~precision_recall(truepag_5psparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -143,7 +143,7 @@ colMeans(uncer_fci5psparse, na.rm=T)
 
 # SHD
 SHD_fci5psparse <- fci_5psparse %>% 
-  map_depth(2, ~SHD(truepag_5psparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -151,7 +151,7 @@ colMeans(SHD_fci5psparse)
 
 # CCI
 res_cci5psparse <- cci_5psparse %>% 
-  map_depth(2, ~precision_recall(truepag_5psparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -164,7 +164,7 @@ colMeans(uncer_cci5psparse)
 
 # SHD
 SHD_cci5psparse <- cci_5psparse %>% 
-  map_depth(2, ~SHD(truepag_5psparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -206,15 +206,16 @@ simdata_5pdense <- N %>% future_map(function(z) {
 # layout(t(1:3))
 
 
-## True PAG
-truepag_5pdense <- matrix(c(
-  0, 2, 2, 0, 2,
-  3, 0, 3, 3, 3,
-  3, 3, 0, 3, 0,
-  0, 3, 3, 0, 3,
-  3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
-dimnames(truepag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pdense)
+## True Ancestral Graph
+dcg_5pdense <- matrix(c(0,1,0,0,1,
+                        0,0,0,1,0,
+                        0,1,0,0,0,
+                        0,0,1,0,0,
+                        0,0,0,1,0), 5,5,byrow=T)
+
+trueag_5pdense <- true_ancestral(dcg_5pdense, gen_dat(B5dense), gaussCItest)
+dimnames(trueag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5pdense)
 
 
 ## Run CCD algorithm
@@ -258,7 +259,7 @@ mat_5pdense <- ccd_5pdense %>%
 ## evaluation
 # CCD
 res_ccd5pdense <- mat_5pdense %>% 
-  map_depth(2, ~precision_recall(truepag_5pdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame()
 
 # UNCERTAINTY
@@ -271,7 +272,7 @@ colMeans(uncer_ccd5pdense, na.rm=T)
 
 # SHD
 SHD_ccd5pdense <- mat_5pdense %>% 
-  map_depth(2, ~SHD(truepag_5pdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 
@@ -279,7 +280,7 @@ colMeans(SHD_ccd5pdense)
 
 # FCI
 res_fci5pdense <- fci_5pdense %>% 
-  map_depth(2, ~precision_recall(truepag_5pdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -292,7 +293,7 @@ colMeans(uncer_fci5pdense, na.rm=T)
 
 # SHD
 SHD_fci5pdense <- fci_5pdense %>% 
-  map_depth(2, ~SHD(truepag_5pdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 
@@ -300,7 +301,7 @@ colMeans(SHD_fci5pdense)
 
 # CCI
 res_cci5pdense <- cci_5pdense %>% 
-  map_depth(2, ~precision_recall(truepag_5pdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY 
@@ -313,7 +314,7 @@ colMeans(uncer_cci5pdense)
 
 # SHD
 SHD_cci5pdense <- cci_5pdense %>% 
-  map_depth(2, ~SHD(truepag_5pdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 
@@ -370,21 +371,21 @@ simdata_10psparse <- N %>% future_map(function(z) {
 # ggm10psparse <- qgraph(cor(data10psparse), layout = layout10, theme="colorblind", graph = "pcor")
 # layout(t(1:3))
 
-## True PAG
-truepag_10psparse <- matrix(c(
-         0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
-         0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
-         3, 3, 0, 2, 0, 0, 0, 0, 0, 0, 
-         0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
-         0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 
-         0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 
-         0, 0, 0, 0, 0, 2, 0, 3, 3, 0, 
-         0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 
-         0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-         0, 0, 0, 0, 0, 0, 0, 0, 2, 0), 10, 10, byrow = T)
+## True Ancestral Graph
+dcg_10psparse <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                          0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                          0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                          0, 0, 0, 0, 0, 0, 0, 0, 1, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10psparse)
+trueag_10psparse <- true_ancestral(dcg_10psparse, gen_dat(B10sparse), gaussCItest)
+dimnames(trueag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10psparse)
 
 
 ## Run CCD algorithm
@@ -429,7 +430,7 @@ mat_10psparse <- ccd_10psparse %>%
 # CCD
 res_ccd10psparse <- mat_10psparse %>% 
   map_depth(2, 
-  ~precision_recall(truepag_10psparse, .x)) %>%
+  ~precision_recall(trueag_10psparse, .x)) %>%
   do.call("cbind", .) %>% t() %>%  
   apply(., 2, unlist) %>%  as.data.frame()
   
@@ -444,7 +445,7 @@ colMeans(uncer_ccd10psparse, na.rm=T)
 
 # SHD
 SHD_ccd10psparse <- mat_10psparse %>% 
-  map_depth(2, ~SHD(truepag_10psparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -452,7 +453,7 @@ colMeans(SHD_ccd10psparse)
 
 # FCI
 res_fci10psparse <- fci_10psparse %>% 
-  map_depth(2, ~precision_recall(truepag_10psparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -465,7 +466,7 @@ colMeans(uncer_fci10psparse, na.rm=T)
 
 # SHD
 SHD_fci10psparse <- fci_10psparse %>% 
-  map_depth(2, ~SHD(truepag_10psparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 
@@ -473,7 +474,7 @@ colMeans(SHD_fci10psparse)
 
 # CCI
 res_cci10psparse <- cci_10psparse %>% 
-  map_depth(2, ~precision_recall(truepag_10psparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -486,7 +487,7 @@ colMeans(uncer_cci10psparse, na.rm=T)
 
 # SHD
 SHD_cci10psparse <- cci_10psparse %>% 
-  map_depth(2, ~SHD(truepag_10psparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -540,21 +541,21 @@ simdata_10pdense <- N %>% future_map(function(z) {
 # ggm10pdense <- qgraph(cor(data10pdense), layout = layout10, theme="colorblind", graph = "pcor")
 # layout(t(1:3))
 
-## True PAG
-truepag_10pdense <- matrix(c(
-  0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 
-  3, 3, 0, 2, 0, 2, 0, 0, 0, 0, 
-  0, 3, 3, 0, 3, 3, 0, 0, 0, 0, 
-  0, 3, 0, 3, 0, 3, 3, 0, 0, 0, 
-  0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 
-  0, 0, 0, 0, 0, 2, 0, 3, 3, 3, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 2, 2, 2, 0), 10, 10, byrow = T)
+## True Ancestral Graph
+dcg_10pdense <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                         0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 
+                         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                         0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                         0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                         0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                         0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                         0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                         0, 0, 0, 0, 0, 0, 1, 1, 1, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10pdense)
+trueag_10pdense <- true_ancestral(dcg_10pdense, gen_dat(B10dense), gaussCItest)
+dimnames(trueag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10pdense)
 
 
 ## Run CCD algorithm
@@ -597,7 +598,7 @@ mat_10pdense  <- ccd_10pdense  %>%
 ## evaluation
 # CCD
 res_ccd10pdense  <- mat_10pdense  %>% 
-  map_depth(2, ~precision_recall(truepag_10pdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -610,7 +611,7 @@ colMeans(uncer_ccd10pdense , na.rm=T)
 
 # SHD
 SHD_ccd10pdense  <- mat_10pdense %>% 
-  map_depth(2, ~SHD(truepag_10pdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -618,7 +619,7 @@ colMeans(SHD_ccd10pdense)
 
 # FCI
 res_fci10pdense  <- fci_10pdense  %>% 
-  map_depth(2, ~precision_recall(truepag_10pdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -631,7 +632,7 @@ colMeans(uncer_fci10pdense, na.rm=T)
 
 # SHD
 SHD_fci10pdense  <- fci_10pdense %>% 
-  map_depth(2, ~SHD(truepag_10pdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -639,7 +640,7 @@ colMeans(SHD_fci10pdense)
 
 # CCI
 res_cci10pdense <- cci_10pdense %>% 
-  map_depth(2, ~precision_recall(truepag_10pdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -652,7 +653,7 @@ colMeans(uncer_cci10pdense, na.rm=T)
 
 # SHD
 SHD_cci10pdense <- cci_10pdense %>% 
-  map_depth(2, ~SHD(truepag_10pdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # averae SHD
@@ -716,17 +717,17 @@ simdata_5pLVsparse <- N %>% future_map(function(z) {
 # data5pLV2 <- gen_dat(B5_lv2, N =1e6, seed = 12345)[,-6]
 
 
-## True PAG
-truepag_5pLVsparse <- matrix(c(
-  0, 2, 2, 0, 0,
-  2, 0, 3, 3, 3,
-  2, 3, 0, 3, 0,
-  0, 3, 3, 0, 3,
-  0, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_5psparseLV <- matrix(c(0, 2, 0, 0, 0, 
+                           2, 0, 0, 1, 0, 
+                           0, 1, 0, 0, 0,
+                           0, 0, 1, 0, 0,
+                           0, 0, 0, 1, 0), 5, 5, byrow = T)
 
-dimnames(truepag_5pLVsparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pLVsparse)
-
+trueag_5psparseLV <- true_ancestral(dcg_5psparseLV, gen_dat(B5_lvsparse), gaussCItest)
+dimnames(trueag_5psparseLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5psparseLV)
 
 ## Run CCD algorithm
 # ccd_5pLVsparse <- simdata_5pLVsparse  %>%
@@ -769,7 +770,7 @@ mat_5pLVsparse  <- ccd_5pLVsparse  %>%
 ## evaluation
 # CCD
 res_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
-  map_depth(2, ~precision_recall(truepag_5pLVsparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -782,7 +783,7 @@ colMeans(uncer_ccd5pLVsparse , na.rm=T)
 
 # SHD
 SHD_ccd5pLVsparse <- mat_5pLVsparse %>% 
-  map_depth(2, ~SHD(truepag_5pLVsparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -790,7 +791,7 @@ colMeans(SHD_ccd5pLVsparse)
 
 # FCI
 res_fci5pLVsparse  <- fci_5pLVsparse  %>% 
-  map_depth(2, ~precision_recall(truepag_5pLVsparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -803,7 +804,7 @@ colMeans(uncer_fci5pLVsparse, na.rm=T)
 
 # SHD
 SHD_fci5pLVsparse <- fci_5pLVsparse %>% 
-  map_depth(2, ~SHD(truepag_5pLVsparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -811,7 +812,7 @@ colMeans(SHD_fci5pLVsparse)
 
 # CCI
 res_cci5pLVsparse <- cci_5pLVsparse %>% 
-  map_depth(2, ~precision_recall(truepag_5pLVsparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -824,7 +825,7 @@ colMeans(uncer_cci5pLVsparse, na.rm=T)
 
 # SHD
 SHD_cci5pLVsparse <- cci_5pLVsparse %>% 
-  map_depth(2, ~SHD(truepag_5pLVsparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -869,16 +870,17 @@ simdata_5pLVdense <- N %>% future_map(function(z) {
 
 
 
-## True PAG
-truepag_5pLVdense <- matrix(c(
-  0, 2, 2, 0, 2,
-  2, 0, 3, 3, 3,
-  2, 3, 0, 3, 0,
-  0, 3, 3, 0, 3,
-  3, 2, 0, 2, 0), 5, 5, byrow = TRUE)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_5pdenseLV <- matrix(c(0, 2, 0, 0, 1, 
+                          2, 0, 0, 1, 0, 
+                          0, 1, 0, 0, 0,
+                          0, 0, 1, 0, 0,
+                          0, 0, 0, 1, 0), 5, 5, byrow = T)
 
-dimnames(truepag_5pLVdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(truepag_5pLVdense)
+trueag_5pdenseLV <- true_ancestral(dcg_5pdenseLV, gen_dat(B5_lvdense), gaussCItest)
+dimnames(trueag_5pdenseLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+plotAG(trueag_5pdenseLV)
 
 
 ## Run CCD algorithm
@@ -922,7 +924,7 @@ mat_5pLVdense  <- ccd_5pLVdense  %>%
 ## evaluation
 # CCD
 res_ccd5pLVdense  <- mat_5pLVdense  %>% 
-  map_depth(2, ~precision_recall(truepag_5pLVdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -935,7 +937,7 @@ colMeans(uncer_ccd5pLVdense , na.rm=T)
 
 # SHD
 SHD_ccd5pLVdense <- mat_5pLVdense %>% 
-  map_depth(2, ~SHD(truepag_5pLVdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -943,7 +945,7 @@ colMeans(SHD_ccd5pLVdense)
 
 # FCI
 res_fci5pLVdense  <- fci_5pLVdense  %>% 
-  map_depth(2, ~precision_recall(truepag_5pLVdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -956,7 +958,7 @@ colMeans(uncer_fci5pLVdense , na.rm=T)
 
 # SHD
 SHD_fci5pLVdense  <- fci_5pLVdense  %>% 
-  map_depth(2, ~SHD(truepag_5pLVdense , .x)) %>% 
+  map_depth(2, ~SHD(trueag_5pdenseLV , .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -964,7 +966,7 @@ colMeans(SHD_fci5pLVdense )
 
 # CCI
 res_cci5pLVdense  <- cci_5pLVdense  %>% 
-  map_depth(2, ~precision_recall(truepag_5pLVdense , .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_5pdenseLV , .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -977,7 +979,7 @@ colMeans(uncer_cci5pLVdense , na.rm=T)
 
 # SHD
 SHD_cci5pLVdense  <- cci_5pLVdense  %>% 
-  map_depth(2, ~SHD(truepag_5pLVdense , .x)) %>% 
+  map_depth(2, ~SHD(trueag_5pdenseLV , .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -1038,21 +1040,22 @@ simdata_10pLVsparse <- N %>% future_map(function(z) {
 # 
 # layout(t(1:3))
 
-## True PAG
-truepag_10pLVsparse <- matrix(c(
-  0, 0, 2, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
-  3, 3, 0, 2, 0, 2, 0, 0, 0, 0, 
-  0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
-  0, 0, 0, 3, 0, 3, 3, 0, 0, 0, 
-  0, 0, 3, 3, 3, 0, 3, 0, 0, 0, 
-  0, 0, 0, 0, 2, 2, 0, 3, 3, 0, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 0, 2, 2, 0), 10, 10, byrow = T)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_10psparseLV <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 
+                            0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 0, 0, 2, 1, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10pLVsparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10pLVsparse)
+trueag_10psparseLV <- true_ancestral(dcg_10psparseLV, gen_dat(B10_lvsparse), gaussCItest)
+dimnames(trueag_10psparseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10psparseLV)
 
 
 ## Run CCD algorithm
@@ -1096,7 +1099,7 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
 ## evaluation
 # CCD
 res_ccd10pLVsparse   <- mat_10pLVsparse  %>% 
-  map_depth(2, ~precision_recall(truepag_10pLVsparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -1109,7 +1112,7 @@ colMeans(uncer_ccd10pLVsparse , na.rm=T)
 
 # SHD
 SHD_ccd10pLVsparse <- mat_10pLVsparse %>% 
-  map_depth(2, ~SHD(truepag_10pLVsparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -1117,7 +1120,7 @@ colMeans(SHD_ccd10pLVsparse)
 
 # FCI
 res_fci10pLVsparse <- fci_10pLVsparse  %>% 
-  map_depth(2, ~precision_recall(truepag_10pLVsparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -1131,7 +1134,7 @@ colMeans(uncer_fci10pLVsparse, na.rm=T)
 
 # SHD
 SHD_fci10pLVsparse <- fci_10pLVsparse %>% 
-  map_depth(2, ~SHD(truepag_10pLVsparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -1140,7 +1143,7 @@ colMeans(SHD_fci10pLVsparse)
 
 # CCI 
 res_cci10pLVsparse <- cci_10pLVsparse %>% 
-  map_depth(2, ~precision_recall(truepag_10pLVsparse, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 
@@ -1154,7 +1157,7 @@ colMeans(uncer_cci10pLVsparse, na.rm=T)
 
 # SHD
 SHD_cci10pLVsparse <- cci_10pLVsparse %>% 
-  map_depth(2, ~SHD(truepag_10pLVsparse, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -1210,21 +1213,22 @@ simdata_10pLVdense <- N %>% future_map(function(z) {
 
 
 
-## True PAG
-truepag_10pLVdense <- matrix(c(
-  0, 2, 2, 0, 0, 0, 0, 0, 0, 0,
-  3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 
-  3, 3, 0, 2, 2, 2, 0, 0, 0, 0, 
-  0, 0, 3, 0, 3, 3, 0, 0, 0, 0, 
-  0, 0, 3, 3, 0, 3, 3, 0, 0, 0, 
-  0, 0, 3, 3, 3, 0, 3, 0, 0, 0, 
-  0, 0, 0, 0, 2, 2, 0, 3, 3, 3, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
-  0, 0, 0, 0, 0, 0, 2, 0, 0, 3, 
-  0, 0, 0, 0, 0, 0, 2, 2, 2, 0), 10, 10, byrow = T)
+## True Ancestral Graph
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_10pdenseLV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+                           0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
+                           0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                           0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                           0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                           0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                           0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 
+                           0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                           0, 0, 0, 0, 0, 0, 1, 2, 1, 0), 10, 10, byrow = T)
 
-dimnames(truepag_10pLVdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-plotAG(truepag_10pLVdense)
+trueag_10pdenseLV <- true_ancestral(dcg_10pdenseLV, gen_dat(B10_lvdense), gaussCItest)
+dimnames(trueag_10pdenseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+plotAG(trueag_10pdenseLV)
 
 
 ## Run CCD algorithm
@@ -1268,7 +1272,7 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 ## evaluation
 # CCD
 res_ccd10pLVdense   <- mat_10pLVdense  %>% 
-  map_depth(2, ~precision_recall(truepag_10pLVdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -1281,7 +1285,7 @@ colMeans(uncer_ccd10pLVdense , na.rm=T)
 
 # SHD
 SHD_ccd10pLVdense <- mat_10pLVdense %>% 
-  map_depth(2, ~SHD(truepag_10pLVdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N)) 
 # average SHD
@@ -1289,7 +1293,7 @@ colMeans(SHD_ccd10pLVdense)
 
 # FCI
 res_fci10pLVdense <- fci_10pLVdense  %>% 
-  map_depth(2, ~precision_recall(truepag_10pLVdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -1302,7 +1306,7 @@ colMeans(uncer_fci10pLVdense, na.rm=T)
 
 # SHD
 SHD_fci10pLVdense <- fci_10pLVdense %>% 
-  map_depth(2, ~SHD(truepag_10pLVdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
@@ -1310,7 +1314,7 @@ colMeans(SHD_fci10pLVdense)
 
 # CCI
 res_cci10pLVdense <- cci_10pLVdense %>% 
-  map_depth(2, ~precision_recall(truepag_10pLVdense, .x)) %>% 
+  map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 
 # UNCERTAINTY
@@ -1324,7 +1328,7 @@ colMeans(uncer_cci10pLVdense, na.rm=T)
 
 # SHD
 SHD_cci10pLVdense <- cci_10pLVdense %>% 
-  map_depth(2, ~SHD(truepag_10pLVdense, .x)) %>% 
+  map_depth(2, ~SHD(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD

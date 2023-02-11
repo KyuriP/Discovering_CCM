@@ -150,28 +150,28 @@ ggarrange(plotlist = precision_plots,
                             ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Precision", face = "bold", size = 18, family = "Palatino"))
 # save the figure
-ggsave("figure/precisionplots.pdf", width = 10, units = "in")
+ggsave("figure/precisionplots.pdf", width = 10, height=6, units = "in")
 
 # recall plot
 ggarrange(plotlist = recall_plots,
                          ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Recall", face = "bold", size = 18, family = "Palatino"))
 # save the figure
-ggsave("figure/recallplots.pdf", width = 10, units = "in")
+ggsave("figure/recallplots.pdf", width = 10, height=6, units = "in")
 
 # uncertainty plot
 ggarrange(plotlist = uncertainty_plots,
                         ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Uncertainty", face = "bold", size = 18, family = "Palatino"))
 # save the figure
-ggsave("figure/uncertaintyplots.pdf", width = 10, units = "in")
+ggsave("figure/uncertaintyplots.pdf", width = 10, height=6, units = "in")
 
 # shd plot
 ggarrange(plotlist = SHD_plots,
                       ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>% 
   annotate_figure(top = text_grob("SHD", face = "bold", size = 15, family = "Palatino"))
 # save the figure
-ggsave("figure/shdplots.pdf", width = 10, units = "in")
+ggsave("figure/shdplots.pdf", width = 10, height=6, units = "in")
 
 
 ## ========================

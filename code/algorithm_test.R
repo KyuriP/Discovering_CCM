@@ -66,7 +66,6 @@ suffStat_4p$n = 1e6
 
 res4p <- fci(suffStat_4p,indepTest=gaussCItest,
              alpha = 0.05, labels = colnames(data4p), selectionBias = FALSE, rules = rep(TRUE, 10))
-
 pag_fci4p <- plotAG(res4p@amat)
 
 ## Run CCI algorithm
