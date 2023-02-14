@@ -29,7 +29,7 @@ results <- list(res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10pspa
 uncertainties <- bind_rows("ccd_5p-sparse" = uncer_ccd5psparse, "fci_5p-sparse" = uncer_fci5psparse, "cci_5p-sparse"=uncer_cci5psparse, "ccd_10p-sparse"=uncer_ccd10psparse, "fci_10p-sparse" = uncer_fci10psparse, "cci_10p-sparse" = uncer_cci10psparse, "ccd_5p-dense"=uncer_ccd5pdense, "fci_5p-dense"=uncer_fci5pdense, "cci_5p-dense"=uncer_cci5pdense, "ccd_10p-dense"=uncer_ccd10pdense, "fci_10p-dense"=uncer_fci10pdense, "cci_10p-dense"=uncer_cci10pdense, "ccd_5p-LVsparse"=uncer_ccd5pLVsparse, "fci_5p-LVsparse"=uncer_fci5pLVsparse, "cci_5p-LVsparse"=uncer_cci5pLVsparse, "ccd_10p-LVsparse"=uncer_ccd10pLVsparse, "fci_10p-LVsparse"=uncer_fci10pLVsparse, "cci_10p-LVsparse"=uncer_cci10pLVsparse,
                            "ccd_5p-LVdense"=uncer_ccd5pLVdense, "fci_5p-LVdense"=uncer_fci5pLVdense, "cci_5p-LVdense"=uncer_cci5pLVdense, "ccd_10p-LVdense"=uncer_ccd10pLVdense, "fci_10p-LVdense"=uncer_fci10pLVdense, "cci_10p-LVdense"=uncer_cci10pLVdense,.id="id") %>% 
   group_by(id) %>% 
-  summarise_all(list(mean = mean, sd = sd)) %>%  
+  summarise_all(list(means = mean, sds = sd)) %>%  
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
          condition = stringr::str_split(id, "_", simplify = T)[,2]) %>% 
   tidyr::pivot_longer(!c(algorithm, condition, id), names_to = "name", values_to = "value") %>% 
@@ -70,13 +70,15 @@ precision_plots <- c("5p_sparse", "5p_dense", "10p_sparse", "10p_dense", "5p_LVs
         tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
         ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
         geom_line(aes(group = algorithm)) +
-        geom_point() +
+        geom_point(size=1) +
         #geom_errorbar(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N)), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))), width=0.1) +
         geom_ribbon(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N)), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
         scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
         scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
         labs(x="N", y="", title = "", subtitle = .x) +
-        scale_y_continuous(limits = c(0.4, 1)) +
+        # check if ylim is set reasonably
+        ylim(0.4, 1) +
+        #scale_y_continuous(limits = c(0.4, 1)) +
         theme_classic() + MyTheme
   )
 
@@ -90,13 +92,15 @@ recall_plots <-  c("5p_sparse", "5p_dense", "10p_sparse", "10p_dense", "5p_LVspa
         tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
         ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
         geom_line(aes(group = algorithm)) +
-        geom_point() +
+        geom_point(size=1) +
         #geom_errorbar(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N)), ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))), width=0.1) +
         geom_ribbon(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N)), ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
         scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
         scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
         labs(x="N", y="", title = "", subtitle = .x) +
-        scale_y_continuous(limits = c(0.4, 1)) +
+        # check if ylim is set reasonably
+        ylim(0.4, 1) +
+        #scale_y_continuous(limits = c(0.4, 1)) +
         theme_classic() + MyTheme
   )
 
@@ -109,15 +113,17 @@ uncertainty_plots <-  c("5p-sparse", "5p-dense", "10p-sparse", "10p-dense", "5p-
         uncertainties %>%
         filter(condition == .x) %>% 
         tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-        ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=mean, group = algorithm, colour = algorithm, fill=algorithm)) +
+        ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=means, group = algorithm, colour = algorithm, fill=algorithm)) +
         geom_line(aes(group = algorithm)) +
-        geom_point() +
+        geom_point(size=1) +
         #geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), width=0.1) +
-        geom_ribbon(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
+        geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N)), ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
         scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
         scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
         labs(x="N", y="", title = "", subtitle = .x) +
-        scale_y_continuous(limits = c(0.4, 1)) +
+        # check if ylim is reasonably set...
+        ylim(0, 0.7) +
+        #scale_y_continuous(limits = c(0.4, 1)) +
         theme_classic() + MyTheme
   )
 
@@ -132,7 +138,7 @@ SHD_plots <- c("5p-sparse", "5p-dense", "10p-sparse", "10p-dense", "5p-LVsparse"
         tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
         ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "5000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
         geom_line(aes(group = algorithm)) +
-        geom_point() + 
+        geom_point(size=1) + 
         #geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), width=0.1) +
         geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N)), ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
         scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -151,28 +157,28 @@ ggarrange(plotlist = precision_plots,
                             ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Precision", face = "bold", size = 18, family = "Palatino"))
 # save the figure
-ggsave("figure/precisionplots.pdf", width = 10, height=6, units = "in")
+ggsave("figure/precisionplots.pdf", width = 10, height=7, units = "in")
 
 # recall plot
 ggarrange(plotlist = recall_plots,
                          ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Recall", face = "bold", size = 18, family = "Palatino"))
 # save the figure
-ggsave("figure/recallplots.pdf", width = 10, height=6, units = "in")
+ggsave("figure/recallplots.pdf", width = 10, height=7, units = "in")
 
 # uncertainty plot
 ggarrange(plotlist = uncertainty_plots,
                         ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   annotate_figure(top = text_grob("Uncertainty", face = "bold", size = 18, family = "Palatino"))
 # save the figure
-ggsave("figure/uncertaintyplots.pdf", width = 10, height=6, units = "in")
+ggsave("figure/uncertaintyplots.pdf", width = 10, height=7, units = "in")
 
 # shd plot
 ggarrange(plotlist = SHD_plots,
                       ncol = 4, nrow = 2, common.legend = TRUE, legend = "bottom") %>% 
   annotate_figure(top = text_grob("SHD", face = "bold", size = 15, family = "Palatino"))
 # save the figure
-ggsave("figure/shdplots.pdf", width = 10, height=6, units = "in")
+ggsave("figure/shdplots.pdf", width = 10, height=7, units = "in")
 
 
 ## ========================
@@ -193,7 +199,9 @@ times %>%
         legend.text = element_text(family =  "Palatino", size=13, face="bold"))
 
 # save the figure
-ggsave("figure/timeplots.pdf", width = 11, height=4, units = "in")
+ggsave("figure/timeplots.pdf", width = 11, height=6, units = "in")
+
+
 
 
 ################################################################################

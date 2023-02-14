@@ -3,7 +3,7 @@
 # source("code/R/plot_fnc.R")
 # source("code/R/data_generating_fnc.R")
 # source("code/eval_metrics.R")
-# source("../code/true_ancestral.R")
+# source("code/true_ancestral.R")
 
 
 library(magrittr)
