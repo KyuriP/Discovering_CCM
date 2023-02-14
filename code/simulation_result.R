@@ -2,6 +2,7 @@ source("code/simulation_code.R")
 library(dplyr)
 library(purrr)
 library(ggplot2)
+library(ggpubr)
 
 ## Precision & Recall
 # compute the average precision and sd

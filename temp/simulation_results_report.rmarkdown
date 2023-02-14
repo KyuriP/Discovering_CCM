@@ -69,9 +69,11 @@ source("../code/simulation_code.R")
 
 ```
 
+
 # Simualtion Design
 
 ## Sparse 5 nodes model
+
 
 ```{r}
 #| results: hide
@@ -110,7 +112,9 @@ plotAG(trueag_5psparse)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 ## Dense 5 nodes model
+
 
 ```{r}
 #| results: hide
@@ -144,7 +148,9 @@ plotAG(trueag_5pdense)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 ## Sparse 10 nodes model
+
 
 ```{r}
 #| results: hide
@@ -200,7 +206,9 @@ plotAG(trueag_10psparse)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 ## Dense 10 nodes model
+
 
 ```{r}
 #| results: hide
@@ -256,7 +264,9 @@ plotAG(trueag_10pdense)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 ## 5 nodes with a LV sparse model
+
 
 ```{r}
 #| results: hide
@@ -300,7 +310,9 @@ plotAG(trueag_5psparseLV)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 ## 5 nodes with a LV dense model
+
 
 ```{r}
 #| results: hide
@@ -345,7 +357,9 @@ plotAG(trueag_5pdenseLV)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 ## 10 nodes with a LV sparse model
+
 
 ```{r}
 #| results: hide
@@ -405,7 +419,9 @@ plotAG(trueag_10psparseLV)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 ## 10 nodes with a LV dense model
+
 
 ```{r}
 #| results: hide
@@ -466,9 +482,11 @@ plotAG(trueag_10pdenseLV)
 title(main = "True AG", font.main = 1, cex.main = 2, line = 2, outer=TRUE)
 ```
 
+
 <hr>
 
 # Simulation Result
+
 
 ```{r}
 ## Precision & Recall
@@ -816,9 +834,11 @@ times %>%
 # ggsave("figure/timeplots.pdf", width = 11, height=4, units = "in")
 ```
 
+
 <hr>
 
 # Empirical Example
+
 
 ```{r}
 #| label: empirical-data
@@ -911,9 +931,12 @@ plotPAG(ccd_mcnally_ocd, mat_mcnally_ocd)
 plotPAG(fci_mcocd, matfci_mcocd)
 ```
 
+
 # Session info
+
 
 ```{r}
 #| code-fold: false
 sessionInfo()
 ```
+
