@@ -729,7 +729,7 @@ p5 <- results %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p_LVsparse", "10p_LVsparse", "5p_LVdense", "10p_LVdense")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense")), y=average_precision_mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
@@ -744,7 +744,7 @@ p6 <- results %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p_LVsparse", "10p_LVsparse", "5p_LVdense", "10p_LVdense")), y=average_recall_mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense")), y=average_recall_mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
@@ -759,7 +759,7 @@ p7 <- uncertainties %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p-LVsparse", "10p-LVsparse", "5p-LVdense", "10p-LVdense")), y=mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p-LVsparse", "5p-LVdense", "10p-LVsparse", "10p-LVdense")), y=mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
@@ -774,7 +774,7 @@ p8 <- SHDs %>%
   # exclude LV conditions
   filter(grepl("LV", condition), N == "1000") %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(condition, levels = c("5p-LVsparse", "10p-LVsparse", "5p-LVdense", "10p-LVdense")), y=mean, group = algorithm, colour = algorithm)) +
+  ggplot(aes(x= factor(condition, levels = c("5p-LVsparse", "5p-LVdense", "10p-LVsparse", "10p-LVdense")), y=mean, group = algorithm, colour = algorithm)) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   geom_line(aes(group = algorithm)) +
   geom_point() +
