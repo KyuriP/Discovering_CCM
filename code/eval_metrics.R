@@ -9,24 +9,24 @@ precision_recall <- function(truepag, estimatedpag){
     pre_null = cm["0","0"]/sum(cm[,"0"])
     rec_null = cm["0","0"]/sum(cm["0",])
   } else {
-    pre_null = NA; rec_null = NA;
-    #print("No null endpoint occured in the estimated graph.")
+    pre_null = 0; rec_null = 0;
+    #print("No null endpoint occurred in the estimated graph.")
   }
   
   if(2 %in% estimatedpag) {
     pre_head = cm["2","2"]/sum(cm[,"2"])
     rec_head = cm["2","2"]/sum(cm["2",])
   } else {
-    pre_head = NA; rec_head = NA;
-    #print("No tail endpoint occured in the estimated graph.")
+    pre_head = 0; rec_head = 0;
+    #print("No tail endpoint occurred in the estimated graph.")
   }
   
   if(3 %in% estimatedpag) {
     pre_tail = cm["3","3"]/sum(cm[,"3"])
     rec_tail = cm["3","3"]/sum(cm["3",])
   } else {
-    pre_tail = NA; rec_tail = NA;
-    #print("No head endpoint occured in the estimated graph.")
+    pre_tail = 0; rec_tail = 0;
+    #print("No head endpoint occurred in the estimated graph.")
   }
   # average precision and recall
   avg_pre = sum(pre_null, pre_tail, pre_head) / 3
@@ -49,7 +49,8 @@ precision_recall <- function(truepag, estimatedpag){
 uncertainty <- function(estimatedpag){
   p <- ncol(estimatedpag)
   n_circ <- sum(estimatedpag == 1) 
-  uncertainty_rate <- n_circ / (p * (p-1)) # total number of possible edgeendpoint = choose(p,2) * 2 
+  # uncertainty_rate <- n_circ / (p * (p-1)) # total number of possible edgeendpoint = choose(p,2) * 2 
+  uncertainty_rate <- n_circ  # total number of possible edgeendpoint = choose(p,2) * 2 
   return(uncertainty_rate)
 }
 
@@ -103,6 +104,59 @@ SHD <- function(truepag, estimatedpag){
   return(shd)
 }
 
+
+#' Create an adjacency matrix consisting of the highest frequency values
+#'
+#' @param amat list of adjacency matrices
+#' @param p number of variables (dimension of amat = p by p)
+high_freq <- function(amat, p){
+  # highest freq value storage
+  freq <- matrix(NA, p, p)
+  # loop through every row & column
+  for(i in 1:p){
+    for(j in 1:p){
+      freq[i, j] <- amat %>% 
+        purrr::map(~.x[i,j]) %>% 
+        unlist %>%  
+        table  %>%    
+        # find the highest freq val
+        which.max %>%  
+        names %>% as.numeric
+    }
+  }
+  dimnames(freq) <- list(paste0("X", 1:p), paste0("X", 1:p))
+  return(freq)
+}
+
+
+#' Compute the proportion of correct estimation per cell 
+#'
+#' @param amat list of adjacency matrices
+#' @param truemat adjacency matrix of the true model
+#' @param p number of variables (dimension of amat = p by p)
+prop_correct <- function(amat, truemat, p){
+  # highest freq value storage
+  correct <-  amat %>% 
+        purrr::map(~.x == truemat) %>% 
+        # sum them all and divide by the number of amats
+        Reduce("+", .) / length(amat)
+  return(correct)
+}
+
+
+
+
+#' Compute the proportion of circle (uncertainty) estimation per cell 
+#'
+#' @param amat list of adjacency matrices
+#' @param p number of variables (dimension of amat = p by p)
+prop_uncertain <- function(amat, p){
+  uncertain <- amat %>% 
+    purrr::map(~.x  == 1) %>% 
+    # sum them all and divide by the number of amats
+    Reduce("+", .) / length(amat)
+  return(uncertain)
+}
 
 
 

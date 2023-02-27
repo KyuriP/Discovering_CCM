@@ -2,9 +2,9 @@
 ## It contains four functions:
 ## `CreateAdjMat`, `extracttriples`, `extractnode`, and `plotPAG`.
 ##
-## Purpose: It plots a PAG using the ccd object from `ccd_KP` function.
-## `plotPAG` is the main function that plots a PAG and
-## it is dependent on the other three functions.
+## Purpose: It plots a partial ancestral graph.
+## `plotPAG` is specifically designed for ccd object.
+## `plotAG` plots a PAG given an (ancestral) adjacency matrix.
 ## ============================================================================
 
 ## load necessary package
@@ -26,7 +26,7 @@ CreateAdjMat <- function(ccd.obj, p){
   # storage matrix
   mat <- matrix(0, p, p, dimnames = list(ccd.obj$nodes, ccd.obj$nodes))
 
-  # for now, I assume the names of nodes are number.
+  # for now, I assume the names of nodes are numbers.
   for (i in 1:length(ccd.edges)){
     nodes <- unlist(stringr::str_split(ccd.edges[i], " "))
     row <- nodes[1]

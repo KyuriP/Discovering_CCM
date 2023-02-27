@@ -4,8 +4,8 @@
 # source("code/R/data_generating_fnc.R")
 # source("code/eval_metrics.R")
 # source("code/true_ancestral.R")
-
-
+# 
+# 
 library(magrittr)
 library(purrr)
 library(furrr)
@@ -48,7 +48,7 @@ equilibrium_check(B5sparse)
 
 # generate data 
 # specify the sample sizes
-N <- c(50, 150, 500, 1000, 5000) 
+N <- c(50, 150, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000) 
 
 simdata_5psparse <- N %>% future_map(function(z) {
   replicate(n=1000,
@@ -74,18 +74,20 @@ trueag_5psparse <- true_ancestral(dcg_5psparse, gen_dat(B5sparse), gaussCItest)
 dimnames(trueag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 plotAG(trueag_5psparse)
 
-## Run CCD algorithm
-# ccd_5psparse <- simdata_5psparse %>% 
+# Run CCD algorithm
+# ccd_5psparse <- simdata_5psparse %>%
 #   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-#       ) 
+#       )
 mat_5psparse <- ccd_5psparse %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
+######### CCD object is not intact when saving'em as .Rdata    :/ :/ :/ 
 # save(ccd_5psparse, file="data/ccd_5psparse.RData")
 # load("data/ccd_5psparse.RData")
 
-# pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse, plotPAG)
-
+# pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse,
+#                         ~map2(.x, .y, plotPAG)
+#                          )
 
 # ## Run FCI algorithm
 # fci_5psparse <- simdata_5psparse %>%
@@ -96,8 +98,8 @@ mat_5psparse <- ccd_5psparse %>%
 # save(fci_5psparse, file="data/fci_5psparse.RData")
 # load("data/fci_5psparse.RData")
 
-# pag_fci5psparse <- fci_5psparse %>% 
-#   map(~plotAG(.x))
+# pag_fci5psparse <- fci_5psparse %>%
+#   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
 # cci_5psparse <- simdata_5psparse %>%
@@ -107,8 +109,8 @@ mat_5psparse <- ccd_5psparse %>%
 # save(cci_5psparse, file="data/cci_5psparse.RData")
 # load("data/cci_5psparse.RData")
 
-# pag_cci5psparse <- cci_5psparse %>% 
-#   map(~plotAG(.x))
+# pag_cci5psparse <- cci_5psparse %>%
+#   map_depth(2, ~plotAG(.x))
 
 
 
@@ -129,6 +131,26 @@ SHD_ccd5psparse <- mat_5psparse %>%
   map_depth(2, ~SHD(trueag_5psparse, .x)) %>% do.call("cbind", .) %>% apply(., 2, unlist) %>%  as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_ccd5psparse)
+
+# high freq
+HF_ccd5psparse <- mat_5psparse %>% 
+  map(~high_freq(.x, p = 5))
+
+# prop correct
+PC_ccd5psparse <- mat_5psparse %>% 
+  map(
+    ~prop_correct(.x, trueag_5psparse, p = 5)
+        )
+
+# prop uncertain
+PU_ccd5psparse <- mat_5psparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+  
+
 
 # FCI
 res_fci5psparse <- fci_5psparse %>% 
@@ -151,6 +173,25 @@ SHD_fci5psparse <- fci_5psparse %>%
 # average SHD
 colMeans(SHD_fci5psparse)
 
+# high freq
+HF_fci5psparse <- fci_5psparse %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_fci5psparse <- fci_5psparse %>% 
+  map(
+    ~prop_correct(.x, trueag_5psparse, p = 5)
+  )
+
+# prop uncertain
+PU_fci5psparse <- fci_5psparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+
+
 # CCI
 res_cci5psparse <- cci_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
@@ -171,6 +212,23 @@ SHD_cci5psparse <- cci_5psparse %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_cci5psparse)
+
+# high freq
+HF_cci5psparse <- cci_5psparse %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_cci5psparse <- cci_5psparse %>% 
+  map(
+    ~prop_correct(.x, trueag_5psparse, p = 5)
+  )
+
+# prop uncertain
+PU_cci5psparse <- cci_5psparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
 
 
 ## ====================
@@ -280,6 +338,25 @@ SHD_ccd5pdense <- mat_5pdense %>%
 
 colMeans(SHD_ccd5pdense)
 
+
+# high freq
+HF_ccd5pdense <- mat_5pdense %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_ccd5pdense <- mat_5pdense %>% 
+  map(
+    ~prop_correct(.x, trueag_5pdense, p = 5)
+  )
+
+# prop uncertain
+PU_ccd5pdense <- mat_5pdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+
 # FCI
 res_fci5pdense <- fci_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
@@ -301,6 +378,25 @@ SHD_fci5pdense <- fci_5pdense %>%
 
 colMeans(SHD_fci5pdense)
 
+# high freq
+HF_fci5pdense <- fci_5pdense %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_fci5pdense <- fci_5pdense %>% 
+  map(
+    ~prop_correct(.x, trueag_5pdense, p = 5)
+  )
+
+# prop uncertain
+PU_fci5pdense <- fci_5pdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+
+
 # CCI
 res_cci5pdense <- cci_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
@@ -321,6 +417,22 @@ SHD_cci5pdense <- cci_5pdense %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 
 colMeans(SHD_cci5pdense)
+
+# high freq
+HF_cci5pdense <- cci_5pdense %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_cci5pdense <- cci_5pdense %>% 
+  map(
+    ~prop_correct(.x, trueag_5pdense, p = 5)
+  )
+
+# prop uncertain
+PU_cci5pdense <- cci_5pdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
 
 
 ## ====================
@@ -391,16 +503,16 @@ plotAG(trueag_10psparse)
 
 
 ## Run CCD algorithm
-# ccd_10psparse <- simdata_10psparse %>% 
+# ccd_10psparse <- simdata_10psparse %>%
 #   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
-#   ) 
+#   )
 mat_10psparse <- ccd_10psparse %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
 # save(ccd_10psparse, file="data/ccd_10psparse.RData")
 # load("data/ccd_10psparse.RData")
 
-# pag_ccd10psparse <- map2(ccd_10psparse, mat_10psparse, plotPAG)
+pag_ccd10psparse <- map2(ccd_10psparse, mat_10psparse, plotPAG)
 
 
 ## Run FCI algorithm
@@ -453,6 +565,29 @@ SHD_ccd10psparse <- mat_10psparse %>%
 # average SHD
 colMeans(SHD_ccd10psparse)
 
+# high freq
+HF_ccd510psparse <- mat_10psparse %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_ccd10psparse <- mat_10psparse %>% 
+  map(
+    ~prop_correct(.x, trueag_10psparse, p = 10)
+  )
+
+# prop uncertain
+PU_ccd10psparse <- mat_10psparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
+
+
+
+
+
+
 # FCI
 res_fci10psparse <- fci_10psparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
@@ -474,6 +609,24 @@ SHD_fci10psparse <- fci_10psparse %>%
 
 colMeans(SHD_fci10psparse)
 
+# high freq
+HF_fci10psparse <- fci_10psparse %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_fci10psparse <- fci_10psparse %>% 
+  map(
+    ~prop_correct(.x, trueag_10psparse, p = 10)
+  )
+
+# prop uncertain
+PU_fci10psparse <- fci_10psparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
+
 # CCI
 res_cci10psparse <- cci_10psparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
@@ -494,6 +647,23 @@ SHD_cci10psparse <- cci_10psparse %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_cci10psparse)
+
+# high freq
+HF_cci10psparse <- cci_10psparse %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_cci10psparse <- cci_10psparse %>% 
+  map(
+    ~prop_correct(.x, trueag_10psparse, p = 10)
+  )
+
+# prop uncertain
+PU_cci10psparse <- cci_10psparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
 
 
 
@@ -619,6 +789,25 @@ SHD_ccd10pdense  <- mat_10pdense %>%
 # average SHD
 colMeans(SHD_ccd10pdense)
 
+
+# high freq
+HF_ccd10pdense <- mat_10pdense %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_ccd10pdense <- mat_10pdense %>% 
+  map(
+    ~prop_correct(.x, trueag_10pdense, p = 10)
+  )
+
+# prop uncertain
+PU_ccd10pdense <- mat_10pdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
+
 # FCI
 res_fci10pdense  <- fci_10pdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
@@ -640,6 +829,28 @@ SHD_fci10pdense  <- fci_10pdense %>%
 # average SHD
 colMeans(SHD_fci10pdense)
 
+
+# high freq
+HF_fci10pdense <- fci_10pdense %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_fci10pdense <- fci_10pdense %>% 
+  map(
+    ~prop_correct(.x, trueag_10pdense, p = 10)
+  )
+
+# prop uncertain
+PU_fci10pdense <- fci_10pdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
+
+
+
+
 # CCI
 res_cci10pdense <- cci_10pdense %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
@@ -660,6 +871,23 @@ SHD_cci10pdense <- cci_10pdense %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # averae SHD
 colMeans(SHD_cci10pdense)
+
+
+# high freq
+HF_cci10pdense <- cci_10pdense %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_cci10pdense <- cci_10pdense %>% 
+  map(
+    ~prop_correct(.x, trueag_10pdense, p = 10)
+  )
+
+# prop uncertain
+PU_cci10pdense <- cci_10pdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
 
 
 ## ====================
@@ -791,6 +1019,26 @@ SHD_ccd5pLVsparse <- mat_5pLVsparse %>%
 # average SHD
 colMeans(SHD_ccd5pLVsparse)
 
+# high freq
+HF_ccd5pLVsparse <- mat_5pLVsparse %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_ccd5pLVsparse <- mat_5pLVsparse %>% 
+  map(
+    ~prop_correct(.x, trueag_5psparseLV, p = 5)
+  )
+
+# prop uncertain
+PU_ccd5pLVsparse <- mat_5pLVsparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+
+
+
 # FCI
 res_fci5pLVsparse  <- fci_5pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
@@ -812,6 +1060,25 @@ SHD_fci5pLVsparse <- fci_5pLVsparse %>%
 # average SHD
 colMeans(SHD_fci5pLVsparse)
 
+# high freq
+HF_fci5pLVsparse <- fci_5pLVsparse %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_fci5pLVsparse <- fci_5pLVsparse %>% 
+  map(
+    ~prop_correct(.x, trueag_5psparseLV, p = 5)
+  )
+
+# prop uncertain
+PU_fci5pLVsparse <- fci_5pLVsparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+
+
 # CCI
 res_cci5pLVsparse <- cci_5pLVsparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
@@ -832,6 +1099,22 @@ SHD_cci5pLVsparse <- cci_5pLVsparse %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_cci5pLVsparse)
+
+# high freq
+HF_cci5pLVsparse <- cci_5pLVsparse %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_cci5pLVsparse <- cci_5pLVsparse %>% 
+  map(
+    ~prop_correct(.x, trueag_5psparseLV, p = 5)
+  )
+
+# prop uncertain
+PU_cci5pLVsparse <- cci_5pLVsparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
 
 
 ## ====================
@@ -945,6 +1228,24 @@ SHD_ccd5pLVdense <- mat_5pLVdense %>%
 # average SHD
 colMeans(SHD_ccd5pLVdense)
 
+# high freq
+HF_ccd5pLVdense <- mat_5pLVdense %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_ccd5pLVdense <- mat_5pLVdense %>% 
+  map(
+    ~prop_correct(.x, trueag_5pdenseLV, p = 5)
+  )
+
+# prop uncertain
+PU_ccd5pLVdense <- mat_5pLVdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+
 # FCI
 res_fci5pLVdense  <- fci_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
@@ -966,6 +1267,24 @@ SHD_fci5pLVdense  <- fci_5pLVdense  %>%
 # average SHD
 colMeans(SHD_fci5pLVdense )
 
+# high freq
+HF_fci5pLVdense <- fci_5pLVdense %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_fci5pLVdense <- fci_5pLVdense %>% 
+  map(
+    ~prop_correct(.x, trueag_5pdenseLV, p = 5)
+  )
+
+# prop uncertain
+PU_fci5pLVdense <- fci_5pLVdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
+
+
+
 # CCI
 res_cci5pLVdense  <- cci_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV , .x)) %>% 
@@ -986,6 +1305,22 @@ SHD_cci5pLVdense  <- cci_5pLVdense  %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_cci5pLVdense )
+
+# high freq
+HF_cci5pLVdense <- cci_5pLVdense %>% 
+  map(~highfreq(.x, p = 5))
+
+# prop correct
+PC_cci5pLVdense <- cci_5pLVdense %>% 
+  map(
+    ~prop_correct(.x, trueag_5pdenseLV, p = 5)
+  )
+
+# prop uncertain
+PU_cci5pLVdense <- cci_5pLVdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 5)
+  )
 
 
 
@@ -1068,9 +1403,9 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
 # save(ccd_10pLVsparse, file="data/ccd_10pLVsparse.RData")
-# load("data/ccd_10pLV.RData")
+# load("data/ccd_10pLVsparse.RData")
 
-# pag_ccd10pLV <- map2(ccd_10pLV, mat_10pLV  , plotPAG)
+# pag_ccd10pLV <- map2(ccd_10pLVsparse, mat_10pLVsparse, plotPAG)
 
 
 ## Run FCI algorithm
@@ -1080,9 +1415,9 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
 #   )
 
 # save(fci_10pLVsparse, file="data/fci_10pLVsparse.RData")
-# load("data/fci_10pLV.RData")
+# load("data/fci_10pLVsparse.RData")
 
-# pag_fci10pLV  <- fci_10pLV   %>% 
+# pag_fci10pLV  <- fci_10pLVsparse   %>%
 #   map(~plotAG(.x))
 
 ## Run CCI algorithm
@@ -1120,6 +1455,24 @@ SHD_ccd10pLVsparse <- mat_10pLVsparse %>%
 # average SHD
 colMeans(SHD_ccd10pLVsparse)
 
+# high freq
+HF_ccd10pLVsparse <- mat_10pLVsparse %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_ccd10pLVsparse <- mat_10pLVsparse %>% 
+  map(
+    ~prop_correct(.x, trueag_10psparseLV, p = 10)
+  )
+
+# prop uncertain
+PU_ccd10pLVsparse <- mat_10pLVsparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
+
 # FCI
 res_fci10pLVsparse <- fci_10pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
@@ -1141,6 +1494,23 @@ SHD_fci10pLVsparse <- fci_10pLVsparse %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_fci10pLVsparse)
+
+# high freq
+HF_fci10pLVsparse <- fci_10pLVsparse %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_fci10pLVsparse <- fci_10pLVsparse %>% 
+  map(
+    ~prop_correct(.x, trueag_10psparseLV, p = 10)
+  )
+
+# prop uncertain
+PU_fci10pLVsparse <- fci_10pLVsparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
 
 
 # CCI 
@@ -1164,6 +1534,23 @@ SHD_cci10pLVsparse <- cci_10pLVsparse %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_cci10pLVsparse)
+
+# high freq
+HF_cci10pLVsparse <- cci_10pLVsparse %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_cci10pLVsparse <- cci_10pLVsparse %>% 
+  map(
+    ~prop_correct(.x, trueag_10psparseLV, p = 10)
+  )
+
+# prop uncertain
+PU_cci10pLVsparse <- cci_10pLVsparse %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
 
 
 
@@ -1200,16 +1587,73 @@ layout10LV = matrix(c(0, 1,
                       7, 1,
                       8, 0), 11, 2, byrow = T)
 
+## 2 LV
+B10_2lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                       0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4,
+                       0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0.6, 1, 0, 0, 0, 0, 0, 0, 0, 0.5,
+                       0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0.6, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 12, 12, byrow = T)
+
+# B10_22lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#                         0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4,
+#                         0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#                         0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0, 0,
+#                         0, 0, 0.6, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+#                         0, 0, 0, 0, 0.2, 0, 0.5, 0, 0, 0, 0, 0,
+#                         0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0.6, 0, 0,
+#                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8, 0,
+#                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 0, 0.5,
+#                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2, 0,
+#                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 12, 12, byrow = T)
+
+colnames(B10_2lvdense) <- c(paste("X", 1:10, sep=""), "L1", "L2")
+
+# specify layout
+layout10LV2 = matrix(c(0, 1,
+                      2, 1,
+                      1, 0,
+                      2, -1,
+                      3, 0,
+                      4, -1,
+                      5, 0,
+                      6, -1,
+                      4, 1,
+                      7, 1,
+                      8, 0,
+                      3, 2), 12, 2, byrow = T)
+
+
 true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV, labels = colnames(B10_lvdense), theme="colorblind")
+
+
+true10p2LVdense <- qgraph(t(B10_2lvdense), layout = layout10LV2, labels = colnames(B10_2lvdense), theme="colorblind")
 
 ## Data generating
 # equilibrium check
 equilibrium_check(B10_lvdense)
 
+equilibrium_check(B10_2lvdense)
+
+
 # generate data (sample size as specified above)
 simdata_10pLVdense <- N %>% future_map(function(z) {
   replicate(n=1000,
             expr = gen_dat(B10_lvdense, N = z)[,-11],  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
+
+
+simdata_10p2LVdense <- N %>% future_map(function(z) {
+  replicate(n=10,
+            expr = gen_dat(B10_2lvdense, N = z)[,-c(11,12)],  
             simplify = FALSE)
 }, .options = furrr_options(seed=123))
 
@@ -1228,9 +1672,37 @@ dcg_10pdenseLV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
                            0, 0, 0, 0, 0, 0, 1, 2, 1, 0), 10, 10, byrow = T)
 
+dcg_10pdense2LV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+                           0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 
+                           0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
+                           0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+                           0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 
+                           0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+                           0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                           0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 
+                           0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+                           0, 0, 0, 0, 0, 0, 1, 2, 1, 0), 10, 10, byrow = T)
+
+# dcg_10pdense22LV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+#                             0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 
+#                             0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
+#                             0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+#                             0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+#                             0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+#                             0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+#                             0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 
+#                             0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 
+#                             0, 0, 0, 0, 0, 0, 1, 2, 1, 0), 10, 10, byrow = T)
+
 trueag_10pdenseLV <- true_ancestral(dcg_10pdenseLV, gen_dat(B10_lvdense), gaussCItest)
 dimnames(trueag_10pdenseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+
+trueag_10pdense2LV <- true_ancestral(dcg_10pdense2LV, gen_dat(B10_2lvdense), gaussCItest)
+dimnames(trueag_10pdense2LV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+
 plotAG(trueag_10pdenseLV)
+plotAG(trueag_10pdense2LV)
+
 
 
 ## Run CCD algorithm
@@ -1238,6 +1710,13 @@ plotAG(trueag_10pdenseLV)
 #   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
 #   )
 mat_10pLVdense   <- ccd_10pLVdense %>% 
+  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+
+# ccd_10p2LVdense  <- simdata_10p2LVdense %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = 0.05)
+#   )
+
+mat_10p2LVdense   <- ccd_10p2LVdense %>% 
   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
 # save(ccd_10pLVdense, file="data/ccd_10pLVdense.RData")
@@ -1251,6 +1730,12 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
 #            alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
+
+## 2 LV try out
+fci_10p2LVdense  <- simdata_10p2LVdense   %>%
+  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+           alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+  )
 
 # save(fci_10pLVdense, file="data/fci_10pLVdense.RData")
 # load("data/fci_10pLV.RData")
@@ -1293,6 +1778,25 @@ SHD_ccd10pLVdense <- mat_10pLVdense %>%
 # average SHD
 colMeans(SHD_ccd10pLVdense)
 
+# high freq
+HF_ccd10pLVdense <- mat_10pLVdense %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_ccd10pLVdense <- mat_10pLVdense %>% 
+  map(
+    ~prop_correct(.x, trueag_10pdenseLV, p = 10)
+  )
+
+# prop uncertain
+PU_ccd10pLVdense <- mat_10pLVdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
+
+
 # FCI
 res_fci10pLVdense <- fci_10pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
@@ -1313,6 +1817,24 @@ SHD_fci10pLVdense <- fci_10pLVdense %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_fci10pLVdense)
+
+# high freq
+HF_fci10pLVdense <- fci_10pLVdense %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_fci10pLVdense <- fci_10pLVdense %>% 
+  map(
+    ~prop_correct(.x, trueag_10pdenseLV, p = 10)
+  )
+
+# prop uncertain
+PU_fci10pLVdense <- fci_10pLVdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
 
 # CCI
 res_cci10pLVdense <- cci_10pLVdense %>% 
@@ -1335,6 +1857,28 @@ SHD_cci10pLVdense <- cci_10pLVdense %>%
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_cci10pLVdense)
+
+# high freq
+HF_cci10pLVdense <- cci_10pLVdense %>% 
+  map(~highfreq(.x, p = 10))
+
+# prop correct
+PC_cci10pLVdense <- cci_10pLVdense %>% 
+  map(
+    ~prop_correct(.x, trueag_10pdenseLV, p = 10)
+  )
+
+# prop uncertain
+PU_cci10pLVdense <- cci_10pLVdense %>% 
+  map(
+    ~prop_uncertain(.x, p = 10)
+  )
+
+
+
+
+
+
 
 
 ##################

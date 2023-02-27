@@ -1,0 +1,20 @@
+<script>
+function graph_fold() {
+    cells = document.querySelectorAll(".cell:has(img)");
+    cells.forEach(cell => {
+      imgs = cell.querySelectorAll(".cell-output-display:has(p img)");
+      imgs.forEach(img => {
+        det = document.createElement("details");
+        sum = document.createElement("summary");
+        det.appendChild(sum);
+        det.children[0].innerText = "Graph";
+        img_clone = img.cloneNode(true);
+        det.appendChild(img_clone);
+        cell.replaceChild(det, img);
+      });
+    });
+}
+
+window.onload = graph_fold();  
+</script>
+
