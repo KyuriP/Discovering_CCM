@@ -94,7 +94,7 @@ Content Overview
 </ul></td>
 </tr>
 <tr class="even">
-<td>week7</td>
+<td><s>week7</s></td>
 <td>Work on simulation &amp; Consultancy session</td>
 <td><ul>
 <li>Trouble-shooting code.</li>
