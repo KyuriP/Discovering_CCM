@@ -102,7 +102,7 @@ Content Overview
 </ul></td>
 </tr>
 <tr class="odd">
-<td>week8</td>
+<td><s>week8</s></td>
 <td>Work on simulation &amp; Consultancy session</td>
 <td><ul>
 <li>Trouble-shooting code.</li>
@@ -110,7 +110,7 @@ Content Overview
 </ul></td>
 </tr>
 <tr class="even">
-<td>week9</td>
+<td><s>week9</s></td>
 <td>Work on simulation</td>
 <td><ul>
 <li>Review the results.</li>
