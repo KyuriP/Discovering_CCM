@@ -31,8 +31,8 @@ true_ancestral <- function(trueadj, dat, indepTest, alpha = 1e-10, p = nrow(true
     truemat[i, desc] <- 3
   }
   # if LV, keep the bidirected edge
-  lv_ind <- which(trueadj == 2, arr.ind = TRUE)
-  truemat[lv_ind] <- 2
+  # lv_ind <- which(trueadj == 2, arr.ind = TRUE)
+  # truemat[lv_ind] <- 2
   
   # set to zero when no edges in skeleton
   ind <- which(skel == 0, arr.ind = TRUE)

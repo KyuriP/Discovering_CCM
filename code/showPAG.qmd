@@ -62,6 +62,8 @@ library(CCI.KP)
 
 # set the seed
 set.seed(123)
+
+plan(multisession) 
 ```
 
 
@@ -1360,7 +1362,7 @@ B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0.6, 1, 0, 0, 0, 0, 0, 0, 0, 0.7,
                        0, 0, 0, 0, 0.8, 0, 0.5, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0.8, 0, 0.6, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8, 0,
+                       0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0.8, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1407,10 +1409,11 @@ dcg_10pdenseLV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
                            0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 
                            0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-                           0, 0, 0, 0, 0, 1, 0, 2, 0, 2, 
-                           0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 
+                           0, 0, 0, 0, 0, 1, 0, 1, 0, 2, 
+                           0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 
                            0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
                            0, 0, 0, 0, 0, 0, 2, 2, 1, 0), 10, 10, byrow = T)
+
 
 trueag_10pdenseLV <- true_ancestral(dcg_10pdenseLV, gen_dat(B10_lvdense), gaussCItest)
 dimnames(trueag_10pdenseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
@@ -1532,92 +1535,187 @@ colMeans(SHD_cci10pLVdense)
 ```{r}
 #| fig-width: 10
 #| fig-height: 5
+#| eval: false
+
+par(mfrow=c(2,5))
+vec <- list("CCD-5p-sparse" = mat_5psparse, "FCI-5p-sparse" = fci_5psparse, "CCI-5p-sparse" = cci_5psparse)
+
+graphs_5psparse <- list()
+for(i in seq_along(vec)){
+  ## high-freq graphs
+  graphs_5psparse[[i]] <- vec[[i]] %>% 
+  map(~high_freq(.x, p = 5) %>% 
+        plotAG)
+  ## correct prop plots
+  vec[[i]] %>% 
+    imap(
+      ~ prop_correct(.x, trueag_5psparse, p = 5) %>% 
+        # long format
+        reshape2::melt() %>% 
+        ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+        geom_tile() +
+        geom_text() + 
+        # reverse factor level
+        scale_y_discrete(limits=rev) + 
+        scale_fill_gradient(low="grey90", high="blue") +
+        labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+    ) %>% 
+    ggpubr::ggarrange(plotlist = .,
+                      ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+    ggpubr::annotate_figure(top = text_grob(glue::glue("Correct Proportion {names(vec[[i]])}"), face = "bold", size = 18, family = "Palatino"))
+  ## uncertainty prop plots
+  vec[[i]] %>% 
+    imap(
+      ~ prop_uncertain(.x, p = 5) %>% 
+        # long format
+        reshape2::melt() %>% 
+        ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+        geom_tile() +
+        geom_text() + 
+        # reverse factor level
+        scale_y_discrete(limits=rev) + 
+        scale_fill_gradient(low="grey90", high="red") +
+        labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
+    ) %>% 
+    ggpubr::ggarrange(plotlist = .,
+                      ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+    ggpubr::annotate_figure(top = text_grob(glue::glue("Uncertainty {names(vec)[i]}"), face = "bold", size = 18, family = "Palatino"))
+}
+
+corprop_plots_5psparse <- list()
+# prop correct
+for(i in seq_along(vec)){
+  corprop_plots_5psparse[[i]] <- vec[[i]] %>% 
+    imap(
+      ~ prop_correct(.x, trueag_5psparse, p = 5) %>% 
+        # long format
+        reshape2::melt() %>% 
+        ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+        geom_tile() +
+        geom_text() + 
+        # reverse factor level
+        scale_y_discrete(limits=rev) + 
+        scale_fill_gradient(low="grey90", high="blue") +
+        labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+    ) %>% 
+    ggpubr::ggarrange(plotlist = .,
+                      ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+    ggpubr::annotate_figure(top = text_grob(glue::glue("Correct Proportion {names(vec[[i]])}"), face = "bold", size = 18, family = "Palatino"))
+}
+
+ucprop_plots_5psparse <- list()
+# prop uncertain
+for(i in seq_along(vec)){
+  ucprop_plots_5psparse[[i]] <- vec[[i]] %>% 
+    imap(
+      ~ prop_uncertain(.x, p = 5) %>% 
+        # long format
+        reshape2::melt() %>% 
+        ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+        geom_tile() +
+        geom_text() + 
+        # reverse factor level
+        scale_y_discrete(limits=rev) + 
+        scale_fill_gradient(low="grey90", high="red") +
+        labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
+    ) %>% 
+    ggpubr::ggarrange(plotlist = .,
+                      ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+    ggpubr::annotate_figure(top = text_grob(glue::glue("Uncertainty {names(vec)[i]}"), face = "bold", size = 18, family = "Palatino"))
+}
+```
+
+
+
+```{r}
+#| fig-width: 10
+#| fig-height: 5
 
 
 ## CCD 5p sparse case
-# high frequency 
+# high frequency
 par(mfrow=c(2,5))
-mat_5psparse %>% 
-  map(~high_freq(.x, p = 5) %>% 
+mat_5psparse %>%
+  map(~high_freq(.x, p = 5) %>%
         plotAG)
 
 # prop correct
-mat_5psparse %>% 
+mat_5psparse %>%
   imap(
-    ~ prop_correct(.x, trueag_5psparse, p = 5) %>% 
+    ~ prop_correct(.x, trueag_5psparse, p = 5) %>%
       # long format
-      reshape2::melt() %>% 
-      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
       geom_tile() +
-      geom_text() + 
+      geom_text() +
       # reverse factor level
-      scale_y_discrete(limits=rev) + 
+      scale_y_discrete(limits=rev) +
       scale_fill_gradient(low="grey90", high="blue") +
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
-  ) %>% 
+  ) %>%
   ggpubr::ggarrange(plotlist = .,
                     ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
-mat_5psparse %>% 
+mat_5psparse %>%
   imap(
-    ~ prop_uncertain(.x, p = 5) %>% 
+    ~ prop_uncertain(.x, p = 5) %>%
       # long format
-      reshape2::melt() %>% 
-      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
       geom_tile() +
-      geom_text() + 
+      geom_text() +
       # reverse factor level
-      scale_y_discrete(limits=rev) + 
+      scale_y_discrete(limits=rev) +
       scale_fill_gradient(low="grey90", high="red") +
-      labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
-  ) %>% 
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
   ggpubr::ggarrange(plotlist = .,
                     ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
 ## FCI 5p sparse case
-# high frequency 
+# high frequency
 par(mfrow=c(2,5))
 
-fci_5psparse %>% 
-  map(~high_freq(.x, p = 5) %>% 
+fci_5psparse %>%
+  map(~high_freq(.x, p = 5) %>%
         plotAG)
 
 # prop correct
-fci_5psparse %>% 
+fci_5psparse %>%
   imap(
-    ~ prop_correct(.x, trueag_5psparse, p = 5) %>% 
+    ~ prop_correct(.x, trueag_5psparse, p = 5) %>%
       # long format
-      reshape2::melt() %>% 
-      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
       geom_tile() +
-      geom_text() + 
+      geom_text() +
       # reverse factor level
-      scale_y_discrete(limits=rev) + 
+      scale_y_discrete(limits=rev) +
       scale_fill_gradient(low="grey90", high="blue") +
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
-  ) %>% 
+  ) %>%
   ggpubr::ggarrange(plotlist = .,
                     ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
-fci_5psparse %>% 
+fci_5psparse %>%
   imap(
-    ~ prop_uncertain(.x, p = 5) %>% 
+    ~ prop_uncertain(.x, p = 5) %>%
       # long format
-      reshape2::melt() %>% 
-      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
       geom_tile() +
-      geom_text() + 
+      geom_text() +
       # reverse factor level
-      scale_y_discrete(limits=rev) + 
+      scale_y_discrete(limits=rev) +
       scale_fill_gradient(low="grey90", high="red") +
-      labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
-  ) %>% 
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
   ggpubr::ggarrange(plotlist = .,
                     ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
@@ -1625,45 +1723,45 @@ fci_5psparse %>%
 
 
 ## CCI 5p sparse case
-# high frequency 
+# high frequency
 par(mfrow=c(2,5))
 
-cci_5psparse %>% 
-  map(~high_freq(.x, p = 5) %>% 
+cci_5psparse %>%
+  map(~high_freq(.x, p = 5) %>%
         plotAG)
 
 # prop correct
-cci_5psparse %>% 
+cci_5psparse %>%
   imap(
-    ~ prop_correct(.x, trueag_5psparse, p = 5) %>% 
+    ~ prop_correct(.x, trueag_5psparse, p = 5) %>%
       # long format
-      reshape2::melt() %>% 
-      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
       geom_tile() +
-      geom_text() + 
+      geom_text() +
       # reverse factor level
-      scale_y_discrete(limits=rev) + 
+      scale_y_discrete(limits=rev) +
       scale_fill_gradient(low="grey90", high="blue") +
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
-  ) %>% 
+  ) %>%
   ggpubr::ggarrange(plotlist = .,
                     ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
-cci_5psparse %>% 
+cci_5psparse %>%
   imap(
-    ~ prop_uncertain(.x, p = 5) %>% 
+    ~ prop_uncertain(.x, p = 5) %>%
       # long format
-      reshape2::melt() %>% 
-      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) + 
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
       geom_tile() +
-      geom_text() + 
+      geom_text() +
       # reverse factor level
-      scale_y_discrete(limits=rev) + 
+      scale_y_discrete(limits=rev) +
       scale_fill_gradient(low="grey90", high="red") +
-      labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
-  ) %>% 
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
   ggpubr::ggarrange(plotlist = .,
                     ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
@@ -1674,7 +1772,6 @@ cci_5psparse %>%
 ```{r}
 #| fig-width: 10
 #| fig-height: 5
-
 
 ## CCD 5p dense case
 # high frequency 
@@ -2097,6 +2194,574 @@ cci_10pdense %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 ```
+
+
+## 5P sparse - LV
+```{r}
+#| fig-width: 10
+#| fig-height: 5
+
+## CCD 5p sparse LV case
+# high frequency
+par(mfrow=c(2,5))
+mat_5pLVsparse %>%
+  map(~high_freq(.x, p = 5) %>%
+        plotAG)
+
+# prop correct
+mat_5pLVsparse %>%
+  imap(
+    ~ prop_correct(.x, trueag_5psparseLV, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+mat_5pLVsparse %>%
+  imap(
+    ~ prop_uncertain(.x, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+
+# high frequency
+par(mfrow=c(2,5))
+
+fci_5pLVsparse %>%
+  map(~high_freq(.x, p = 5) %>%
+        plotAG)
+
+# prop correct
+fci_5pLVsparse %>%
+  imap(
+    ~ prop_correct(.x, trueag_5psparseLV, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+fci_5pLVsparse %>%
+  imap(
+    ~ prop_uncertain(.x, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
+
+
+
+## CCI 5p sparse case
+# high frequency
+par(mfrow=c(2,5))
+
+cci_5pLVsparse %>%
+  map(~high_freq(.x, p = 5) %>%
+        plotAG)
+
+# prop correct
+cci_5pLVsparse %>%
+  imap(
+    ~ prop_correct(.x, trueag_5psparseLV, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+cci_5pLVsparse %>%
+  imap(
+    ~ prop_uncertain(.x, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+```
+
+
+
+## 5P dense - LV
+```{r}
+#| fig-width: 10
+#| fig-height: 5
+
+## CCD 5p dense LV case
+# high frequency
+par(mfrow=c(2,5))
+mat_5pLVdense %>%
+  map(~high_freq(.x, p = 5) %>%
+        plotAG)
+
+# prop correct
+mat_5pLVdense %>%
+  imap(
+    ~ prop_correct(.x, trueag_5pdenseLV, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+mat_5pLVdense %>%
+  imap(
+    ~ prop_uncertain(.x, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+
+# high frequency
+par(mfrow=c(2,5))
+
+fci_5pLVdense %>%
+  map(~high_freq(.x, p = 5) %>%
+        plotAG)
+
+# prop correct
+fci_5pLVdense %>%
+  imap(
+    ~ prop_correct(.x, trueag_5pdenseLV, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+fci_5pLVdense %>%
+  imap(
+    ~ prop_uncertain(.x, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
+
+
+
+## CCI 5p sparse case
+# high frequency
+par(mfrow=c(2,5))
+
+cci_5pLVdense %>%
+  map(~high_freq(.x, p = 5) %>%
+        plotAG)
+
+# prop correct
+cci_5pLVdense %>%
+  imap(
+    ~ prop_correct(.x, trueag_5pdenseLV, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+cci_5pLVdense %>%
+  imap(
+    ~ prop_uncertain(.x, p = 5) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+```
+
+
+## 10P sparse - LV
+```{r}
+#| fig-width: 14
+#| fig-height: 7
+
+## CCD 10p sparse LV case
+# high frequency
+par(mfrow=c(2,5))
+mat_10pLVsparse %>%
+  map(~high_freq(.x, p = 10) %>%
+        plotAG)
+
+# prop correct
+mat_10pLVsparse %>%
+  imap(
+    ~ prop_correct(.x, trueag_10psparseLV, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+mat_10pLVsparse %>%
+  imap(
+    ~ prop_uncertain(.x, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+
+# high frequency
+par(mfrow=c(2,5))
+
+fci_10pLVsparse %>%
+  map(~high_freq(.x, p = 10) %>%
+        plotAG)
+
+# prop correct
+fci_10pLVsparse %>%
+  imap(
+    ~ prop_correct(.x, trueag_10psparseLV, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+fci_10pLVsparse %>%
+  imap(
+    ~ prop_uncertain(.x, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
+
+
+
+## CCI 5p sparse case
+# high frequency
+par(mfrow=c(2,5))
+
+cci_10pLVsparse %>%
+  map(~high_freq(.x, p = 10) %>%
+        plotAG)
+
+# prop correct
+cci_10pLVsparse %>%
+  imap(
+    ~ prop_correct(.x, trueag_10psparseLV, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+cci_10pLVsparse %>%
+  imap(
+    ~ prop_uncertain(.x, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
+
+```
+
+
+
+
+## 10P dense - LV
+```{r}
+#| fig-width: 14
+#| fig-height: 7
+
+## CCD 10p dense LV case
+# high frequency
+par(mfrow=c(2,5))
+mat_10pLVdense %>%
+  map(~high_freq(.x, p = 10) %>%
+        plotAG)
+
+# prop correct
+mat_10pLVdense %>%
+  imap(
+    ~ prop_correct(.x, trueag_10pdenseLV, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+mat_10pLVdense %>%
+  imap(
+    ~ prop_uncertain(.x, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+
+# high frequency
+par(mfrow=c(2,5))
+
+fci_10pLVdense %>%
+  map(~high_freq(.x, p = 10) %>%
+        plotAG)
+
+# prop correct
+fci_10pLVdense %>%
+  imap(
+    ~ prop_correct(.x, trueag_10pdenseLV, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+fci_10pLVdense %>%
+  imap(
+    ~ prop_uncertain(.x, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
+
+
+
+## CCI 5p sparse case
+# high frequency
+par(mfrow=c(2,5))
+
+cci_10pLVdense %>%
+  map(~high_freq(.x, p = 10) %>%
+        plotAG)
+
+# prop correct
+cci_10pLVdense %>%
+  imap(
+    ~ prop_correct(.x, trueag_10pdenseLV, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="blue") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+# prop uncertain
+cci_10pLVdense %>%
+  imap(
+    ~ prop_uncertain(.x, p = 10) %>%
+      # long format
+      reshape2::melt() %>%
+      ggplot(aes(x = Var2, y = Var1, fill = value, label= value)) +
+      geom_tile() +
+      geom_text() +
+      # reverse factor level
+      scale_y_discrete(limits=rev) +
+      scale_fill_gradient(low="grey90", high="red") +
+      labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
+  ) %>%
+  ggpubr::ggarrange(plotlist = .,
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+  ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
+
+```
+
 
 :::
 
