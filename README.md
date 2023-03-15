@@ -118,7 +118,7 @@ Content Overview
 </ul></td>
 </tr>
 <tr class="odd">
-<td>week10</td>
+<td><s>week10</s></td>
 <td>Work on simulation &amp; update Methods section</td>
 <td><ul>
 <li>Update the results section.</li>
