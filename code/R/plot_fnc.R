@@ -102,7 +102,7 @@ extractnode <- function(triples) {
 #' }
 
 
-#' Plot PAG (partial ancestral graph)
+#' Plot PAG (partial ancestral graph) for CCD algorithm
 #'
 #' @param amat the adjacency matrix of PAG
 #' @param ccd.obj the resulting object of ccdKP function
@@ -172,9 +172,16 @@ plotPAG <- function(ccd.obj, amat)
 
 
 ## =======================================
-## plotAG function (edited slightly)
+## plotAG function (edited slightly from `pcalg` package)
 ## =======================================
-
+#' Plot PAG (partial ancestral graph) for FCI and CCI algorithms
+#'
+#' @param amat adjacency matrix of the resulting estimated graph
+#'
+#' @details
+#' "0": no edge; "1": circle; "2": arrow; "3": tail
+#'
+#' @return a PAG graph of graphNEL class
 plotAG <- function(amat)
 {
   g <- as(amat,"graphNEL")

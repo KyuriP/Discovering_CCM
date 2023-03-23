@@ -7,7 +7,7 @@
 ## ============================================================================
 
 
-searchAM_KP <- function(amat,x,type = c("an","de","ant","sp","nb","pa","ch","pde", "pan"))
+searchAM_KP <- function(amat, x, type = c("an","de","ant","sp","nb","pa","ch","pde", "pan"))
 {
   ## ----------------------------------------------------------------------
   ## Arguments:

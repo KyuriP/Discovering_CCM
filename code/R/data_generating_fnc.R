@@ -10,7 +10,7 @@
 #'
 #' @param B the square regression matrix
 #'
-#' @return print out message whether equilibrium is met.
+#' @return print out message whether equilibrium is met or not.
 equilibrium_check <- function(B){
   # if the absolute values of all eigen values of B are smaller than 1,
   # then it reaches an equilibrium state
