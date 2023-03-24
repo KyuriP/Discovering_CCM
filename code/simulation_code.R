@@ -91,7 +91,8 @@ equilibrium_check(B5sparse)
 
 # generate data 
 # specify the sample sizes
-N <- c(50, 150, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 10000)
+N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
+
 # specify replication number
 n <- 500
 # specify alpha level

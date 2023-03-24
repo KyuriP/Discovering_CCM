@@ -62,6 +62,8 @@ precision_recall <- function(truepag, estimatedpag){
 
 
 
+
+
 #' Compute uncertainty rate
 #' @param estimatedpag estimated pag adjacency matrix
 #'
@@ -198,3 +200,94 @@ prop_uncertain <- function(amat, p){
 
 
 
+## ============================================================================
+# Extra: two functions below `precision2` and `recall2` are the same as 
+# `precision_recall` function but only return acerage precision and recall value, 
+# respectively. They are just made to be used for the extended simulation study 
+# where we random sample B matrices. 
+## ============================================================================
+
+#' Compute only average precision 
+#' @param truepag adjacency matrix of true ancestral graph
+#' @param estimatedpag estimated pag adjacency matrix
+#'
+#' @return average precision 
+#' (e.g., arrowhead, arrowtail, null)
+precision2 <- function(truepag, estimatedpag){
+  ## compare to the true pag
+  # create a confusion matrix
+  cm <- table(true = truepag, est = estimatedpag, exclude="1") # exclude circle
+  # compute precision & recall for each category
+  # (0 = null, 1 = circle, 2 = arrow head, 3 = arrow tail)
+  if(0 %in% estimatedpag) {
+    pre_null = cm["0","0"]/sum(cm[,"0"])
+    rec_null = cm["0","0"]/sum(cm["0",])
+  } else {
+    pre_null = 0; rec_null = 0;
+    # print("No null endpoint occurred in the estimated graph.")
+  }
+  
+  if(2 %in% estimatedpag) {
+    pre_head = cm["2","2"]/sum(cm[,"2"])
+    rec_head = cm["2","2"]/sum(cm["2",])
+  } else {
+    pre_head = 0; rec_head = 0;
+    # print("No tail endpoint occurred in the estimated graph.")
+  }
+  
+  if(3 %in% estimatedpag) {
+    pre_tail = cm["3","3"]/sum(cm[,"3"])
+    rec_tail = cm["3","3"]/sum(cm["3",])
+  } else {
+    pre_tail = 0; rec_tail = 0;
+    #print("No head endpoint occurred in the estimated graph.")
+  }
+  # average precision and recall
+  avg_pre = sum(pre_null, pre_tail, pre_head) / 3
+  avg_rec = sum(rec_null, rec_tail, rec_head) / 3
+  # return precision and recall value for each edge-endpoint along with the average
+  return(average_precision = avg_pre)
+}
+
+
+#' Compute only average recall 
+#' @param truepag adjacency matrix of true ancestral graph
+#' @param estimatedpag estimated pag adjacency matrix
+#'
+#' @return average recall 
+#' (e.g., arrowhead, arrowtail, null)
+recall2 <- function(truepag, estimatedpag){
+  ## compare to the true pag
+  # create a confusion matrix
+  cm <- table(true = truepag, est = estimatedpag, exclude="1") # exclude circle
+  # compute precision & recall for each category
+  # (0 = null, 1 = circle, 2 = arrow head, 3 = arrow tail)
+  if(0 %in% estimatedpag) {
+    pre_null = cm["0","0"]/sum(cm[,"0"])
+    rec_null = cm["0","0"]/sum(cm["0",])
+  } else {
+    pre_null = 0; rec_null = 0;
+    # print("No null endpoint occurred in the estimated graph.")
+  }
+  
+  if(2 %in% estimatedpag) {
+    pre_head = cm["2","2"]/sum(cm[,"2"])
+    rec_head = cm["2","2"]/sum(cm["2",])
+  } else {
+    pre_head = 0; rec_head = 0;
+    # print("No tail endpoint occurred in the estimated graph.")
+  }
+  
+  if(3 %in% estimatedpag) {
+    pre_tail = cm["3","3"]/sum(cm[,"3"])
+    rec_tail = cm["3","3"]/sum(cm["3",])
+  } else {
+    pre_tail = 0; rec_tail = 0;
+    #print("No head endpoint occurred in the estimated graph.")
+  }
+  # average precision and recall
+  avg_pre = sum(pre_null, pre_tail, pre_head) / 3
+  avg_rec = sum(rec_null, rec_tail, rec_head) / 3
+  # return precision and recall value for each edge-endpoint along with the average
+  return(average_recall = avg_rec)
+}
