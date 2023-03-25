@@ -1,4 +1,3 @@
-
 ## ============================================================================
 ## Description
 #
@@ -202,7 +201,7 @@ prop_uncertain <- function(amat, p){
 
 ## ============================================================================
 # Extra: two functions below `precision2` and `recall2` are the same as 
-# `precision_recall` function but only return acerage precision and recall value, 
+# `precision_recall` function but only return average precision and recall value, 
 # respectively. They are just made to be used for the extended simulation study 
 # where we random sample B matrices. 
 ## ============================================================================

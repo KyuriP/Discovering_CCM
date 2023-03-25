@@ -1,4 +1,3 @@
-
 ## =============================================================================
 ## Description
 #
@@ -70,4 +69,49 @@ fci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.05,
 cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.05, 
     labels = colnames(depression), p = ncol(depression), verbose=TRUE) %>% .$maag %>% plotAG
 
-1/sqrt(408)
+
+
+
+## =======================================
+## 4. Extra: Transformed data distribution
+## =======================================
+# specify my custom plotting theme
+MyTheme2 <-  theme(plot.title = element_text(family = "Palatino", size = 14, hjust=0.5),
+                   plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15, hjust=0.5),
+                   axis.text=element_text(face = "bold",family = "Palatino", size = 11),
+                   #axis.text.x = element_text(angle = 45, hjust = 1.2, vjust =1.2),
+                   axis.title = element_text(face = "bold",family = "Palatino", size = 12),
+                   legend.text = element_text(face = "bold", family = "Palatino", size = 12),
+                   legend.position="bottom",
+                   strip.text = element_text(size=12, family = "Palatino"),
+                   strip.background = element_rect(fill="#f0f0f0", linetype = "solid", color="gray"),
+                   strip.placement = "outside",
+                   panel.border = element_rect(color = "#DCDCDC", fill = NA)
+)
+
+# original data distribution
+p1 <- depression %>%
+  tidyr::pivot_longer(where(is.numeric)) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 10) +
+  facet_wrap(~name) +
+  theme_minimal() +
+  ggtitle("(a) Original data") +
+  MyTheme2
+
+## transform data
+# some are not normal --> makes the data semi-parametric Gaussian using huge package
+transformed_dat <- huge::huge.npn(depression) %>% as.data.frame()
+
+## check the distributions of transformed data
+p2 <- transformed_dat %>%
+  tidyr::pivot_longer(where(is.numeric)) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 10) +
+  facet_wrap(~name) +
+  theme_minimal() +
+  ggtitle("(b) Transformed data") +
+  MyTheme2
+
+ggpubr::ggarrange(p1,p2)
+#ggsave(filename = "results/transformdat.pdf", width = 25, height = 13, dpi = 300, units = "cm")

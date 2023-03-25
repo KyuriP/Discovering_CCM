@@ -1,18 +1,29 @@
-## ============================================================================
+## =============================================================================
 ## Description
 #
-# This script contains code for creating the overall result figure (Figure 16 & Figure 17).
-# First part concerns creating a neat dataframe of each evaluation metrics 
-# (precision, recall, and uncertainty rate) including their mean and standard deviation (SD) values.
-# Second part concerns creating figures.
-## ============================================================================
-
+# This script contains all the code for the secondary simulation study 
+# with varying alpha level.
+# As is the case with the main simulation study, there are in total 8 models and
+# we generate 500 datasets from each model.
+#
+# The content is as follows:
+# 0. Preparation: we source and load necessary functions & packages and generate data.
+# 1. Run algorithms: we again run three algorithms CCD, FCI, and CCI then estimate PAGs.
+# 2. Evaluate performance: we compute structural Hamming distance, precision, recall,
+# and uncertainty rate for each condition.
+# 3. Organize results: we make neat data frames of resulting values of evaluation
+# metrics from each algorithm.
+# 4. Create figures: we create figures for each evaluation metric comparing the 
+# performance of each algorithm per condition.
+## =============================================================================
 
 ## ========================
 ## 0. Preparation
 ## ========================
 # source the simulation study results
 source("code/simulation_code.R")
+source("code/R/eval_metrics.R")
+source("code/R/true_ancestral.R")
 
 # load packages
 library(dplyr)
@@ -20,484 +31,717 @@ library(purrr)
 library(ggplot2)
 library(ggpubr)
 library(ggh4x)
+library(magrittr) # for assigning pipes %<>%
 
+## Data generating
+# specify the sample sizes
+N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
+# specify replication number
+n <- 500
+# vary alpha depending on N
+alpha <- 1/sqrt(N)
+
+# allow parallel processing
+plan(multisession) 
+
+generatesimdat <- function(B, N, seed=123){
+  # generate data n times for each N
+  simdat <- N %>% future_map(function(z) {
+    replicate(n = n,
+              expr = gen_dat(B, N = z),  
+              simplify = FALSE)
+  }, .options = furrr_options(seed=seed) 
+  ) %>% 
+    rlang::set_names(.,  N)
+  return(simdat)
+}
+
+
+# generate data
+simdat_alpha <- list(B5sparse = B5sparse, B5dense = B5dense, B10sparse =  B10sparse, B10dense = B10dense, B5_lvsparse = B5_lvsparse, B5_lvdense = B5_lvdense, B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %>% 
+  map(~generatesimdat(.x, N)
+        )
+
+simdat_alpha2 <- simdat_alpha %>% bind_rows(.id="id")
 
 
 ## ============================
-## 1. Evaluating performance
+## 1. Running algorithms
 ## ============================
+## =============
+## B5 sparse 
+## =============
+CCDB5sparse <- list()
+for(i in 1:length(N)){
+  CCDB5sparse[[i]] <- simdat_alpha2 %>% filter(id == "B5sparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB5sparse <- list()
+for(i in 1:length(N)){
+  FCIB5sparse[[i]] <- simdat_alpha2 %>% filter(id == "B5sparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+        doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB5sparse <- list()
+for(i in 1:length(N)){
+  CCIB5sparse[[i]] <- simdat_alpha2 %>% filter(id == "B5sparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+               labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
 
-## 5P SPARSE ##
+## =============
+## B5 dense 
+## =============
+CCDB5dense <- list()
+for(i in 1:length(N)){
+  CCDB5dense[[i]] <- simdat_alpha2 %>% filter(id == "B5dense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB5dense <- list()
+for(i in 1:length(N)){
+  FCIB5dense[[i]] <- simdat_alpha2 %>% filter(id == "B5dense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+              doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB5dense <- list()
+for(i in 1:length(N)){
+  CCIB5dense[[i]] <- simdat_alpha2 %>% filter(id == "B5dense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+             labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+
+## =============
+## B10 sparse 
+## =============
+CCDB10sparse <- list()
+for(i in 1:length(N)){
+  CCDB10sparse[[i]] <- simdat_alpha2 %>% filter(id == "B10sparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB10sparse <- list()
+for(i in 1:length(N)){
+  FCIB10sparse[[i]] <- simdat_alpha2 %>% filter(id == "B10sparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+              doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB10sparse <- list()
+for(i in 1:length(N)){
+  CCIB10sparse[[i]] <- simdat_alpha2 %>% filter(id == "B10sparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+             labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+
+## =============
+## B10 dense 
+## =============
+CCDB10dense <- list()
+for(i in 1:length(N)){
+  CCDB10dense[[i]] <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB10dense <- list()
+for(i in 1:length(N)){
+  FCIB10dense[[i]] <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+              doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB10dense <- list()
+for(i in 1:length(N)){
+  CCIB10dense[[i]] <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+             labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+
+
+## =============
+## B5 sparse LV
+## =============
+CCDB5_LVsparse <- list()
+for(i in 1:length(N)){
+  CCDB5_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvsparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB5_LVsparse <- list()
+for(i in 1:length(N)){
+  FCIB5_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvsparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+              doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB5_LVsparse <- list()
+for(i in 1:length(N)){
+  CCIB5_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvsparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+             labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+
+## =============
+## B5 dense LV
+## =============
+CCDB5_LVdense <- list()
+for(i in 1:length(N)){
+  CCDB5_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvdense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB5_LVdense <- list()
+for(i in 1:length(N)){
+  FCIB5_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvdense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+              doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB5_LVdense <- list()
+for(i in 1:length(N)){
+  CCIB5_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvdense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+             labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+
+## =============
+## B10 sparse LV
+## =============
+CCDB10_LVsparse <- list()
+for(i in 1:length(N)){
+  CCDB10_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvsparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB10_LVsparse <- list()
+for(i in 1:length(N)){
+  FCIB10_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvsparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+              doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB10_LVsparse <- list()
+for(i in 1:length(N)){
+  CCIB10_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvsparse") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+             labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+
+## =============
+## B10 dense LV
+## =============
+CCDB10_LVdense <- list()
+for(i in 1:length(N)){
+  CCDB10_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvdense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
+          CreateAdjMat(., length(.$nodes))
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+FCIB10_LVdense <- list()
+for(i in 1:length(N)){
+  FCIB10_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvdense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest, alpha = alpha[i], 
+              doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+CCIB10_LVdense <- list()
+for(i in 1:length(N)){
+  CCIB10_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvdense") %>% 
+    dplyr::select(paste(N[i])) %>% 
+    .[[paste(N[i])]] %>% 
+    map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha[i], 
+             labels = colnames(.x), p = ncol(.x)) %>% .$maag
+    ) %>% 
+    rlang::set_names(., N[i])
+}
+
+
+## ============================
+## 2. Evaluating performance 
+## ============================
+## =============
+## B5 sparse
+## =============
 ## CCD
-res_ccd5psparse <- mat_5psparse %>% 
+res_ccd5psparse2 <- CCDB5sparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
-
 # UNCERTAINTY
-uncer_ccd5psparse <- mat_5psparse %>% 
-  map_depth(2, ~uncertainty(.x)) %>% do.call("cbind", .) %>% apply(., 2, unlist) %>%  as.data.frame %>% 
+uncer_ccd5psparse2 <- CCDB5sparse %>% 
+  map_depth(2, ~uncertainty(.x)) %>% do.call("cbind", .) %>% 
+  apply(., 2, unlist) %>%  as.data.frame %>% 
   rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_ccd5psparse, na.rm=T)
-
 # SHD
-SHD_ccd5psparse <- mat_5psparse %>% 
-  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% do.call("cbind", .) %>% apply(., 2, unlist) %>%  as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_ccd5psparse)
+SHD_ccd5psparse2 <- CCDB5sparse %>% 
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% do.call("cbind", .) %>% 
+  apply(., 2, unlist) %>%  as.data.frame %>% rename_with(~ paste0("N = ", N))
 
 ## FCI
-res_fci5psparse <- fci_5psparse %>% 
+res_fci5psparse2 <- FCIB5sparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci5psparse <- fci_5psparse %>% 
+uncer_fci5psparse2 <- FCIB5sparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_fci5psparse, na.rm=T)
 # SHD
-SHD_fci5psparse <- fci_5psparse %>% 
+SHD_fci5psparse2 <- FCIB5sparse %>% 
   map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_fci5psparse)
 
 ## CCI
-res_cci5psparse <- cci_5psparse %>% 
+res_cci5psparse2 <- CCIB5sparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_cci5psparse <- cci_5psparse %>% 
+uncer_cci5psparse2 <- CCIB5sparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_cci5psparse)
 # SHD
-SHD_cci5psparse <- cci_5psparse %>% 
+SHD_cci5psparse2 <- CCIB5sparse %>% 
   map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_cci5psparse)
 
 
-## 5P DENSE ##
+## =============
+## B5 dense
+## =============
 ## CCD
-res_ccd5pdense <- mat_5pdense %>% 
-  map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame()
+res_ccd5pdense2 <- CCDB5dense %>% 
+  map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
+  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_ccd5pdense <- mat_5pdense %>% 
-  map_depth(2, ~uncertainty(.x)) %>% 
-  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
-  as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(uncer_ccd5pdense, na.rm=T)
+uncer_ccd5pdense2 <- CCDB5dense %>% 
+  map_depth(2, ~uncertainty(.x)) %>% do.call("cbind", .) %>% 
+  apply(., 2, unlist) %>%  as.data.frame %>% 
+  rename_with(~ paste0("N = ", N))
 # SHD
-SHD_ccd5pdense <- mat_5pdense %>% 
-  map_depth(2, ~SHD(trueag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% apply(., 2, unlist) %>%  
-  as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(SHD_ccd5pdense)
+SHD_ccd5pdense2 <- CCDB5dense %>% 
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% do.call("cbind", .) %>% 
+  apply(., 2, unlist) %>%  as.data.frame %>% rename_with(~ paste0("N = ", N))
 
 ## FCI
-res_fci5pdense <- fci_5pdense %>% 
-  map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
+res_fci5pdense2 <- FCIB5dense %>% 
+  map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci5pdense <- fci_5pdense%>% 
+uncer_fci5pdense2 <- FCIB5dense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(uncer_fci5pdense, na.rm=T)
 # SHD
-SHD_fci5pdense <- fci_5pdense %>% 
-  map_depth(2, ~SHD(trueag_5pdense, .x)) %>% 
+SHD_fci5pdense2 <- FCIB5dense %>% 
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(SHD_fci5pdense)
 
 ## CCI
-res_cci5pdense <- cci_5pdense %>% 
-  map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
+res_cci5pdense2 <- CCIB5dense %>% 
+  map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
-# UNCERTAINTY 
-uncer_cci5pdense <- cci_5pdense %>% 
+# UNCERTAINTY
+uncer_cci5pdense2 <- CCIB5dense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(uncer_cci5pdense)
 # SHD
-SHD_cci5pdense <- cci_5pdense %>% 
-  map_depth(2, ~SHD(trueag_5pdense, .x)) %>% 
+SHD_cci5pdense2 <- CCIB5dense %>% 
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(SHD_cci5pdense)
 
 
-## 10P SPARSE ##
+## =============
+## B10 sparse
+## =============
 ## CCD
-res_ccd10psparse <- mat_10psparse %>% 
+res_ccd10psparse2 <- CCDB10sparse %>% 
   map_depth(2, 
             ~precision_recall(trueag_10psparse, .x)) %>%
   do.call("cbind", .) %>% t() %>%  
   apply(., 2, unlist) %>%  as.data.frame()
-
 # UNCERTAINTY
-uncer_ccd10psparse <- mat_10psparse %>% 
+uncer_ccd10psparse2 <- CCDB10sparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_ccd10psparse, na.rm=T)
 # SHD
-SHD_ccd10psparse <- mat_10psparse %>% 
+SHD_ccd10psparse2 <- CCDB10sparse %>% 
   map_depth(2, ~SHD(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_ccd10psparse)
 
 ## FCI
-res_fci10psparse <- fci_10psparse %>% 
+res_fci10psparse2 <- FCIB10sparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci10psparse <- fci_10psparse%>% 
+uncer_fci10psparse2 <- FCIB10sparse%>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(uncer_fci10psparse, na.rm=T)
 # SHD
-SHD_fci10psparse <- fci_10psparse %>% 
+SHD_fci10psparse2 <- FCIB10sparse %>% 
   map_depth(2, ~SHD(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-colMeans(SHD_fci10psparse)
 
 ## CCI
-res_cci10psparse <- cci_10psparse %>% 
+res_cci10psparse2 <- CCIB10sparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_cci10psparse <- cci_10psparse %>% 
+uncer_cci10psparse2 <- CCIB10sparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_cci10psparse, na.rm=T)
 # SHD
-SHD_cci10psparse <- cci_10psparse %>% 
+SHD_cci10psparse2 <- CCIB10sparse %>% 
   map_depth(2, ~SHD(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_cci10psparse)
 
 
-## 10P DENSE ##
+## =============
+## B10 dense
+## =============
 ## CCD
-res_ccd10pdense  <- mat_10pdense  %>% 
+res_ccd10pdense2  <- CCDB10dense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_ccd10pdense  <- mat_10pdense  %>% 
+uncer_ccd10pdense2  <- CCDB10dense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_ccd10pdense , na.rm=T)
 # SHD
-SHD_ccd10pdense  <- mat_10pdense %>% 
+SHD_ccd10pdense2  <- CCDB10dense %>% 
   map_depth(2, ~SHD(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_ccd10pdense)
 
 ## FCI
-res_fci10pdense  <- fci_10pdense  %>% 
+res_fci10pdense2  <- FCIB10dense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci10pdense <- fci_10pdense %>% 
+uncer_fci10pdense2 <- FCIB10dense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_fci10pdense, na.rm=T)
 # SHD
-SHD_fci10pdense  <- fci_10pdense %>% 
+SHD_fci10pdense  <- FCIB10dense %>% 
   map_depth(2, ~SHD(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_fci10pdense)
 
 ## CCI
-res_cci10pdense <- cci_10pdense %>% 
+res_cci10pdense2 <- CCIB10dense %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_cci10pdense <- cci_10pdense %>% 
+uncer_cci10pdense2 <- CCIB10dense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_cci10pdense, na.rm=T)
 # SHD
-SHD_cci10pdense <- cci_10pdense %>% 
+SHD_cci10pdense2 <- CCIB10dense %>% 
   map_depth(2, ~SHD(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_cci10pdense)
 
-## 5P SPARSE LV ##
+## =============
+## B5 sparse LV
+## =============
 ## CCD
-res_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
+res_ccd5pLVsparse2  <- CCDB5_LVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
+uncer_ccd5pLVsparse2  <- CCDB5_LVsparse  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_ccd5pLVsparse , na.rm=T)
 # SHD
-SHD_ccd5pLVsparse <- mat_5pLVsparse %>% 
+SHD_ccd5pLVsparse2 <- CCDB5_LVsparse %>% 
   map_depth(2, ~SHD(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_ccd5pLVsparse)
 
 ## FCI
-res_fci5pLVsparse  <- fci_5pLVsparse  %>% 
+res_fci5pLVsparse2  <- FCIB5_LVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci5pLVsparse <- fci_5pLVsparse %>% 
+uncer_fci5pLVsparse2 <- FCIB5_LVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_fci5pLVsparse, na.rm=T)
 # SHD
-SHD_fci5pLVsparse <- fci_5pLVsparse %>% 
+SHD_fci5pLVsparse2 <- FCIB5_LVsparse %>% 
   map_depth(2, ~SHD(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_fci5pLVsparse)
 
 ## CCI
-res_cci5pLVsparse <- cci_5pLVsparse %>% 
+res_cci5pLVsparse2 <- CCIB5_LVsparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_cci5pLVsparse <- cci_5pLVsparse %>% 
+uncer_cci5pLVsparse2 <- CCIB5_LVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average unceratinty
-colMeans(uncer_cci5pLVsparse, na.rm=T)
 # SHD
-SHD_cci5pLVsparse <- cci_5pLVsparse %>% 
+SHD_cci5pLVsparse2 <- CCIB5_LVsparse %>% 
   map_depth(2, ~SHD(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_cci5pLVsparse)
 
-## 5P DENSE LV ##
+## =============
+## B5 dense LV
+## =============
 ## CCD
-res_ccd5pLVdense  <- mat_5pLVdense  %>% 
+res_ccd5pLVdense2  <- CCDB5_LVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_ccd5pLVdense  <- mat_5pLVdense  %>% 
+uncer_ccd5pLVdense2  <- CCDB5_LVdense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_ccd5pLVdense , na.rm=T)
 # SHD
-SHD_ccd5pLVdense <- mat_5pLVdense %>% 
+SHD_ccd5pLVdense2 <- CCDB5_LVdense %>% 
   map_depth(2, ~SHD(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_ccd5pLVdense)
 
 ## FCI
-res_fci5pLVdense  <- fci_5pLVdense  %>% 
+res_fci5pLVdense2  <- FCIB5_LVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci5pLVdense <- fci_5pLVdense  %>% 
+uncer_fci5pLVdense2 <- FCIB5_LVdense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_fci5pLVdense , na.rm=T)
 # SHD
-SHD_fci5pLVdense  <- fci_5pLVdense  %>% 
+SHD_fci5pLVdense2  <- FCIB5_LVdense  %>% 
   map_depth(2, ~SHD(trueag_5pdenseLV , .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_fci5pLVdense)
 
 ## CCI
-res_cci5pLVdense  <- cci_5pLVdense  %>% 
+res_cci5pLVdense2  <- CCIB5_LVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV , .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_cci5pLVdense  <- cci_5pLVdense  %>% 
+uncer_cci5pLVdense2  <- CCIB5_LVdense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_cci5pLVdense , na.rm=T)
 # SHD
-SHD_cci5pLVdense  <- cci_5pLVdense  %>% 
+SHD_cci5pLVdense2  <- CCIB5_LVdense  %>% 
   map_depth(2, ~SHD(trueag_5pdenseLV , .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_cci5pLVdense )
 
-## 10P SPARSE LV ##
+## =============
+## B10 sparse LV
+## =============
 ## CCD
-res_ccd10pLVsparse   <- mat_10pLVsparse  %>% 
+res_ccd10pLVsparse2   <- CCDB10_LVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_ccd10pLVsparse  <- mat_10pLVsparse  %>% 
+uncer_ccd10pLVsparse2  <- CCDB10_LVsparse  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_ccd10pLVsparse , na.rm=T)
 # SHD
-SHD_ccd10pLVsparse <- mat_10pLVsparse %>% 
+SHD_ccd10pLVsparse2 <- CCDB10_LVsparse %>% 
   map_depth(2, ~SHD(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_ccd10pLVsparse)
 
 ## FCI
-res_fci10pLVsparse <- fci_10pLVsparse  %>% 
+res_fci10pLVsparse2 <- FCIB10_LVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci10pLVsparse <- fci_10pLVsparse %>% 
+uncer_fci10pLVsparse2 <- FCIB10_LVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_fci10pLVsparse, na.rm=T)
 # SHD
-SHD_fci10pLVsparse <- fci_10pLVsparse %>% 
+SHD_fci10pLVsparse2 <- FCIB10_LVsparse %>% 
   map_depth(2, ~SHD(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_fci10pLVsparse)
 
 ## CCI 
-res_cci10pLVsparse <- cci_10pLVsparse %>% 
+res_cci10pLVsparse2 <- CCIB10_LVsparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_cci10pLVsparse <- cci_10pLVsparse %>% 
+uncer_cci10pLVsparse2 <- CCIB10_LVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_cci10pLVsparse, na.rm=T)
 # SHD
-SHD_cci10pLVsparse <- cci_10pLVsparse %>% 
+SHD_cci10pLVsparse2 <- CCIB10_LVsparse %>% 
   map_depth(2, ~SHD(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_cci10pLVsparse)
 
-## 10P DENSE LV ##
+## =============
+## B10 dense LV
+## =============
 ## CCD
-res_ccd10pLVdense   <- mat_10pLVdense  %>% 
+res_ccd10pLVdense2   <- CCDB10_LVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_ccd10pLVdense  <- mat_10pLVdense %>% 
+uncer_ccd10pLVdense2  <- CCDB10_LVdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_ccd10pLVdense , na.rm=T)
 # SHD
-SHD_ccd10pLVdense <- mat_10pLVdense %>% 
+SHD_ccd10pLVdense2 <- CCDB10_LVdense %>% 
   map_depth(2, ~SHD(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N)) 
-# average SHD
-colMeans(SHD_ccd10pLVdense)
 
 ## FCI
-res_fci10pLVdense <- fci_10pLVdense  %>% 
+res_fci10pLVdense2 <- FCIB10_LVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_fci10pLVdense <- fci_10pLVdense %>% 
+uncer_fci10pLVdense2 <- FCIB10_LVdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_fci10pLVdense, na.rm=T)
 # SHD
-SHD_fci10pLVdense <- fci_10pLVdense %>% 
+SHD_fci10pLVdense2 <- FCIB10_LVdense %>% 
   map_depth(2, ~SHD(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_fci10pLVdense)
 
 ## CCI
-res_cci10pLVdense <- cci_10pLVdense %>% 
+res_cci10pLVdense2 <- CCIB10_LVdense %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
-uncer_cci10pLVdense <- cci_10pLVdense %>% 
+uncer_cci10pLVdense2 <- CCIB10_LVdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average uncertainty
-colMeans(uncer_cci10pLVdense, na.rm=T)
 # SHD
-SHD_cci10pLVdense <- cci_10pLVdense %>% 
+SHD_cci10pLVdense2 <- CCIB10_LVdense %>% 
   map_depth(2, ~SHD(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-# average SHD
-colMeans(SHD_cci10pLVdense)
 
 
 
 ## ============================
-## 2. Create neat dataframe
+## 3. Create neat dataframes
 ## ============================
 
 ## Compute average precision & recall and corresponding sd for each condition
-pre_rec <- list(
+pre_rec2 <- list(
   # put all the results together in a list
-  res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10psparse, res_fci10psparse, res_cci10psparse, res_ccd5pdense, res_fci5pdense, res_cci5pdense, res_ccd10pdense, res_fci10pdense, res_cci10pdense, res_ccd5pLVsparse, res_fci5pLVsparse, res_cci5pLVsparse, res_ccd5pLVdense, res_fci5pLVdense, res_cci5pLVdense, res_ccd10pLVsparse, res_fci10pLVsparse, res_cci10pLVsparse, res_ccd10pdense,  res_fci10pLVdense, res_cci10pLVdense
+  res_ccd5psparse2, res_fci5psparse2, res_cci5psparse2, res_ccd10psparse2, res_fci10psparse2, res_cci10psparse2, res_ccd5pdense2, res_fci5pdense2, res_cci5pdense2, res_ccd10pdense2, res_fci10pdense2, res_cci10pdense2, res_ccd5pLVsparse2, res_fci5pLVsparse2, res_cci5pLVsparse2, res_ccd5pLVdense2, res_fci5pLVdense2, res_cci5pLVdense2, res_ccd10pLVsparse2, res_fci10pLVsparse2, res_cci10pLVsparse2, res_ccd10pdense2,  res_fci10pLVdense2, res_cci10pLVdense2
 ) %>% 
   # transpose df
   map(~ sjmisc::rotate_df(.x) %>%
@@ -509,10 +753,10 @@ pre_rec <- list(
         dplyr::summarise(across(everything(.), list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T))))) %>% 
   bind_rows() %>% 
   mutate(algorithm = rep(c("CCD", "FCI", "CCI"), 8),
-                condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", "5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense"), each=3),
-                netsize = stringr::str_split(condition, "_", simplify=T)[,1],
-                latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LV", "without LV"),
-                densities = stringr::str_remove(stringr::str_split(condition, "_", simplify=T)[,2], "LV")
+         condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", "5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense"), each=3),
+         netsize = stringr::str_split(condition, "_", simplify=T)[,1],
+         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LV", "without LV"),
+         densities = stringr::str_remove(stringr::str_split(condition, "_", simplify=T)[,2], "LV")
   ) %>%
   # brings the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric)) %>% 
@@ -525,10 +769,10 @@ pre_rec <- list(
 
 
 ## Compute average uncertainty rate and corresponding sd for each condition
-uncertainties <- bind_rows(
+uncertainties2 <- bind_rows(
   # bind all results from each condition
-  "CCD_5p-sparse" = uncer_ccd5psparse, "FCI_5p-sparse" = uncer_fci5psparse, "CCI_5p-sparse"=uncer_cci5psparse, "CCD_10p-sparse"=uncer_ccd10psparse, "FCI_10p-sparse" = uncer_fci10psparse, "CCI_10p-sparse" = uncer_cci10psparse, "CCD_5p-dense"=uncer_ccd5pdense, "FCI_5p-dense"=uncer_fci5pdense, "CCI_5p-dense"=uncer_cci5pdense, "CCD_10p-dense"=uncer_ccd10pdense, "FCI_10p-dense"=uncer_fci10pdense, "CCI_10p-dense"=uncer_cci10pdense, "CCD_5p-LVsparse"=uncer_ccd5pLVsparse, "FCI_5p-LVsparse"=uncer_fci5pLVsparse, "CCI_5p-LVsparse"=uncer_cci5pLVsparse, "CCD_10p-LVsparse"=uncer_ccd10pLVsparse, "FCI_10p-LVsparse"=uncer_fci10pLVsparse, "CCI_10p-LVsparse"=uncer_cci10pLVsparse,
-  "CCD_5p-LVdense"=uncer_ccd5pLVdense, "FCI_5p-LVdense"=uncer_fci5pLVdense, "CCI_5p-LVdense"=uncer_cci5pLVdense, "CCD_10p-LVdense"=uncer_ccd10pLVdense, "FCI_10p-LVdense"=uncer_fci10pLVdense, "CCI_10p-LVdense"=uncer_cci10pLVdense, .id="id"
+  "CCD_5p-sparse" = uncer_ccd5psparse2, "FCI_5p-sparse" = uncer_fci5psparse2, "CCI_5p-sparse"=uncer_cci5psparse2, "CCD_10p-sparse"=uncer_ccd10psparse2, "FCI_10p-sparse" = uncer_fci10psparse2, "CCI_10p-sparse" = uncer_cci10psparse2, "CCD_5p-dense"=uncer_ccd5pdense2, "FCI_5p-dense"=uncer_fci5pdense2, "CCI_5p-dense"=uncer_cci5pdense2, "CCD_10p-dense"=uncer_ccd10pdense2, "FCI_10p-dense"=uncer_fci10pdense2, "CCI_10p-dense"=uncer_cci10pdense2, "CCD_5p-LVsparse"=uncer_ccd5pLVsparse2, "FCI_5p-LVsparse"=uncer_fci5pLVsparse2, "CCI_5p-LVsparse"=uncer_cci5pLVsparse2, "CCD_10p-LVsparse"=uncer_ccd10pLVsparse2, "FCI_10p-LVsparse"=uncer_fci10pLVsparse2, "CCI_10p-LVsparse"=uncer_cci10pLVsparse2,
+  "CCD_5p-LVdense"=uncer_ccd5pLVdense2, "FCI_5p-LVdense"=uncer_fci5pLVdense2, "CCI_5p-LVdense"=uncer_cci5pLVdense2, "CCD_10p-LVdense"=uncer_ccd10pLVdense2, "FCI_10p-LVdense"=uncer_fci10pLVdense2, "CCI_10p-LVdense"=uncer_cci10pLVdense2, .id="id"
 ) %>% 
   group_by(id) %>% 
   # get the average and sd
@@ -547,10 +791,9 @@ uncertainties <- bind_rows(
 
 
 ## Compute average SHD values and corresponding sd for each condition
-SHDs <- bind_rows(
+SHDs2 <- bind_rows(
   # bind all results from each condition
-  "CCD_5p-sparse" = SHD_ccd5psparse, "FCI_5p-sparse" = SHD_fci5psparse, "CCI_5p-sparse"=SHD_cci5psparse, "CCD_10p-sparse"= SHD_ccd10psparse, "FCI_10p-sparse" = SHD_fci10psparse, "CCI_10p-sparse" = SHD_cci10psparse, "CCD_5p-dense"= SHD_ccd5pdense, "FCI_5p-dense"=SHD_fci5pdense, "CCI_5p-dense"=SHD_cci5pdense, "CCD_10p-dense"= SHD_ccd10pdense, "FCI_10p-dense"=SHD_fci10pdense, "CCI_10p-dense"=SHD_cci10pdense, "CCD_5p-LVsparse"=SHD_ccd5pLVsparse, "FCI_5p-LVsparse"=SHD_fci5pLVsparse, "CCI_5p-LVsparse"=SHD_cci5pLVsparse, "CCD_10p-LVsparse"=SHD_ccd10pLVsparse, "FCI_10p-LVsparse"=SHD_fci10pLVsparse, "CCI_10p-LVsparse"=SHD_cci10pLVsparse, 
-  "CCD_5p-LVdense"=SHD_ccd5pLVdense, "FCI_5p-LVdense"=SHD_fci5pLVdense, "CCI_5p-LVdense"=SHD_cci5pLVdense, "CCD_10p-LVdense"=SHD_ccd10pLVdense, "FCI_10p-LVdense"=SHD_fci10pLVdense, "CCI_10p-LVdense"=SHD_cci10pLVdense, .id="id"
+  "CCD_5p-sparse" = SHD_ccd5psparse2, "FCI_5p-sparse" = SHD_fci5psparse2, "CCI_5p-sparse"=SHD_cci5psparse2, "CCD_10p-sparse"= SHD_ccd10psparse2, "FCI_10p-sparse" = SHD_fci10psparse2, "CCI_10p-sparse" = SHD_cci10psparse2, "CCD_5p-dense"= SHD_ccd5pdense2, "FCI_5p-dense"=SHD_fci5pdense2, "CCI_5p-dense"=SHD_cci5pdense2, "CCD_10p-dense"= SHD_ccd10pdense2, "FCI_10p-dense"=SHD_fci10pdense2, "CCI_10p-dense"=SHD_cci10pdense2, "CCD_5p-LVsparse"=SHD_ccd5pLVsparse2, "FCI_5p-LVsparse"=SHD_fci5pLVsparse2, "CCI_5p-LVsparse"=SHD_cci5pLVsparse2, "CCD_10p-LVsparse"=SHD_ccd10pLVsparse2, "FCI_10p-LVsparse"=SHD_fci10pLVsparse2, "CCI_10p-LVsparse"=SHD_cci10pLVsparse2, "CCD_5p-LVdense"=SHD_ccd5pLVdense2, "FCI_5p-LVdense"=SHD_fci5pLVdense2, "CCI_5p-LVdense"=SHD_cci5pLVdense2, "CCD_10p-LVdense"=SHD_ccd10pLVdense2, "FCI_10p-LVdense"=SHD_fci10pLVdense2, "CCI_10p-LVdense"=SHD_cci10pLVdense2, .id="id"
 ) %>% 
   group_by(id) %>% 
   # get the average and sd
@@ -568,9 +811,8 @@ SHDs <- bind_rows(
 
 
 
-
 ## ============================
-## 3. Create figures
+## 4. Create figures
 ## ============================
 
 ## specify the common figure theme
@@ -589,9 +831,8 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 )
 
 
-
 ## SHD figure
-SHDs %>%
+SHDs2 %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
   # add line plots
@@ -613,7 +854,7 @@ SHDs %>%
 
 
 ## Precision figure
-precision_plot <- pre_rec %>% 
+precision_plot <- pre_rec2 %>% 
   filter(grepl("average_precision", metric)) %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
@@ -636,7 +877,7 @@ precision_plot <- pre_rec %>%
 
 
 ## Recall figure
-recall_plot <- pre_rec %>% 
+recall_plot <- pre_rec2 %>% 
   filter(grepl("average_recall", metric)) %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
@@ -661,10 +902,8 @@ recall_plot <- pre_rec %>%
 #ggpubr::ggarrange(precision_plot, recall_plot, nrow=2, common.legend = TRUE, legend = "bottom")
 
 
-
-
 ## Uncertainty figure
-uncertainty_plot <- uncertainties %>%
+uncertainty_plot <- uncertainties2 %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
   # add line plots

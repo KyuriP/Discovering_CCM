@@ -418,7 +418,7 @@ dev.off()
 library(ggh4x)
 
 
-MyTheme2 <-  theme(plot.title = element_text(, family = "Palatino", size = 14, hjust=0.5),
+MyTheme2 <-  theme(plot.title = element_text(family = "Palatino", size = 14, hjust=0.5),
                   plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15, hjust=0.5),
                   axis.text=element_text(face = "bold",family = "Palatino", size = 11),
                   #axis.text.x = element_text(angle = 45, hjust = 1.2, vjust =1.2),
@@ -458,3 +458,26 @@ p2 <- transformed_dat %>%
 
 ggpubr::ggarrange(p1,p2)
 ggsave(filename = "results/transformdat.pdf", width = 25, height = 13, dpi = 300, units = "cm")
+
+
+
+################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

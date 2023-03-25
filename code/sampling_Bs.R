@@ -1,14 +1,28 @@
+## =============================================================================
+## Description
+# 
+# 
+## =============================================================================
+
+## ======================
+## 0. Preparation
+## ======================
+
+## set the seed
+set.seed(123)
+
+
 
 
 
 ## ======================
-## Generate data 
+## 1. Generate data 
 ## ======================
 
 # specify the sample sizes
 N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
 # specify replication number
-n <- 1e6
+n <- 1e3
 # specify alpha level
 alpha <- 0.05
 
@@ -27,8 +41,6 @@ sampleranB <- function(B, seed=123){
               expr = gen_dat(ranB, N = z),  
               simplify = FALSE)
   }, .options = furrr_options(seed=seed))
-  # assign colnames
-  colnames(simdat) <- colnames(B)
   return(simdata = simdat)
 }
 
@@ -46,7 +58,7 @@ sampleranB2 <- function(B, LV=NULL, seed=123){
     simdat[[i]] <- list()
     # number of repetition
     for(j in 1:n){
-      # sample random weight for B from uniform distribution (unif[-0.8, -0.1] U unif[0.1, 0.8])
+      # sample random weights for B from uniform distribution (unif[-0.8, -0.1] & unif[0.1, 0.8])
       ranB <- matrix((0.8*runif(p^2)+0.1)*sample(c(-1,1), p^2,replace=TRUE), p, p)
       # assign 0 where B = 0
       ind <- which(B == 0, arr.ind = TRUE)
@@ -84,7 +96,7 @@ simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 
 
 ## ======================
-## Run algorithms
+## 2. Run algorithms
 ## ======================
 CCDres <- simdatalist %>% 
   map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
@@ -106,9 +118,9 @@ truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pde
 
 
 
-## ======================
-## Evaluate performance
-## ======================
+## =========================
+## 3. Evaluate performance
+## =========================
 
 ## SHD
 CCDshd <- list()
@@ -143,6 +155,7 @@ for(i in 1:length(CCIres)){
 }
 names(CCIshd) <- names(CCIres)
 
+## combine the SHDs
 SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>% 
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
@@ -158,7 +171,7 @@ SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>%
 
 
 
-## precision 
+## Precision
 CCDprec <- list()
 for(i in 1:length(CCDres)){
   CCDprec[[i]] <- CCDres[[i]] %>% 
@@ -186,7 +199,7 @@ for(i in 1:length(CCIres)){
 }
 names(CCIprec) <- names(CCIres)
 
-## combine the results
+## combine the preicisions
 prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>% 
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
@@ -201,7 +214,7 @@ prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>
   relocate(where(is.character), .before = where(is.numeric))
 
 
-## recall
+## Recall
 CCDrec <- list()
 for(i in 1:length(CCDres)){
   CCDrec[[i]] <- CCDres[[i]] %>% 
@@ -229,7 +242,7 @@ for(i in 1:length(CCIres)){
 }
 names(CCIrec) <- names(CCIres)
 
-## combine the results
+## combine the recalls
 rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>% 
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
@@ -244,7 +257,7 @@ rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>%
   relocate(where(is.character), .before = where(is.numeric))
 
   
-## uncertainty
+## Uncertainty
 CCDunc <- list()
 for(i in 1:length(CCDres)){
   CCDunc[[i]] <- CCDres[[i]] %>% 
@@ -284,7 +297,7 @@ for(i in 1:length(CCIres)){
 names(CCIunc) <- names(CCIres)
 
 
-## combine the results
+## combine the uncertainties
 unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>% 
   # n = repeat N: 3 algo * 2 (mean & sd), repeat c(means,sd) by length of N * 3 algo
   mutate(n = rep(N,6), statistics = rep(c("means", "sds"), each = length(N), times = 3)) %>% 
@@ -298,9 +311,9 @@ unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>%
 
 
 
-## ================================
-## Plot the figures for comparison
-## ================================
+## ===================================
+## 4. Plot the figures for comparison
+## ===================================
 
 ## plot SHD
 SHD_ranB %>%
