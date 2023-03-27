@@ -21,17 +21,17 @@ library(ggplot2)
 library(dplyr)
 
 ## source all the necessary functions
-source("R/CCD_fnc.R")
-source("R/plot_fnc.R")
+source("code/R/CCD_fnc.R")
+source("code/R/plot_fnc.R")
 
 ## import the example empirical data
-mcnally <- read.csv("../data/McNally.csv")
+mcnally <- read.csv("data/McNally.csv")
 
 # separate depression / OCD symptoms
 # (original data contains both depression and OCD symptoms)
 # (here we only use depression symptoms)
-depression <- mcnally[,1:16]
-ocd <- mcnally[,17:26]
+depression <- mcnally[,1:16] %>% apply(., 2, as.numeric) # convert it to numeric (for CCD)
+ocd <- mcnally[,17:26] %>% apply(., 2, as.numeric)
 
 # paranormal transformation using huge package
 # trans_dep <- huge::huge.npn(depression)
@@ -55,20 +55,19 @@ qgraph(glassoFitdep, layout = "spring", theme="colorblind",
 set.seed(123)
 ## estimate the PAG on depression symptoms by running CCD
 # run CCD
-ccd_mcnally_dep <- ccdKP(df=depression, dataType = "discrete", alpha=0.05)
+ccd_mcnally_dep <- ccdKP(df=depression, dataType = "continuous", alpha=0.01)
 # create an adjacency matrix for PAG
 mat_mcnally_dep <- CreateAdjMat(ccd_mcnally_dep, p = ncol(depression))
 # plot the PAG
 pag_mcnally_dep <- plotPAG(ccd_mcnally_dep, mat_mcnally_dep)
 
 ## estimate the PAG on depression symptoms by running FCI
-fci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.05, 
+fci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01, 
     labels = colnames(depression), verbose=TRUE) %>% .@amat %>% plotAG 
 
 ## estimate the PAG on depression symptoms by running CCI
-cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.05, 
+cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01, 
     labels = colnames(depression), p = ncol(depression), verbose=TRUE) %>% .$maag %>% plotAG
-
 
 
 

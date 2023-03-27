@@ -1,7 +1,7 @@
 ## =============================================================================
 ## Description
 #
-# This script contains all the code for the secondary simulation study 
+# This script contains all the code for the secondary analysis 
 # with varying alpha level.
 # As is the case with the main simulation study, there are in total 8 models and
 # we generate 500 datasets from each model.
@@ -44,11 +44,11 @@ alpha <- 1/sqrt(N)
 # allow parallel processing
 plan(multisession) 
 
-generatesimdat <- function(B, N, seed=123){
+generatesimdat <- function(B, N, LV = NULL, seed=123){
   # generate data n times for each N
   simdat <- N %>% future_map(function(z) {
     replicate(n = n,
-              expr = gen_dat(B, N = z),  
+              expr = if(is.null(LV)) gen_dat(B, N = z) else gen_dat(B, N = z)[,-LV],
               simplify = FALSE)
   }, .options = furrr_options(seed=seed) 
   ) %>% 
@@ -58,12 +58,29 @@ generatesimdat <- function(B, N, seed=123){
 
 
 # generate data
-simdat_alpha <- list(B5sparse = B5sparse, B5dense = B5dense, B10sparse =  B10sparse, B10dense = B10dense, B5_lvsparse = B5_lvsparse, B5_lvdense = B5_lvdense, B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %>% 
+# simdat_alpha <- list(B5sparse = B5sparse, B5dense = B5dense, B10sparse =  B10sparse, B10dense = B10dense, B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %>% 
+#   map(~generatesimdat(.x, N)
+#         )
+
+
+## create all simulated data using random B 
+simdat_alphawoLV <- list(B5sparse = B5sparse, B5dense = B5dense, B10sparse =  B10sparse, B10dense = B10dense) %>% 
   map(~generatesimdat(.x, N)
-        )
+  )
+
+simdata_alpha5pwLV <- list(B5_lvsparse = B5_lvsparse, B5_lvdense = B5_lvdense) %>% 
+  map(~
+        generatesimdat(.x, LV = 6, N)
+  )
+
+simdata_alpha10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %>% 
+  map(~
+        generatesimdat(.x, LV = c(11, 12), N)
+  )
+
+simdat_alpha <- append(simdat_alphawoLV, append(simdata_alpha5pwLV, simdata_alpha10pwLV))
 
 simdat_alpha2 <- simdat_alpha %>% bind_rows(.id="id")
-
 
 ## ============================
 ## 1. Running algorithms
@@ -520,7 +537,7 @@ uncer_fci10pdense2 <- FCIB10dense %>%
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 # SHD
-SHD_fci10pdense  <- FCIB10dense %>% 
+SHD_fci10pdense2  <- FCIB10dense %>% 
   map_depth(2, ~SHD(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
@@ -832,7 +849,7 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 
 
 ## SHD figure
-SHDs2 %>%
+shdplot <- SHDs2 %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
   # add line plots
@@ -844,13 +861,17 @@ SHDs2 %>%
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  labs(x="N", y="", title = "") +
+  labs(x="", y="", title = "") +
   # apply the theme
   theme_minimal() +
   MyTheme + 
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
-  ggtitle("SHD")
+  ggtitle("(a) SHD") +
+  # remove the x-axis texts & ticks
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
 
 ## Precision figure
@@ -873,8 +894,11 @@ precision_plot <- pre_rec2 %>%
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
   #labs(title = "Precision", x = "N", y = "")
-  labs(title = "(a) Precision", x = "", y = "")
-
+  labs(title = "(b) Precision", x = "", y = "") +
+  # remove the x-axis texts & ticks
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
 ## Recall figure
 recall_plot <- pre_rec2 %>% 
@@ -896,11 +920,14 @@ recall_plot <- pre_rec2 %>%
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # labs(title = "Recall", x = "N", y = "")
-  labs(title = "(b) Recall", x = "", y = "")
+  labs(title = "(c) Recall", x = "", y = "") +
+  # remove the x-axis texts & ticks
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
 # combine the plots together
 #ggpubr::ggarrange(precision_plot, recall_plot, nrow=2, common.legend = TRUE, legend = "bottom")
-
 
 ## Uncertainty figure
 uncertainty_plot <- uncertainties2 %>%
@@ -921,10 +948,15 @@ uncertainty_plot <- uncertainties2 %>%
   MyTheme + 
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
-  ggtitle("(c) Uncertainty")
-
-ggpubr::ggarrange(precision_plot, recall_plot, uncertainty_plot, nrow=3, common.legend = TRUE, legend = "bottom")
-
-# ggsave(filename = "results/prec-recall-uncer.pdf", width = 25, height = 30, dpi = 300, units = "cm")
+  ggtitle("(d) Uncertainty")
 
 
+ggpubr::ggarrange(shdplot, precision_plot, nrow=2, common.legend = TRUE, legend = "bottom")
+# ggsave(filename = "results/varyingalpha_result1.pdf", width = 25, height = 20, dpi = 300, units = "cm")
+
+ggpubr::ggarrange(recall_plot, uncertainty_plot, nrow=2, common.legend = TRUE, legend = "bottom")
+
+# ggsave(filename = "results/varyingalpha_result2.pdf", width = 25, height = 20, dpi = 300, units = "cm")
+
+ggpubr::ggarrange(shdplot, precision_plot, recall_plot, uncertainty_plot, nrow=4, common.legend = TRUE, legend = "bottom")
+# ggsave(filename = "results/varyingalpha_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")

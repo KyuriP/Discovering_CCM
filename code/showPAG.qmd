@@ -44,8 +44,8 @@ options(warn = -1)
 source("R/CCD_fnc.R")
 source("R/plot_fnc.R")
 source("R/data_generating_fnc.R")
-source("eval_metrics.R")
-source("true_ancestral.R")
+source("R/eval_metrics.R")
+source("R/true_ancestral.R")
 
 library(magrittr)
 library(purrr)
@@ -102,15 +102,14 @@ equilibrium_check(B5sparse)
 
 # generate data 
 # specify the sample sizes
-N <- c(100, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 10000, 20000)
+N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
 # specify replication number
 n <- 500
 # specify alpha level
-alpha <- 0.1
+alpha <- 0.05
 
 
 simdata_5psparse <- N %>% future_map(function(z) {
-  # later increase n again to 1000 or sth
   replicate(n = n,
             expr = gen_dat(B5sparse, N = z),  
             simplify = FALSE)
@@ -146,24 +145,24 @@ mat_5psparse <- ccd_5psparse %>%
 #                          ) 
 
 # ## Run FCI algorithm
-fci_5psparse <- simdata_5psparse %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.001, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
-      )
+# fci_5psparse <- simdata_5psparse %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
+#       )
 
 # save(fci_5psparse, file="data/fci_5psparse.RData")
-# load("data/fci_5psparse.RData")
+load("../data/fci_5psparse.RData")
 # par(mfrow=c(2,5))
 # pag_fci5psparse <- fci_5psparse %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_5psparse <- simdata_5psparse %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-      )
+# cci_5psparse <- simdata_5psparse %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#       )
 
 # save(cci_5psparse, file="data/cci_5psparse.RData")
-# load("data/cci_5psparse.RData")
+load("../data/cci_5psparse.RData")
 # par(mfrow=c(2,5))
 # pag_cci5psparse <- cci_5psparse %>%
 #   map_depth(2, ~plotAG(.x))
@@ -309,25 +308,25 @@ mat_5pdense <- ccd_5pdense %>%
 
 
 ## Run FCI algorithm
-fci_5pdense <- simdata_5pdense %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
-  )
+# fci_5pdense <- simdata_5pdense %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
+#   )
 
 # save(fci_5pdense, file="data/fci_5pdense.RData")
-# load("data/fci_5pdense.RData")
+load("../data/fci_5pdense.RData")
 
 # par(mfrow=c(2,5))
 # pag_fci5pdense <- fci_5pdense %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_5pdense <- simdata_5pdense %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_5pdense <- simdata_5pdense %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_5pdense, file="data/cci_5pdense.RData")
-# load("data/cci_5pdense.RData")
+load("../data/cci_5pdense.RData")
 # par(mfrow=c(2,5))
 # pag_cci5pdense <- cci_5pdense %>%
 #   map_depth(2, ~plotAG(.x))
@@ -501,24 +500,24 @@ mat_10psparse <- ccd_10psparse %>%
 #                          )
 
 ## Run FCI algorithm
-fci_10psparse <- simdata_10psparse %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_10psparse <- simdata_10psparse %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_10psparse, file="data/fci_10psparse.RData")
-# load("data/fci_10psparse.RData")
+load("../data/fci_10psparse.RData")
 # par(mfrow=c(2,5))
 # pag_fci10psparse <- fci_10psparse %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_10psparse <- simdata_10psparse %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_10psparse <- simdata_10psparse %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_10psparse, file="data/cci_10psparse.RData")
-# load("data/cci_10psparse.RData")
+load("../data/cci_10psparse.RData")
 # par(mfrow=c(2,5))
 # pag_cci10psparse <- cci_10psparse %>%
 #   map_depth(2, ~plotAG(.x))
@@ -699,24 +698,24 @@ mat_10pdense  <- ccd_10pdense  %>%
 #                          )
 
 ## Run FCI algorithm
-fci_10pdense <- simdata_10pdense  %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.001, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_10pdense <- simdata_10pdense  %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_10pdense, file="data/fci_10pdense.RData")
-# load("data/fci_10pdense.RData")
+load("../data/fci_10pdense.RData")
 # par(mfrow=c(2,5))
 # pag_fci10pdense <- fci_10pdense  %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_10pdense  <- simdata_10pdense %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_10pdense  <- simdata_10pdense %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_10pdense, file="data/cci_10pdense.RData")
-# load("data/cci_10pdense.RData")
+load("../data/cci_10pdense.RData")
 # par(mfrow=c(2,5))
 # pag_cci10pdense  <- cci_10pdense  %>%
 #   map_depth(2, ~plotAG(.x))
@@ -876,24 +875,24 @@ mat_5pLVsparse  <- ccd_5pLVsparse  %>%
 #                          )
 
 ## Run FCI algorithm
-fci_5pLVsparse <- simdata_5pLVsparse  %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.001, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_5pLVsparse <- simdata_5pLVsparse  %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_5pLVsparse, file="data/fci_5pLVsparse.RData")
-# load("data/fci_5pLV2.RData")
+load("../data/fci_5pLVsparse.RData")
 # par(mfrow=c(2,5))
 # pag_fci_5pLVsparse <- fci_5pLVsparse  %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_5pLVsparse  <- simdata_5pLVsparse %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_5pLVsparse  <- simdata_5pLVsparse %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 # 
 # save(cci_5pLVsparse, file="data/cci_5pLVsparse.RData")
-# load("data/cci_5pLV2.RData")
+load("../data/cci_5pLVsparse.RData")
 # par(mfrow=c(2,5))
 # pag_cci_5pLVsparse <- cci_5pLVsparse  %>%
 #   map_depth(2, ~plotAG(.x))
@@ -1037,24 +1036,24 @@ mat_5pLVdense  <- ccd_5pLVdense  %>%
 #                          )
 
 ## Run FCI algorithm
-fci_5pLVdense <- simdata_5pLVdense  %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-                    alpha = 0.001, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_5pLVdense <- simdata_5pLVdense  %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 # 
 # save(fci_5pLVdense, file="data/fci_5pLVdense.RData")
-# load("data/fci_5pLV2.RData")
+load("../data/fci_5pLVdense.RData")
 # par(mfrow=c(2,5))
 # pag_fci5pLVdense <- fci_5pLVdense  %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_5pLVdense  <- simdata_5pLVdense %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_5pLVdense  <- simdata_5pLVdense %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 # 
 # save(cci_5pLVdense, file="data/cci_5pLVdense.RData")
-# load("data/cci_5pLV2.RData")
+load("../data/cci_5pLVdense.RData")
 # par(mfrow=c(2,5))
 # pag_cci5pLVdense <- cci_5pLVdense  %>%
 #   map_depth(2, ~plotAG(.x))
@@ -1252,24 +1251,24 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
 #                          )
 
 ## Run FCI algorithm
-fci_10pLVsparse  <- simdata_10pLVsparse   %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.001, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_10pLVsparse  <- simdata_10pLVsparse   %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_10pLVsparse, file="data/fci_10pLVsparse.RData")
-# load("data/fci_10pLVsparse.RData")
+load("../data/fci_10pLVsparse.RData")
 # par(mfrow=c(2,5))
 # pag_fci10pLV  <- fci_10pLVsparse %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_10pLVsparse  <- simdata_10pLVsparse %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_10pLVsparse  <- simdata_10pLVsparse %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_10pLVsparse, file="data/cci_10pLVsparse.RData")
-# load("data/cci_10pLV.RData")
+load("../data/cci_10pLVsparse.RData")
 # par(mfrow=c(2,5))
 # pag_cci10pLVsparse   <- cci_10pLVsparse %>%
 #   map_depth(2, ~plotAG(.x))
@@ -1450,24 +1449,24 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 #                          )
 
 ## Run FCI algorithm
-fci_10pLVdense  <- simdata_10pLVdense   %>%
-  map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = 0.001, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
-  )
+# fci_10pLVdense  <- simdata_10pLVdense   %>%
+#   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#            alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#   )
 
 # save(fci_10pLVdense, file="data/fci_10pLVdense.RData")
-# load("data/fci_10pLV.RData")
+load("../data/fci_10pLVdense.RData")
 # par(mfrow=c(2,5))
 # pag_fci10pLVdense <- fci_10pLVdense   %>%
 #   map_depth(2, ~plotAG(.x))
 
 ## Run CCI algorithm
-cci_10pLVdense  <- simdata_10pLVdense  %>%
-  map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
-  )
+# cci_10pLVdense  <- simdata_10pLVdense  %>%
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   )
 
 # save(cci_10pLVdense, file="data/cci_10pLVdense.RData")
-# load("data/cci_10pLV.RData")
+load("../data/cci_10pLVdense.RData")
 # par(mfrow=c(2,5))
 # pag_cci10pLVdense   <- cci_10pLVdense %>%
 #   map_depth(2, ~plotAG(.x))
@@ -1666,7 +1665,7 @@ mat_5psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1684,7 +1683,7 @@ mat_5psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -1711,7 +1710,7 @@ fci_5psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1729,7 +1728,7 @@ fci_5psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -1775,7 +1774,7 @@ cci_5psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 ```
@@ -1826,7 +1825,7 @@ mat_5pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -1853,7 +1852,7 @@ fci_5pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1871,7 +1870,7 @@ fci_5pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -1899,7 +1898,7 @@ cci_5pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1917,7 +1916,7 @@ cci_5pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 ```
@@ -1951,7 +1950,7 @@ mat_10psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1969,7 +1968,7 @@ mat_10psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -1996,7 +1995,7 @@ fci_10psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2014,7 +2013,7 @@ fci_10psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2042,7 +2041,7 @@ cci_10psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2060,7 +2059,7 @@ cci_10psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 ```
@@ -2112,7 +2111,7 @@ mat_10pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2139,7 +2138,7 @@ fci_10pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2157,7 +2156,7 @@ fci_10pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2185,7 +2184,7 @@ cci_10pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2236,7 +2235,7 @@ mat_5pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2254,7 +2253,7 @@ mat_5pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2280,7 +2279,7 @@ fci_5pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2298,7 +2297,7 @@ fci_5pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2326,7 +2325,7 @@ cci_5pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2344,7 +2343,7 @@ cci_5pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-5p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 ```
@@ -2377,7 +2376,7 @@ mat_5pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2395,7 +2394,7 @@ mat_5pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2421,7 +2420,7 @@ fci_5pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2439,7 +2438,7 @@ fci_5pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2467,7 +2466,7 @@ cci_5pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2485,7 +2484,7 @@ cci_5pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-5p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 ```
@@ -2518,7 +2517,7 @@ mat_10pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2536,7 +2535,7 @@ mat_10pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2562,7 +2561,7 @@ fci_10pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2580,7 +2579,7 @@ fci_10pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-10p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2608,7 +2607,7 @@ cci_10pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2626,7 +2625,7 @@ cci_10pLVsparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-10p-LV-sparse", face = "bold", size = 18, family = "Palatino"))
 
 ```
@@ -2659,7 +2658,7 @@ mat_10pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2677,7 +2676,7 @@ mat_10pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCD-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2703,7 +2702,7 @@ fci_10pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion FCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2721,7 +2720,7 @@ fci_10pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty FCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 
@@ -2749,7 +2748,7 @@ cci_10pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -2767,7 +2766,7 @@ cci_10pLVdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-10p-LV-dense", face = "bold", size = 18, family = "Palatino"))
 
 ```
@@ -2843,7 +2842,7 @@ precision_plots <- c("5p_sparse", "5p_dense", "10p_sparse", "10p_dense", "5p_LVs
         results %>% 
         filter(condition == .x & grepl("average_precision", metric)) %>% 
         tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-        ggplot(aes(x= factor(N, levels = c("100", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000", "20000")), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
+        ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
         geom_line(aes(group = algorithm)) +
         geom_point(size=1) +
         #geom_errorbar(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N)), ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))), width=0.1) +
@@ -2866,7 +2865,7 @@ recall_plots <-  c("5p_sparse", "5p_dense", "10p_sparse", "10p_dense", "5p_LVspa
         results %>% 
         filter(condition == .x & grepl("average_recall", metric)) %>% 
         tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-        ggplot(aes(x= factor(N, levels = c("100", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000", "20000")), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
+        ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
         geom_line(aes(group = algorithm)) +
         geom_point(size=1) +
         #geom_errorbar(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N)), ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))), width=0.1) +
@@ -2889,7 +2888,7 @@ uncertainty_plots <-  c("5p-sparse", "5p-dense", "10p-sparse", "10p-dense", "5p-
         uncertainties %>%
         filter(condition == .x) %>% 
         tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-        ggplot(aes(x= factor(N, levels = c("100", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000", "20000")), y=means, group = algorithm, colour = algorithm, fill=algorithm)) +
+        ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=means, group = algorithm, colour = algorithm, fill=algorithm)) +
         geom_line(aes(group = algorithm)) +
         geom_point(size=1) +
         #geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), width=0.1) +
@@ -2898,8 +2897,8 @@ uncertainty_plots <-  c("5p-sparse", "5p-dense", "10p-sparse", "10p-dense", "5p-
         scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
         labs(x="N", y="", title = "", subtitle = .x) +
         # check if ylim is reasonably set...
-        #ylim(0, 1) +
-        ylim(0, 20) +
+        ylim(0, 1) +
+        # ylim(0, 20) +
         #scale_y_continuous(limits = c(0.4, 1)) +
         theme_classic() + MyTheme
   )
@@ -2913,7 +2912,7 @@ SHD_plots <- c("5p-sparse", "5p-dense", "10p-sparse", "10p-dense", "5p-LVsparse"
         SHDs %>%
         filter(condition == .x) %>% 
         tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-        ggplot(aes(x= factor(N, levels = c("100", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000", "20000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
+        ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
         geom_line(aes(group = algorithm)) +
         geom_point(size=1) + 
         #geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), width=0.1) +

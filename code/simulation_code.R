@@ -10,8 +10,8 @@
 # We generate 500 datasets from each model and estimate partial ancestral graphs (PAGs)
 # using CCD, FCI, and CCI algorithm.
 #
-# Plotting resulting PAGs are commented out;
-# if interested, simply uncomment them and run the plotting code.
+# Running algorithms (except for CCD) and plotting the resulting PAGs are commented out
+# due to a long running time. if interested, simply uncomment them and run the code.
 ## =============================================================================
 
 
@@ -113,6 +113,7 @@ dimnames(trueag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep="
 # plot true AG
 plotAG(trueag_5psparse)
 
+
 ## Run CCD algorithm
 ccd_5psparse <- simdata_5psparse %>%
   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
@@ -125,7 +126,7 @@ mat_5psparse <- ccd_5psparse %>%
 # save(ccd_5psparse, file="data/ccd_5psparse.RData")
 # save(mat_5psparse, file="data/mat_5psparse.RData")
 # load("data/mat_5psparse.RData")
-# can we have a more elegant way to combine "graphNEL" plots? ? ? ? ? ?? 
+# can we have a more elegant way to combine "graphNEL" plots? ? ? ? ? ?
 
 # plot resulting PAGs
 # pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse,

@@ -220,31 +220,31 @@ precision2 <- function(truepag, estimatedpag){
   # (0 = null, 1 = circle, 2 = arrow head, 3 = arrow tail)
   if(0 %in% estimatedpag) {
     pre_null = cm["0","0"]/sum(cm[,"0"])
-    rec_null = cm["0","0"]/sum(cm["0",])
   } else {
-    pre_null = 0; rec_null = 0;
+    pre_null = 0;
     # print("No null endpoint occurred in the estimated graph.")
   }
   
   if(2 %in% estimatedpag) {
     pre_head = cm["2","2"]/sum(cm[,"2"])
-    rec_head = cm["2","2"]/sum(cm["2",])
   } else {
-    pre_head = 0; rec_head = 0;
+    pre_head = 0; 
     # print("No tail endpoint occurred in the estimated graph.")
   }
   
   if(3 %in% estimatedpag) {
     pre_tail = cm["3","3"]/sum(cm[,"3"])
-    rec_tail = cm["3","3"]/sum(cm["3",])
   } else {
-    pre_tail = 0; rec_tail = 0;
+    pre_tail = 0; 
     #print("No head endpoint occurred in the estimated graph.")
   }
+  # if there is any NaN, replace with zero (it is due to the zero in the denominator)
+  tmp <- c(pre_null, pre_head, pre_tail)
+  tmp[is.nan(tmp)] <- 0
+  pre_null <- tmp[1]; pre_head <- tmp[2]; pre_tail <- tmp[3]
   # average precision and recall
   avg_pre = sum(pre_null, pre_tail, pre_head) / 3
-  avg_rec = sum(rec_null, rec_tail, rec_head) / 3
-  # return precision and recall value for each edge-endpoint along with the average
+  # return average precision value
   return(average_precision = avg_pre)
 }
 
@@ -262,31 +262,32 @@ recall2 <- function(truepag, estimatedpag){
   # compute precision & recall for each category
   # (0 = null, 1 = circle, 2 = arrow head, 3 = arrow tail)
   if(0 %in% estimatedpag) {
-    pre_null = cm["0","0"]/sum(cm[,"0"])
     rec_null = cm["0","0"]/sum(cm["0",])
   } else {
-    pre_null = 0; rec_null = 0;
+    rec_null = 0;
     # print("No null endpoint occurred in the estimated graph.")
   }
   
   if(2 %in% estimatedpag) {
-    pre_head = cm["2","2"]/sum(cm[,"2"])
     rec_head = cm["2","2"]/sum(cm["2",])
   } else {
-    pre_head = 0; rec_head = 0;
+    rec_head = 0;
     # print("No tail endpoint occurred in the estimated graph.")
   }
   
   if(3 %in% estimatedpag) {
-    pre_tail = cm["3","3"]/sum(cm[,"3"])
     rec_tail = cm["3","3"]/sum(cm["3",])
   } else {
-    pre_tail = 0; rec_tail = 0;
+    rec_tail = 0;
     #print("No head endpoint occurred in the estimated graph.")
   }
-  # average precision and recall
-  avg_pre = sum(pre_null, pre_tail, pre_head) / 3
+  # if there is any NaN, replace with zero (it is due to the zero in the denominator)
+  tmp <- c(rec_null, rec_head, rec_tail)
+  tmp[is.nan(tmp)] <- 0
+  rec_null <- tmp[1]; rec_head <- tmp[2]; rec_tail <- tmp[3]
+  
+  # average recall
   avg_rec = sum(rec_null, rec_tail, rec_head) / 3
-  # return precision and recall value for each edge-endpoint along with the average
+  # return average recall value 
   return(average_recall = avg_rec)
 }
