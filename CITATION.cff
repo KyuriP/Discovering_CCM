@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Park"
+  given-names: "Kyuri"
+  orcid: "https://orcid.org/0000-0001-8502-2134"
+title: "Discovering cyclic causal models in psychological research"
+version: 2.0.4
+date-released: 2023-03-30
+url: "https://github.com/KyuriP/Thesis_KP
