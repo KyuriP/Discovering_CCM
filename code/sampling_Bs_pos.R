@@ -146,10 +146,7 @@ load("data/largedata_randomB/CCIres_randomB.Rdata")
 
 
 
-CCDshd1000 <- list()
-for(i in 1:length(CCDres)){
-  
-}
+
 
 ## =========================
 ## 3. Evaluate performance
@@ -157,36 +154,36 @@ for(i in 1:length(CCDres)){
 
 ## SHD
 CCDshd <- list()
-for(i in 1:length(CCDres2)){
-  CCDshd[[i]] <- CCDres2[[i]] %>% 
+for(i in 1:length(CCDres)){
+  CCDshd[[i]] <- CCDres[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N))  %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCDshd) <- names(CCDres2)
+names(CCDshd) <- names(CCDres)
 
 
 FCIshd <- list()
-for(i in 1:length(FCIres2)){
-  FCIshd[[i]] <- FCIres2[[i]] %>% 
+for(i in 1:length(FCIres)){
+  FCIshd[[i]] <- FCIres[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(FCIshd) <- names(FCIres2)
+names(FCIshd) <- names(FCIres)
 
 
 CCIshd <- list()
-for(i in 1:length(CCIres2)){
-  CCIshd[[i]] <- CCIres2[[i]] %>% 
+for(i in 1:length(CCIres)){
+  CCIshd[[i]] <- CCIres[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCIshd) <- names(CCIres2)
+names(CCIshd) <- names(CCIres)
 
 ## combine the SHDs
 SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>% 
@@ -206,31 +203,31 @@ SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>%
 
 ## Precision
 CCDprec <- list()
-for(i in 1:length(CCDres2)){
-  CCDprec[[i]] <- CCDres2[[i]] %>% 
+for(i in 1:length(CCDres)){
+  CCDprec[[i]] <- CCDres[[i]] %>% 
     map_depth(2, ~precision2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
     rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
 }
-names(CCDprec) <- names(CCDres2)
+names(CCDprec) <- names(CCDres)
 
 FCIprec <- list()
-for(i in 1:length(FCIres2)){
-  FCIprec[[i]] <- FCIres2[[i]] %>% 
+for(i in 1:length(FCIres)){
+  FCIprec[[i]] <- FCIres[[i]] %>% 
     map_depth(2, ~precision2(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
     rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
 }
-names(FCIprec) <- names(FCIres2)
+names(FCIprec) <- names(FCIres)
 
 CCIprec <- list()
-for(i in 1:length(CCIres2)){
-  CCIprec[[i]] <- CCIres2[[i]] %>% 
+for(i in 1:length(CCIres)){
+  CCIprec[[i]] <- CCIres[[i]] %>% 
     map_depth(2, ~precision2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%
     rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
 }
-names(CCIprec) <- names(CCIres2)
+names(CCIprec) <- names(CCIres)
 
 ## combine the precisions
 prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>% 
@@ -249,31 +246,31 @@ prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>
 
 ## Recall
 CCDrec <- list()
-for(i in 1:length(CCDres2)){
-  CCDrec[[i]] <- CCDres2[[i]] %>% 
+for(i in 1:length(CCDres)){
+  CCDrec[[i]] <- CCDres[[i]] %>% 
     map_depth(2, ~recall2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
     rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
 }
-names(CCDrec) <- names(CCDres2)
+names(CCDrec) <- names(CCDres)
 
 FCIrec <- list()
-for(i in 1:length(FCIres2)){
-  FCIrec[[i]] <- FCIres2[[i]] %>% 
+for(i in 1:length(FCIres)){
+  FCIrec[[i]] <- FCIres[[i]] %>% 
     map_depth(2, ~ recall2(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
     rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
 }
-names(FCIrec) <- names(FCIres2)
+names(FCIrec) <- names(FCIres)
 
 CCIrec <- list()
-for(i in 1:length(CCIres2)){
-  CCIrec[[i]] <- CCIres2[[i]] %>% 
+for(i in 1:length(CCIres)){
+  CCIrec[[i]] <- CCIres[[i]] %>% 
     map_depth(2, ~ recall2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%
     rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
 }
-names(CCIrec) <- names(CCIres2)
+names(CCIrec) <- names(CCIres)
 
 ## combine the recalls
 rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>% 
@@ -292,8 +289,8 @@ rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>%
 
 ## Uncertainty
 CCDunc <- list()
-for(i in 1:length(CCDres2)){
-  CCDunc[[i]] <- CCDres2[[i]] %>% 
+for(i in 1:length(CCDres)){
+  CCDunc[[i]] <- CCDres[[i]] %>% 
     map_depth(2, ~uncertainty(.x)) %>% 
     do.call("cbind", .) %>% 
     apply(., 2, unlist) %>% 
@@ -301,12 +298,12 @@ for(i in 1:length(CCDres2)){
     rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means = mean, sds = sd))  %>% t()
 }
-names(CCDunc) <- names(CCDres2)
+names(CCDunc) <- names(CCDres)
 
 
 FCIunc <- list()
-for(i in 1:length(FCIres2)){
-  FCIunc[[i]] <- FCIres2[[i]] %>% 
+for(i in 1:length(FCIres)){
+  FCIunc[[i]] <- FCIres[[i]] %>% 
     map_depth(2, ~uncertainty(.x))  %>% 
     do.call("cbind", .) %>% 
     apply(., 2, unlist) %>% 
@@ -314,12 +311,12 @@ for(i in 1:length(FCIres2)){
     rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means = mean, sds = sd)) %>% t()
 }
-names(FCIunc) <- names(FCIres2)
+names(FCIunc) <- names(FCIres)
 
 
 CCIunc <- list()
-for(i in 1:length(CCIres2)){
-  CCIunc[[i]] <- CCIres2[[i]] %>% 
+for(i in 1:length(CCIres)){
+  CCIunc[[i]] <- CCIres[[i]] %>% 
     map_depth(2, ~uncertainty(.x)) %>% 
     do.call("cbind", .) %>% 
     apply(., 2, unlist) %>% 
@@ -327,7 +324,7 @@ for(i in 1:length(CCIres2)){
     rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means = mean, sds = sd)) %>% t() 
 }
-names(CCIunc) <- names(CCIres2)
+names(CCIunc) <- names(CCIres)
 
 
 ## combine the uncertainties
