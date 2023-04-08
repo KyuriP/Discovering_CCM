@@ -35,7 +35,7 @@ library(magrittr) # for assigning pipes %<>%
 
 ## Data generating
 # specify the sample sizes
-N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
+N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
 # specify replication number
 n <- 500
 # vary alpha depending on N
@@ -772,7 +772,7 @@ pre_rec2 <- list(
   mutate(algorithm = rep(c("CCD", "FCI", "CCI"), 8),
          condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", "5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense"), each=3),
          netsize = stringr::str_split(condition, "_", simplify=T)[,1],
-         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LV", "without LV"),
+         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LC", "without LC"),
          densities = stringr::str_remove(stringr::str_split(condition, "_", simplify=T)[,2], "LV")
   ) %>%
   # brings the algorithm and condition names first
@@ -797,7 +797,7 @@ uncertainties2 <- bind_rows(
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
          condition = stringr::str_split(id, "_", simplify = T)[,2],
          netsize = stringr::str_split(condition, "-", simplify=T)[,1],
-         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LV", "without LV"),
+         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LC", "without LC"),
          densities = stringr::str_remove(stringr::str_split(condition, "-", simplify=T)[,2], "LV")
   ) %>% 
   tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), names_to = "name", values_to = "value") %>% 
@@ -818,7 +818,7 @@ SHDs2 <- bind_rows(
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
          condition = stringr::str_split(id, "_", simplify = T)[,2],
          netsize = stringr::str_split(condition, "-", simplify=T)[,1],
-         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LV", "without LV"),
+         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LC", "without LC"),
          densities = stringr::str_remove(stringr::str_split(condition, "-", simplify=T)[,2], "LV")
   ) %>% 
   tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), names_to = "name", values_to = "value") %>% 
@@ -851,13 +851,14 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 ## SHD figure
 shdplot <- SHDs2 %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
+  ggplot(aes(x= as.numeric(N), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
   geom_point(size=1) + 
   # exaggerate the intervals a bit to ensure they are visible in the plot (times by 3)
-  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N))*3, ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))*3), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N))*3, ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))*3), alpha=0.2, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -866,25 +867,28 @@ shdplot <- SHDs2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(a) SHD") +
-  # remove the x-axis texts & ticks
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  guides(color = "none", fill = "none")
+
+
+ggsave(filename = "results/varyingalpha_shd.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+
 
 
 ## Precision figure
 precision_plot <- pre_rec2 %>% 
   filter(grepl("average_precision", metric)) %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
+  ggplot(aes(x= as.numeric(N), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
   geom_point(size=1) +
   # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
-  geom_ribbon(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))*2, ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=average_precision_mean+qnorm(0.25)*average_precision_sd, ymax=average_precision_mean+qnorm(0.75)*average_precision_sd), alpha=0.15, color=NA) +
+  # geom_ribbon(aes(ymin=average_precision_mean-qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))*2, ymax=average_precision_mean+qnorm(0.975)*average_precision_sd/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -892,25 +896,28 @@ precision_plot <- pre_rec2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
   #labs(title = "Precision", x = "N", y = "")
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   labs(title = "(b) Precision", x = "", y = "") +
-  # remove the x-axis texts & ticks
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  guides(color = "none", fill = "none")
+
+
+ggsave(filename = "results/varyingalpha_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+
 
 ## Recall figure
 recall_plot <- pre_rec2 %>% 
   filter(grepl("average_recall", metric)) %>% 
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
+  ggplot(aes(x= as.numeric(N), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
   geom_point(size=1) +
   # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
-  geom_ribbon(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))*2, ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=average_recall_mean+qnorm(0.25)*average_recall_sd, ymax=average_recall_mean+qnorm(0.75)*average_recall_sd), alpha=0.15, color=NA) +
+  # geom_ribbon(aes(ymin=average_recall_mean-qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))*2, ymax=average_recall_mean+qnorm(0.975)*average_recall_sd/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -918,13 +925,14 @@ recall_plot <- pre_rec2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # labs(title = "Recall", x = "N", y = "")
-  labs(title = "(c) Recall", x = "", y = "") +
-  # remove the x-axis texts & ticks
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # labs(title = "Recall", x = "N", y = "")
+  labs(title = "(c) Recall", x = "", y = "") + 
+  guides(color = "none", fill = "none")
+
+ggsave(filename = "results/varyingalpha_rec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 # combine the plots together
 #ggpubr::ggarrange(precision_plot, recall_plot, nrow=2, common.legend = TRUE, legend = "bottom")
@@ -932,13 +940,14 @@ recall_plot <- pre_rec2 %>%
 ## Uncertainty figure
 uncertainty_plot <- uncertainties2 %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(N, levels = c("50", "150", "500", "1000", "1500", "2000", "2500", "3000", "4000", "5000", "10000")), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
+  ggplot(aes(x= as.numeric(N), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
   geom_point(size=1) + 
   # exaggerate the intervals a bit to ensure they are visible in the plot (times by )
-  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N))*2, ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N))*2, ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -947,16 +956,20 @@ uncertainty_plot <- uncertainties2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(d) Uncertainty")
+
+ggsave(filename = "results/varyingalpha_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
+
 
 
 ggpubr::ggarrange(shdplot, precision_plot, nrow=2, common.legend = TRUE, legend = "bottom")
-# ggsave(filename = "results/varyingalpha_result1.pdf", width = 25, height = 20, dpi = 300, units = "cm")
+ggsave(filename = "results/varyingalpha_result1.pdf", width = 25, height = 22, dpi = 300, units = "cm")
 
 ggpubr::ggarrange(recall_plot, uncertainty_plot, nrow=2, common.legend = TRUE, legend = "bottom")
-
-# ggsave(filename = "results/varyingalpha_result2.pdf", width = 25, height = 20, dpi = 300, units = "cm")
+ggsave(filename = "results/varyingalpha_result2.pdf", width = 25, height = 22, dpi = 300, units = "cm")
 
 ggpubr::ggarrange(shdplot, precision_plot, recall_plot, uncertainty_plot, nrow=4, common.legend = TRUE, legend = "bottom")
 # ggsave(filename = "results/varyingalpha_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+

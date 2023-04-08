@@ -40,11 +40,11 @@ set.seed(123)
 ## ======================
 
 # specify the sample sizes
-N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
+N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
 # specify replication number
-n <- 1e3
+n <- 500
 # specify alpha level
-alpha <- 0.05
+alpha <- 0.01
 
 
 sampleranB <- function(B, seed=123){
@@ -135,21 +135,22 @@ CCIres <- simdatalist %>%
 truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, trueag_10psparseLV, trueag_10pdenseLV)
 
 
+save(CCDres, file ="data/ranB/CCDres_randB.Rdata")
+save(FCIres, file = "data/ranB/FCIres_randB.Rdata")
+save(CCIres, file = "data/ranB/CCIres_randB.Rdata")
+
+
 # load results
 load("data/largedata_n500/CCDres2_randomB.Rdata")
 load("data/largedata_n500/FCIres2_randomB.Rdata")
 load("data/largedata_n500/CCIres2_randomB.Rdata")
+# 
+# load("data/largedata_randomB/CCDres_randomB.Rdata")
+# load("data/largedata_randomB/FCIres_randomB.Rdata")
+# load("data/largedata_randomB/CCIres_randomB.Rdata")
 
-load("data/largedata_randomB/CCDres_randomB.Rdata")
-load("data/largedata_randomB/FCIres_randomB.Rdata")
-load("data/largedata_randomB/CCIres_randomB.Rdata")
 
 
-
-CCDshd1000 <- list()
-for(i in 1:length(CCDres)){
-  
-}
 
 ## =========================
 ## 3. Evaluate performance
@@ -193,7 +194,7 @@ SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>%
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
   tidyr::unnest(value) %>% 
@@ -237,7 +238,7 @@ prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
   tidyr::unnest(value) %>% 
@@ -280,7 +281,7 @@ rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>%
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
   tidyr::unnest(value) %>% 
@@ -337,7 +338,7 @@ unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>%
   tidyr::pivot_longer(cols = -c(id, n, statistics), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>% 
   relocate(where(is.character), .before = where(is.numeric))
@@ -365,79 +366,89 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 ## plot SHD
 shdplot_ranB <- SHD_ranB %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000","3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill = id)) +
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) + 
-  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 3)
-  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(n)*3, ymax=means+qnorm(0.975)*sds/sqrt(n)*3), alpha=0.2, color=NA) +
+  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
+  # geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(n)*2, ymax=means+qnorm(0.975)*sds/sqrt(n)*2), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  #scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   labs(x="", y="", title = "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
-  ggtitle("(a) SHD") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), scales = "free_y", switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  ggtitle("(a) SHD")  +
+  guides(color = "none", fill = "none")
+
+ggsave(filename = "results/samplingbeta_shd.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot precision
 precisionplot_ranB <- prec_ranB %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill=id)) +
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill=id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) +
   # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
-  geom_ribbon(aes(ymin=means - qnorm(0.975)*sds/sqrt(n)*2, ymax=means + qnorm(0.975)*sds/sqrt(n)*2), alpha=0.2, color=NA) +
+  # geom_ribbon(aes(ymin=means - qnorm(0.975)*sds/sqrt(n)*2, ymax=means + qnorm(0.975)*sds/sqrt(n)*2), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   labs(title = "(b) Precision", x = "", y = "") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  guides(color = "none", fill = "none")
+
+ggsave(filename = "results/samplingbeta_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+
 
 ## plot recall
 recallplot_ranB <- rec_ranB %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill=id)) +
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill=id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) +
-  geom_ribbon(aes(ymin=means - qnorm(0.975)*sds/sqrt(n)*2, ymax=means + qnorm(0.975)*sds/sqrt(n)*2), alpha=0.2, color=NA) +
+  # geom_ribbon(aes(ymin=means - qnorm(0.975)*sds/sqrt(n)*2, ymax=means + qnorm(0.975)*sds/sqrt(n)*2), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
-  labs(title = "(c) Recall", x = "", y = "") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(title = "(c) Recall", x = "", y = "")+
+  guides(color = "none", fill = "none")
+
+ggsave(filename = "results/samplingbeta_rec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot uncertainty 
 uncertaintyplot_ranB <- unc_ranB %>%  tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000",  "3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill = id)) +
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) + 
   #geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), width=0.1) +
   # exaggerate the intervals a bit to ensure they are visible in the plot (times by )
-  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N)), ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
+  # geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N)), ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   #scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   labs(x="N", y="", title = "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(d) Uncertainty") 
-  # theme(axis.title.x=element_blank(),
-  #       axis.text.x=element_blank(),
-  #       axis.ticks.x=element_blank())
+
+ggsave(filename = "results/samplingbeta_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 
 # combine the plots
@@ -445,6 +456,80 @@ ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, recallplot_ranB, uncertainty
 #ggsave(filename = "results/samplingbeta_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
 
 ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_result1.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+# ggsave(filename = "results/samplingbeta_result1.pdf", width = 25, height = 22, dpi = 300, units = "cm")
 ggpubr::ggarrange(recallplot_ranB, uncertaintyplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_result2.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+# ggsave(filename = "results/samplingbeta_result2.pdf", width = 25, height = 22, dpi = 300, units = "cm")
+
+
+
+## Extract only 5p dense cases
+dense5pshd <- SHD_ranB |> filter(condition == "B5dense") |>
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  geom_line(aes(group = id)) +
+  geom_point(size=1) + 
+  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(x="", y="", title = "") +
+  theme_minimal() +
+  MyTheme + 
+  #ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggtitle("(a) SHD") 
+
+
+dense5pprec <-prec_ranB |> filter(condition == "B5dense") |>
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  geom_line(aes(group = id)) +
+  geom_point(size=1) + 
+  # exaggerate the intervals a bit to ensure they are visible in the plot (times by )
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(x="", y="", title = "") +
+  theme_minimal() +
+  MyTheme + 
+  #ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggtitle("(b) precision") 
+
+dense5prec <- rec_ranB |> filter(condition == "B5dense") |>
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  geom_line(aes(group = id)) +
+  geom_point(size=1) + 
+  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 3)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(x="", y="", title = "") +
+  theme_minimal() +
+  MyTheme + 
+  #ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggtitle("(c) recall") 
+
+dense5punc <- unc_ranB |> filter(condition == "B5dense") |>
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  geom_line(aes(group = id)) +
+  geom_point(size=1) + 
+  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 3)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(x="", y="", title = "") +
+  theme_minimal() +
+  MyTheme + 
+  #ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggtitle("(d) uncertainty") 
+
+
+# combine the plots
+ggpubr::ggarrange(dense5pshd, dense5pprec, dense5prec, dense5punc, ncol=2, nrow=2, common.legend = TRUE, legend = "bottom")
+
+ggsave(filename = "results/samplingbeta_dense5p.pdf", width = 17, height = 13, dpi = 300, units = "cm")

@@ -598,8 +598,8 @@ SHDs %>%
   geom_line(aes(group = algorithm)) +
   # add scattered points
   geom_point(size=1) + 
-  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 3)
-  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N))*3, ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))*3), alpha=0.2, color=NA) +
+  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
+  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N))*2, ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -671,7 +671,7 @@ uncertainty_plot <- uncertainties %>%
   geom_line(aes(group = algorithm)) +
   # add scattered points
   geom_point(size=1) + 
-  # exaggerate the intervals a bit to ensure they are visible in the plot (times by )
+  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
   geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N))*2, ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))*2), alpha=0.2, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +

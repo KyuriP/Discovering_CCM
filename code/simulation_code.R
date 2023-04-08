@@ -88,11 +88,11 @@ equilibrium_check(B5sparse)
 
 ## Data generating
 # specify the sample sizes
-N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
+N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
 # specify replication number
 n <- 500
 # specify alpha level
-alpha <- 0.05
+alpha <- 0.01
 
 # generate data
 simdata_5psparse <- N %>% future_map(function(z) {
@@ -141,7 +141,7 @@ mat_5psparse <- ccd_5psparse %>%
 #   )
 
 # save(fci_5psparse, file="data/fci_5psparse.RData")
-load("data/fci_5psparse.RData")
+# load("data/fci_5psparse.RData")
 
 # plot resulting PAGs
 # pag_fci5psparse <- fci_5psparse %>%
@@ -153,7 +153,7 @@ load("data/fci_5psparse.RData")
 #                     labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
 # save(cci_5psparse, file="data/cci_5psparse.RData")
-load("data/cci_5psparse.RData")
+# load("data/cci_5psparse.RData")
 
 # plot resulting PAGs
 # pag_cci5psparse <- cci_5psparse %>%
@@ -215,7 +215,7 @@ mat_5pdense <- ccd_5pdense %>%
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
 #   )
 # save(fci_5pdense, file="data/fci_5pdense.RData")
-load("data/fci_5pdense.RData")
+# load("data/fci_5pdense.RData")
 
 # plot resulting PAGs
 # pag_fci5pdense <- fci_5pdense %>%
@@ -226,7 +226,7 @@ load("data/fci_5pdense.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag
 #   )
 # save(cci_5pdense, file="data/cci_5pdense.RData")
-load("data/cci_5pdense.RData")
+# load("data/cci_5pdense.RData")
 
 # plot resulting PAGs
 # pag_cci5pdense <- cci_5pdense %>%
@@ -312,7 +312,7 @@ mat_10psparse <- ccd_10psparse %>%
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 # save(fci_10psparse, file="data/fci_10psparse.RData")
-load("data/fci_10psparse.RData")
+# load("data/fci_10psparse.RData")
 
 # plot resulting PAGs
 # pag_fci10psparse <- fci_10psparse %>%
@@ -323,7 +323,7 @@ load("data/fci_10psparse.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
 # save(cci_10psparse, file="data/cci_10psparse.RData")
-load("data/cci_10psparse.RData")
+# load("data/cci_10psparse.RData")
 
 # plot resulting PAGs
 # pag_cci10psparse <- cci_10psparse %>%
@@ -406,7 +406,7 @@ mat_10pdense  <- ccd_10pdense  %>%
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 # save(fci_10pdense, file="data/fci_10pdense.RData")
-load("data/fci_10pdense.RData")
+# load("data/fci_10pdense.RData")
 
 # plot resulting PAGs
 # pag_fci10pdense <- fci_10pdense  %>%
@@ -417,7 +417,7 @@ load("data/fci_10pdense.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pdense, file="data/cci_10pdense.RData")
-load("data/cci_10pdense.RData")
+# load("data/cci_10pdense.RData")
 
 # plot resulting PAGs
 # pag_cci10pdense  <- cci_10pdense  %>%
@@ -492,7 +492,7 @@ mat_5pLVsparse  <- ccd_5pLVsparse  %>%
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
 #   )
 # save(fci_5pLVsparse, file="data/fci_5pLVsparse.RData")
-load("data/fci_5pLVsparse.RData")
+# load("data/fci_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_fci_5pLVsparse <- fci_5pLVsparse  %>%
@@ -504,7 +504,7 @@ load("data/fci_5pLVsparse.RData")
 #   )
 # 
 # save(cci_5pLVsparse, file="data/cci_5pLVsparse.RData")
-load("data/cci_5pLVsparse.RData")
+# load("data/cci_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_cci_5pLVsparse <- cci_5pLVsparse  %>%
@@ -572,7 +572,7 @@ mat_5pLVdense  <- ccd_5pLVdense  %>%
 #   )
 
 # save(fci_5pLVdense, file="data/fci_5pLVdense.RData")
-load("data/fci_5pLVdense.RData")
+# load("data/fci_5pLVdense.RData")
 
 # plot resulting PAGs
 # pag_fci5pLVdense <- fci_5pLVdense  %>%
@@ -584,7 +584,7 @@ load("data/fci_5pLVdense.RData")
 #   )
 
 # save(cci_5pLVdense, file="data/cci_5pLVdense.RData")
-load("data/cci_5pLVdense.RData")
+# load("data/cci_5pLVdense.RData")
 
 # plot resulting PAGs
 # pag_cci5pLVdense <- cci_5pLVdense  %>%
@@ -672,7 +672,7 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
 #                     labels = colnames(.x)) %>% .@amat  
 #   )
 # save(fci_10pLVsparse, file="data/fci_10pLVsparse.RData")
-load("data/fci_10pLVsparse.RData")
+# load("data/fci_10pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_fci10pLV  <- fci_10pLVsparse %>%
@@ -682,7 +682,7 @@ load("data/fci_10pLVsparse.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pLVsparse, file="data/cci_10pLVsparse.RData")
-load("data/cci_10pLVsparse.RData")
+# load("data/cci_10pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_cci10pLVsparse   <- cci_10pLVsparse %>%
@@ -782,7 +782,7 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 #                     labels = colnames(.x)) %>% .@amat
 #   )
 # save(fci_10pLVdense, file="data/fci_10pLVdense.RData")
-load("data/fci_10pLVdense.RData")
+# load("data/fci_10pLVdense.RData")
 
 # plot resulting PAGs
 # pag_fci10pLVdense <- fci_10pLVdense   %>%
@@ -793,7 +793,7 @@ load("data/fci_10pLVdense.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pLVdense, file="data/cci_10pLVdense.RData")
-load("data/cci_10pLVdense.RData")
+# load("data/cci_10pLVdense.RData")
 
 # plot resulting PAGs
 # pag_cci10pLVdense   <- cci_10pLVdense %>%

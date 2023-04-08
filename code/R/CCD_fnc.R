@@ -6,7 +6,7 @@
 ##
 ## Purpose: To run the CCD algorithm.
 ##
-## Note: This is a wrapper function for the ccd algorithm in the Tetrad software.
+## Note: This is a wrapper function for the CCD algorithm in the Tetrad software.
 ## Please check Tetrad for more detailed information
 ## on its CCD function (https://sites.google.com/view/tetradcausal).
 ## ============================================================================

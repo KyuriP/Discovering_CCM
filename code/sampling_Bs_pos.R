@@ -2,22 +2,14 @@
 ## Description
 # 
 # This script contains all the code for the secondary analysis with 
-# randomly sampled coefficients for the regression matrix B.
+# randomly sampled coefficients for the regression matrix B "only positive values".
 #
-# Purpose: to gauge how much the results of the main analysis are dependent on 
-# the specific weights we specified.
+# Purpose: to assess the dependence of the results from the main analysis on 
+# the specified weights by randomly sampling coefficients for the regression matrix 
+# B with "only positive values" 
+# (we simulate a positive manifold to examine if there is any impact on the results).
 #
-# As is the case with the main analysis, there are in total 8 models and
-# we generate 500 datasets from each model.
-#
-# The content is as follows:
-# 0. Preparation: we source and load necessary functions & packages and generate data.
-# 1. Generate data: we generate data based on randomly sampled B matrix at every iteration. 
-# 2. Run algorithms: we again run three algorithms CCD, FCI, and CCI then estimate PAGs.
-# 3. Evaluate performance: we compute structural Hamming distance, precision, recall,
-# and uncertainty rate for each condition.
-# 4. Create figures: we create figures for each evaluation metric comparing the 
-# performance of each algorithm per condition.
+# The rest set up is exactly the same as `sampling_Bs.R`.
 ## =============================================================================
 
 ## ======================
@@ -40,11 +32,11 @@ set.seed(123)
 ## ======================
 
 # specify the sample sizes
-N <- c(50, 150, 500, 1000, 1500, 2000, 3000, 4000, 5000, 10000)
+N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
 # specify replication number
-n <- 1e3
+n <- 500
 # specify alpha level
-alpha <- 0.05
+alpha <- 0.01
 
 
 sampleranB <- function(B, seed=123){
@@ -116,17 +108,17 @@ simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 ## ======================
 ## 2. Run algorithms
 ## ======================
-CCDres <- simdatalist %>% 
+CCDres_pos <- simdatalist %>% 
   map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
   map_depth(3, ~CreateAdjMat(.x, length(.x$nodes)))
 
 
-FCIres <- simdatalist %>% 
+FCIres_pos <- simdatalist %>% 
   map_depth(3, ~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
                      alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
   )
 
-CCIres <- simdatalist %>% 
+CCIres_pos <- simdatalist %>% 
   map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
   )
 
@@ -136,13 +128,13 @@ truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pde
 
 
 # load results
-load("data/largedata_n500/CCDres2_randomB.Rdata")
-load("data/largedata_n500/FCIres2_randomB.Rdata")
-load("data/largedata_n500/CCIres2_randomB.Rdata")
-
-load("data/largedata_randomB/CCDres_randomB.Rdata")
-load("data/largedata_randomB/FCIres_randomB.Rdata")
-load("data/largedata_randomB/CCIres_randomB.Rdata")
+load("data/largedata_posB/CCDres3_pos.Rdata")
+load("data/largedata_posB/FCIres3_pos.Rdata")
+load("data/largedata_posB/CCIres3_pos.Rdata")
+# 
+# load("data/largedata_randomB/CCDres_randomB.Rdata")
+# load("data/largedata_randomB/FCIres_randomB.Rdata")
+# load("data/largedata_randomB/CCIres_randomB.Rdata")
 
 
 
@@ -154,36 +146,36 @@ load("data/largedata_randomB/CCIres_randomB.Rdata")
 
 ## SHD
 CCDshd <- list()
-for(i in 1:length(CCDres)){
-  CCDshd[[i]] <- CCDres[[i]] %>% 
+for(i in 1:length(CCDres_pos)){
+  CCDshd[[i]] <- CCDres_pos[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N))  %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCDshd) <- names(CCDres)
+names(CCDshd) <- names(CCDres_pos)
 
 
 FCIshd <- list()
-for(i in 1:length(FCIres)){
-  FCIshd[[i]] <- FCIres[[i]] %>% 
+for(i in 1:length(FCIres_pos)){
+  FCIshd[[i]] <- FCIres_pos[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(FCIshd) <- names(FCIres)
+names(FCIshd) <- names(FCIres_pos)
 
 
 CCIshd <- list()
-for(i in 1:length(CCIres)){
-  CCIshd[[i]] <- CCIres[[i]] %>% 
+for(i in 1:length(CCIres_pos)){
+  CCIshd[[i]] <- CCIres_pos[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCIshd) <- names(CCIres)
+names(CCIshd) <- names(CCIres_pos)
 
 ## combine the SHDs
 SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>% 
