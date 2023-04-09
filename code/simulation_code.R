@@ -10,13 +10,19 @@
 # We generate 500 datasets from each model and estimate partial ancestral graphs (PAGs)
 # using CCD, FCI, and CCI algorithm.
 #
-# Running algorithms (except for CCD) and plotting the resulting PAGs are commented out
-# due to a long running time. if interested, simply uncomment them and run the code.
+# Executing the algorithms and generating the corresponding PAGs have been commented out
+# due to the long processing time. 
+# If interested, simply uncomment those lines and run the code.
+#
+# The content is as follows:
+# 0. Preparation: we source and load necessary functions & packages.
+# 1 - 8. Simulation: a total of 8 simulated models.
+# 9. Analysis of algorithm running time.
 ## =============================================================================
 
 
 ## ========================
-## Preparation
+## 0. Preparation
 ## ========================
 
 ## source all the necessary functions
@@ -40,7 +46,7 @@ library(rJava)
 library(usethis)
 library(devtools)
 
-## slightly modified CCI package
+# slightly modified CCI package
 # remotes::install_github("KyuriP/CCI_KP")
 library(CCI.KP)
 
@@ -50,20 +56,25 @@ library(rcausal)
 # bioconductor
 if (!require("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
-
-BiocManager::install("Rgraphviz")
-BiocManager::install("graph")
-BiocManager::install("RBGL")
+# BiocManager::install("Rgraphviz")
+# BiocManager::install("graph")
+# BiocManager::install("RBGL")
 
 
 ## set the seed
 set.seed(123)
-
 ## allow parallel processing
 plan(multisession) 
+## simulation specification
+# specify the sample sizes
+N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
+# specify replication number
+n <- 500
+# specify alpha level
+alpha <- 0.01
 
 ## ====================
-## 5p - sparse
+## 1. 5p - sparse
 ## ====================
 # specify B matrix
 B5sparse = matrix(c(0, 0, 0, 0, 0,
@@ -83,20 +94,12 @@ layout5 = matrix(c(0,1,
 par(mfrow=c(1,2))
 # true 5p sparse DCG
 true5psparse <- qgraph(t(B5sparse), layout=layout5, labels = colnames(B5sparse), theme="colorblind")
-# equilibrium check
-equilibrium_check(B5sparse)
 
 ## Data generating
-# specify the sample sizes
-N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
-# specify replication number
-n <- 500
-# specify alpha level
-alpha <- 0.01
-
-# generate data
+# equilibrium check
+equilibrium_check(B5sparse)
+# generate data (sample size as specified above)
 simdata_5psparse <- N %>% future_map(function(z) {
-  # later increase n again to 1000 or sth
   replicate(n = n,
             expr = gen_dat(B5sparse, N = z),  
             simplify = FALSE)
@@ -115,18 +118,17 @@ plotAG(trueag_5psparse)
 
 
 ## Run CCD algorithm
-ccd_5psparse <- simdata_5psparse %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_5psparse <- ccd_5psparse %>%
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_5psparse <- simdata_5psparse %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_5psparse <- ccd_5psparse %>%
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
 ######### CCD object is not intact when saving'em as .Rdata   
 ######### We save adj matrices but not the ccd objects themselves...
 # save(ccd_5psparse, file="data/ccd_5psparse.RData")
 # save(mat_5psparse, file="data/mat_5psparse.RData")
-# load("data/mat_5psparse.RData")
-# can we have a more elegant way to combine "graphNEL" plots? ? ? ? ? ?
+load("../data/mat_5psparse.RData")
 
 # plot resulting PAGs
 # pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse,
@@ -141,7 +143,7 @@ mat_5psparse <- ccd_5psparse %>%
 #   )
 
 # save(fci_5psparse, file="data/fci_5psparse.RData")
-# load("data/fci_5psparse.RData")
+load("../data/fci_5psparse.RData")
 
 # plot resulting PAGs
 # pag_fci5psparse <- fci_5psparse %>%
@@ -153,7 +155,7 @@ mat_5psparse <- ccd_5psparse %>%
 #                     labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
 # save(cci_5psparse, file="data/cci_5psparse.RData")
-# load("data/cci_5psparse.RData")
+load("../data/cci_5psparse.RData")
 
 # plot resulting PAGs
 # pag_cci5psparse <- cci_5psparse %>%
@@ -162,7 +164,7 @@ mat_5psparse <- ccd_5psparse %>%
 
 
 ## ====================
-## 5p - dense
+## 2. 5p - dense
 ## ====================
 # specify B matrix
 B5dense = matrix(c(0, 0, 0, 0, 0,
@@ -196,26 +198,27 @@ dimnames(trueag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""
 plotAG(trueag_5pdense)
 
 ## Run CCD algorithm
-ccd_5pdense <- simdata_5pdense %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_5pdense <- ccd_5pdense %>% 
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_5pdense <- simdata_5pdense %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_5pdense <- ccd_5pdense %>% 
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
 # save(ccd_5pdense, file="data/ccd_5pdense.RData")
 # save(mat_5pdense, file="data/mat_5pdense.RData")
-# load("data/ccd_5pdense.RData")
+load("../data/mat_5pdense.RData")
 # par(mfrow=c(2,5))
 # pag_ccd5pdense <- map2(ccd_5pdense, mat_5pdense,
 #                         ~map2(.x, .y, plotPAG)
 #                          )
+
 ## Run FCI algorithm
 # fci_5pdense <- simdata_5pdense %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
 #   )
 # save(fci_5pdense, file="data/fci_5pdense.RData")
-# load("data/fci_5pdense.RData")
+load("../data/fci_5pdense.RData")
 
 # plot resulting PAGs
 # pag_fci5pdense <- fci_5pdense %>%
@@ -226,7 +229,7 @@ mat_5pdense <- ccd_5pdense %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag
 #   )
 # save(cci_5pdense, file="data/cci_5pdense.RData")
-# load("data/cci_5pdense.RData")
+load("../data/cci_5pdense.RData")
 
 # plot resulting PAGs
 # pag_cci5pdense <- cci_5pdense %>%
@@ -235,7 +238,7 @@ mat_5pdense <- ccd_5pdense %>%
 
 
 ## ====================
-## 10p - sparse
+## 3. 10p - sparse
 ## ====================
 
 B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -288,18 +291,19 @@ dcg_10psparse <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
                           0, 0, 0, 0, 0, 0, 0, 0, 1, 0), 10, 10, byrow = T)
 trueag_10psparse <- true_ancestral(dcg_10psparse, gen_dat(B10sparse), gaussCItest)
 dimnames(trueag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+# plot true AG
 plotAG(trueag_10psparse)
 
 ## Run CCD algorithm
-ccd_10psparse <- simdata_10psparse %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_10psparse <- ccd_10psparse %>% 
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_10psparse <- simdata_10psparse %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_10psparse <- ccd_10psparse %>% 
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
 # save(ccd_10psparse, file="data/ccd_10psparse.RData")
 # save(mat_10psparse, file="data/mat_10psparse.RData")
-# load("data/ccd_10psparse.RData")
+load("../data/mat_10psparse.RData")
 
 # plot resulting PAGs
 # pag_ccd10psparse <- map2(ccd_10psparse, mat_10psparse,
@@ -312,7 +316,7 @@ mat_10psparse <- ccd_10psparse %>%
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 # save(fci_10psparse, file="data/fci_10psparse.RData")
-# load("data/fci_10psparse.RData")
+load("../data/fci_10psparse.RData")
 
 # plot resulting PAGs
 # pag_fci10psparse <- fci_10psparse %>%
@@ -323,7 +327,7 @@ mat_10psparse <- ccd_10psparse %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
 # save(cci_10psparse, file="data/cci_10psparse.RData")
-# load("data/cci_10psparse.RData")
+load("../data/cci_10psparse.RData")
 
 # plot resulting PAGs
 # pag_cci10psparse <- cci_10psparse %>%
@@ -332,7 +336,7 @@ mat_10psparse <- ccd_10psparse %>%
 
 
 ## ====================
-## 10p - dense
+## 4. 10p - dense
 ## ====================
 B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0.3, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 
@@ -386,14 +390,14 @@ dimnames(trueag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep
 plotAG(trueag_10pdense)
 
 ## Run CCD algorithm
-ccd_10pdense <- simdata_10pdense  %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_10pdense  <- ccd_10pdense  %>% 
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_10pdense <- simdata_10pdense  %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_10pdense  <- ccd_10pdense  %>% 
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 # save(ccd_10pdense, file="data/ccd_10pdense.RData")
 # save(mat_10pdense, file="data/mat_10pdense.RData")
-# load("data/ccd_10pdense.RData")
+load("../data/mat_10pdense.RData")
 
 # plot resulting PAGs
 # pag_ccd10pdense <- map2(ccd_10pdense, mat_10pdense,
@@ -406,7 +410,7 @@ mat_10pdense  <- ccd_10pdense  %>%
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 # save(fci_10pdense, file="data/fci_10pdense.RData")
-# load("data/fci_10pdense.RData")
+load("../data/fci_10pdense.RData")
 
 # plot resulting PAGs
 # pag_fci10pdense <- fci_10pdense  %>%
@@ -417,7 +421,7 @@ mat_10pdense  <- ccd_10pdense  %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pdense, file="data/cci_10pdense.RData")
-# load("data/cci_10pdense.RData")
+load("../data/cci_10pdense.RData")
 
 # plot resulting PAGs
 # pag_cci10pdense  <- cci_10pdense  %>%
@@ -426,7 +430,7 @@ mat_10pdense  <- ccd_10pdense  %>%
 
 
 ## ====================
-## 5p with LV sparse
+## 5. 5p with LV sparse
 ## ====================
 # specify B matrix
 B5_lvsparse = matrix(c(0, 0, 0, 0, 0, 1,
@@ -472,14 +476,14 @@ plotAG(trueag_5psparseLV)
 
 
 ## Run CCD algorithm
-ccd_5pLVsparse <- simdata_5pLVsparse  %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_5pLVsparse  <- ccd_5pLVsparse  %>% 
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_5pLVsparse <- simdata_5pLVsparse  %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_5pLVsparse  <- ccd_5pLVsparse  %>% 
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 # save(ccd_5pLVsparse, file="data/ccd_5pLVsparse.RData")
 # save(mat_5pLVsparse, file="data/mat_5pLVsparse.RData")
-# load("data/ccd_5pLV.RData")
+load("../data/mat_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_ccd5pLVsparse <- map2(ccd_5pLVsparse, mat_5pLVsparse,
@@ -492,7 +496,7 @@ mat_5pLVsparse  <- ccd_5pLVsparse  %>%
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
 #   )
 # save(fci_5pLVsparse, file="data/fci_5pLVsparse.RData")
-# load("data/fci_5pLVsparse.RData")
+load("../data/fci_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_fci_5pLVsparse <- fci_5pLVsparse  %>%
@@ -504,7 +508,7 @@ mat_5pLVsparse  <- ccd_5pLVsparse  %>%
 #   )
 # 
 # save(cci_5pLVsparse, file="data/cci_5pLVsparse.RData")
-# load("data/cci_5pLVsparse.RData")
+load("../data/cci_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_cci_5pLVsparse <- cci_5pLVsparse  %>%
@@ -513,7 +517,7 @@ mat_5pLVsparse  <- ccd_5pLVsparse  %>%
 
 
 ## ====================
-## 5p with LV dense
+## 6. 5p with LV dense
 ## ====================
 B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
                       0, 0, 0.4, 0, 0, 1,
@@ -553,14 +557,14 @@ dimnames(trueag_5pdenseLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=
 plotAG(trueag_5pdenseLV)
 
 ## Run CCD algorithm
-ccd_5pLVdense <- simdata_5pLVdense  %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_5pLVdense  <- ccd_5pLVdense  %>% 
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_5pLVdense <- simdata_5pLVdense  %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_5pLVdense  <- ccd_5pLVdense  %>% 
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 # save(ccd_5pLVdense, file="data/ccd_5pLVdense.RData")
 # save(mat_5pLVdense, file="data/mat_5pLVdense.RData")
-# load("data/ccd_5pLV.RData")
+load("../data/mat_5pLVdense.RData")
 # par(mfrow=c(2,5))
 # pag_ccd5pLVdense <- map2(ccd_5pLVdense, mat_5pLVdense,
 #                         ~map2(.x, .y, plotPAG)
@@ -572,7 +576,7 @@ mat_5pLVdense  <- ccd_5pLVdense  %>%
 #   )
 
 # save(fci_5pLVdense, file="data/fci_5pLVdense.RData")
-# load("data/fci_5pLVdense.RData")
+load("../data/fci_5pLVdense.RData")
 
 # plot resulting PAGs
 # pag_fci5pLVdense <- fci_5pLVdense  %>%
@@ -584,7 +588,7 @@ mat_5pLVdense  <- ccd_5pLVdense  %>%
 #   )
 
 # save(cci_5pLVdense, file="data/cci_5pLVdense.RData")
-# load("data/cci_5pLVdense.RData")
+load("../data/cci_5pLVdense.RData")
 
 # plot resulting PAGs
 # pag_cci5pLVdense <- cci_5pLVdense  %>%
@@ -593,11 +597,9 @@ mat_5pLVdense  <- ccd_5pLVdense  %>%
 
 
 ## ====================
-## 10p with LV sparse
+## 7. 10p with LV sparse
 ## ====================
 # specify B matrix
-
-## with 2 LVs
 B10_lvsparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0.7,
                         0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -653,14 +655,14 @@ dimnames(trueag_10psparseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, 
 plotAG(trueag_10psparseLV)
 
 ## Run CCD algorithm
-ccd_10pLVsparse  <- simdata_10pLVsparse   %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_10pLVsparse   <- ccd_10pLVsparse %>% 
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_10pLVsparse  <- simdata_10pLVsparse   %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_10pLVsparse   <- ccd_10pLVsparse %>% 
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 # save(ccd_10pLVsparse, file="data/ccd_10pLVsparse.RData")
 # save(mat_10pLVsparse, file="data/mat_10pLVsparse.RData")
-# load("data/ccd_10pLVsparse.RData")
+load("../data/mat_10pLVsparse.RData")
 # par(mfrow=c(2,5))
 # pag_ccd10pLVsparse <- map2(ccd_10pLVsparse, mat_10pLVsparse,
 #                         ~map2(.x, .y, plotPAG)
@@ -672,7 +674,7 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
 #                     labels = colnames(.x)) %>% .@amat  
 #   )
 # save(fci_10pLVsparse, file="data/fci_10pLVsparse.RData")
-# load("data/fci_10pLVsparse.RData")
+load("../data/fci_10pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_fci10pLV  <- fci_10pLVsparse %>%
@@ -682,7 +684,7 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pLVsparse, file="data/cci_10pLVsparse.RData")
-# load("data/cci_10pLVsparse.RData")
+load("../data/cci_10pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_cci10pLVsparse   <- cci_10pLVsparse %>%
@@ -691,22 +693,9 @@ mat_10pLVsparse   <- ccd_10pLVsparse %>%
 
 
 ## ====================
-## 10p with LV dense
+## 8. 10p with LV dense
 ## ====================
 # specify B matrix
-
-# B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-#                        0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4,
-#                        0.4, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-#                        0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0, 0,
-#                        0, 0, 0.6, 1, 0, 0, 0, 0, 0, 0, 0, 0.5,
-#                        0, 0, 0, 0, 0.8, 0, 0.5, 0, 0, 0, 0, 0,
-#                        0, 0, 0, 0, 0, 0, 0, 1, 0.8, 0.6, 0, 0,
-#                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.8, 0,
-#                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0.4, 0, 0,
-#                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0,
-#                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-#                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 12, 12, byrow = T)
 B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0.5, 0, 1.4, 0, 0, 0, 0, 0, 0, 0, 0, 1.1,
                        0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -769,7 +758,7 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 
 # save(ccd_10pLVdense, file="data/ccd_10pLVdense.RData")
 # save(mat_10pLVdense, file="data/mat_10pLVdense.RData")
-# load("data/ccd_10pLV.RData")
+load("../data/mat_10pLVdense.RData")
 # plot resulting PAGs
 # pag_ccd10pLVdense <- map2(ccd_10pLVdense, mat_10pLVdense,
 #                         ~map2(.x, .y, plotPAG)
@@ -782,7 +771,7 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 #                     labels = colnames(.x)) %>% .@amat
 #   )
 # save(fci_10pLVdense, file="data/fci_10pLVdense.RData")
-# load("data/fci_10pLVdense.RData")
+load("../data/fci_10pLVdense.RData")
 
 # plot resulting PAGs
 # pag_fci10pLVdense <- fci_10pLVdense   %>%
@@ -793,7 +782,7 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pLVdense, file="data/cci_10pLVdense.RData")
-# load("data/cci_10pLVdense.RData")
+load("../data/cci_10pLVdense.RData")
 
 # plot resulting PAGs
 # pag_cci10pLVdense   <- cci_10pLVdense %>%
@@ -801,14 +790,14 @@ mat_10pLVdense   <- ccd_10pLVdense %>%
 
 
 
-## ====================
-## Running time 
-## ====================
+## =========================
+## 9. Algorithm running time 
+## =========================
 
 #remotes::install_github("joshuaulrich/microbenchmark")
-
 library(microbenchmark)
 
+# compute the algorithm running time using n = 1000
 times <- microbenchmark(
   ccd_5psparse = ccdKP(df=simdata_5psparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
   fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5psparse[[1]][[1]])),
@@ -854,12 +843,14 @@ times <- times %>%
 
 ## plot the results
 times %>%
-  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", "5pLVsparse","5pLVdense", "10pLVsparse","10pLVdense")), y = log(time), col= factor(algorithm))) +
-  geom_boxplot(position = "dodge", outlier.size = 0.8, outlier.alpha = 0.2) + theme_classic() +
-  # scale_x_discrete(name ="Condition",
-  #                  labels=c("", "5p-sparse", "", "","5p-dense","","", "10p-sparse","","","10p-dense","","","5p-LV","","","10p-LV","")) +
+  ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", 
+                                           "5pLVsparse","5pLVdense", "10pLVsparse","10pLVdense")), 
+             y = log(time), col= factor(algorithm))) +
+  geom_boxplot(position = "dodge", outlier.size = 0.8, outlier.alpha = 0.2) + 
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", subtitle = "Time in milliseconds (ms)") +
+  labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", 
+       subtitle = "Time in milliseconds (ms)") +
+  theme_classic() +
   theme(axis.text.x = element_text(face = "bold", angle=40, margin = margin(t = 13)))
 
 

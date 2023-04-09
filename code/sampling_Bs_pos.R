@@ -39,26 +39,8 @@ n <- 500
 alpha <- 0.01
 
 
-sampleranB <- function(B, seed=123){
-  # variable number
-  p <- ncol(B)
-  # sample random weight for B from uniform distribution (unif[-0.8, -0.1] U unif[0.1, 0.8])
-  ranB <- matrix((0.8*runif(p^2)+0.1)*sample(c(-1,1), p^2,replace=TRUE), p, p)
-  # assign 0 where B = 0
-  ind <- which(B == 0, arr.ind = TRUE)
-  ranB[ind] <- 0
-  # generate data n times for each N
-  simdat <- N %>% future_map(function(z) {
-    replicate(n = n,
-              expr = gen_dat(ranB, N = z),  
-              simplify = FALSE)
-  }, .options = furrr_options(seed=seed))
-  return(simdata = simdat)
-}
 
-
-
-### if randomB is used for each iteration..
+## function used to generate data from randomly sampled B weights (only positive)
 sampleranB2 <- function(B, LV=NULL, seed=123){
   set.seed(seed)
   # variable number
@@ -105,6 +87,7 @@ simdata_10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %
 
 simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 
+
 ## ======================
 ## 2. Run algorithms
 ## ======================
@@ -122,20 +105,13 @@ CCIres_pos <- simdatalist %>%
   map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
   )
 
-
 # true adj.matrices
 truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, trueag_10psparseLV, trueag_10pdenseLV)
-
 
 # load results
 load("data/largedata_posB/CCDres3_pos.Rdata")
 load("data/largedata_posB/FCIres3_pos.Rdata")
 load("data/largedata_posB/CCIres3_pos.Rdata")
-# 
-# load("data/largedata_randomB/CCDres_randomB.Rdata")
-# load("data/largedata_randomB/FCIres_randomB.Rdata")
-# load("data/largedata_randomB/CCIres_randomB.Rdata")
-
 
 
 
@@ -351,89 +327,98 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
                   panel.spacing.y = unit(4, "mm")
 )
 
+
 ## plot SHD
-shdplot_ranB <- SHD_ranB %>%
+shdplot_ranB_pos <- SHD_ranB %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000","3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill = id)) +
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) + 
-  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 3)
-  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(n)*3, ymax=means+qnorm(0.975)*sds/sqrt(n)*3), alpha=0.2, color=NA) +
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  #scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   labs(x="", y="", title = "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
-  ggtitle("(a) SHD") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), scales = "free_y", switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  ggtitle("(a) SHD")  +
+  guides(color = "none", fill = "none")
+# save the plot
+# ggsave(filename = "results/samplingbeta_pos_shd.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+
 
 
 ## plot precision
-precisionplot_ranB <- prec_ranB %>% 
+precisionplot_ranB_pos <- prec_ranB %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill=id)) +
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill=id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) +
-  # exaggerate the intervals a bit to ensure they are visible in the plot (times by 2)
-  geom_ribbon(aes(ymin=means - qnorm(0.975)*sds/sqrt(n)*2, ymax=means + qnorm(0.975)*sds/sqrt(n)*2), alpha=0.2, color=NA) +
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   labs(title = "(b) Precision", x = "", y = "") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  guides(color = "none", fill = "none")
+# save the plot
+# ggsave(filename = "results/samplingbeta_pos_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+
 
 ## plot recall
-recallplot_ranB <- rec_ranB %>% 
+recallplot_ranB_pos <- rec_ranB %>% 
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000", "3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill=id)) +
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill=id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) +
-  geom_ribbon(aes(ymin=means - qnorm(0.975)*sds/sqrt(n)*2, ymax=means + qnorm(0.975)*sds/sqrt(n)*2), alpha=0.2, color=NA) +
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
-  labs(title = "(c) Recall", x = "", y = "") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(title = "(c) Recall", x = "", y = "")+
+  guides(color = "none", fill = "none")
+# save the plot
+# ggsave(filename = "results/samplingbeta_pos_rec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot uncertainty 
-uncertaintyplot_ranB <- unc_ranB %>%  tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= factor(n, levels = c("50", "150", "500", "1000", "1500", "2000",  "3000", "4000", "5000", "10000")), y=means, group = id, colour = id, fill = id)) +
+uncertaintyplot_ranB_pos <- unc_ranB %>%  tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
   geom_line(aes(group = id)) +
   geom_point(size=1) + 
-  #geom_errorbar(aes(ymin=mean-qnorm(0.975)*sd/sqrt(as.numeric(N)), ymax=mean+qnorm(0.975)*sd/sqrt(as.numeric(N))), width=0.1) +
-  # exaggerate the intervals a bit to ensure they are visible in the plot (times by )
-  geom_ribbon(aes(ymin=means-qnorm(0.975)*sds/sqrt(as.numeric(N)), ymax=means+qnorm(0.975)*sds/sqrt(as.numeric(N))), alpha=0.2, color=NA) +
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   #scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   labs(x="N", y="", title = "") +
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p")) ~ factor(latentvar, levels = c("without LV", "with LV")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(d) Uncertainty") 
-# theme(axis.title.x=element_blank(),
-#       axis.text.x=element_blank(),
-#       axis.ticks.x=element_blank())
+# save the plot
+# ggsave(filename = "results/samplingbeta_pos_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 
 # combine the plots
-ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, recallplot_ranB, uncertaintyplot_ranB, nrow=4, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+ggpubr::ggarrange(shdplot_ranB_pos, precisionplot_ranB_pos, 
+                  recallplot_ranB_pos, uncertaintyplot_ranB_pos, 
+                  nrow=4, common.legend = TRUE, legend = "bottom")
+#ggsave(filename = "results/samplingbeta_pos_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
 
-ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_result1.pdf", width = 25, height = 35, dpi = 300, units = "cm")
-ggpubr::ggarrange(recallplot_ranB, uncertaintyplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_result2.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+ggpubr::ggarrange(shdplot_ranB_pos, precisionplot_ranB_pos, 
+                  nrow=2, common.legend = TRUE, legend = "bottom")
+#ggsave(filename = "results/samplingbeta_pos_result1.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+ggpubr::ggarrange(recallplot_ranB_pos, uncertaintyplot_ranB_pos, 
+                  nrow=2, common.legend = TRUE, legend = "bottom")
+#ggsave(filename = "results/samplingbeta_pos_result2.pdf", width = 25, height = 35, dpi = 300, units = "cm")

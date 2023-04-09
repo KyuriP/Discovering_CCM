@@ -1392,7 +1392,7 @@ cci_5psparse %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>%
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCI-5p-sparse", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1444,7 +1444,7 @@ mat_5pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-5p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1730,7 +1730,7 @@ mat_10pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}"))
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Correct Proportion CCD-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 # prop uncertain
@@ -1839,7 +1839,7 @@ cci_10pdense %>%
       labs(x = "", y="", title = glue::glue("N = {N[.y]}")) 
   ) %>% 
   ggpubr::ggarrange(plotlist = .,
-                    ncol = 6, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
+                    ncol = 5, nrow = 2, common.legend = TRUE, legend = "bottom") %>%
   ggpubr::annotate_figure(top = text_grob("Uncertainty CCI-10p-dense", face = "bold", size = 18, family = "Palatino"))
 
 ```

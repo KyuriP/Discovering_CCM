@@ -1,0 +1,4 @@
+- source: Supplementary_material.qmd
+  quarto-pub:
+    - id: 7df1d42b-f868-4527-9147-e71d5aaf2563
+      url: 'https://quartopub.com/sites/kyurip/discovering-cyclic-causal-models'

@@ -61,7 +61,7 @@ isCyclic <- function(graph)
 
 # specify the conditions
 p <- 10 # 10 variable model
-alpha <- 0.05 
+alpha <- 0.01
 storage <- list()
 equilibrium <- c()
 
