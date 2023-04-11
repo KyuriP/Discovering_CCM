@@ -109,9 +109,9 @@ CCIres_pos <- simdatalist %>%
 truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, trueag_10psparseLV, trueag_10pdenseLV)
 
 # load results
-load("data/largedata_posB/CCDres3_pos.Rdata")
-load("data/largedata_posB/FCIres3_pos.Rdata")
-load("data/largedata_posB/CCIres3_pos.Rdata")
+load("data/largedata_posB/CCDres3_pos.Rdata") # CCDres
+load("data/largedata_posB/FCIres3_pos.Rdata") # FCIres
+load("data/largedata_posB/CCIres3_pos.Rdata") # CCIres
 
 
 
@@ -122,43 +122,43 @@ load("data/largedata_posB/CCIres3_pos.Rdata")
 
 ## SHD
 CCDshd <- list()
-for(i in 1:length(CCDres_pos)){
-  CCDshd[[i]] <- CCDres_pos[[i]] %>% 
+for(i in 1:length(CCDres)){
+  CCDshd[[i]] <- CCDres[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N))  %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCDshd) <- names(CCDres_pos)
+names(CCDshd) <- names(CCDres)
 
 
 FCIshd <- list()
-for(i in 1:length(FCIres_pos)){
-  FCIshd[[i]] <- FCIres_pos[[i]] %>% 
+for(i in 1:length(FCIres)){
+  FCIshd[[i]] <- FCIres[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(FCIshd) <- names(FCIres_pos)
+names(FCIshd) <- names(FCIres)
 
 
 CCIshd <- list()
-for(i in 1:length(CCIres_pos)){
-  CCIshd[[i]] <- CCIres_pos[[i]] %>% 
+for(i in 1:length(CCIres)){
+  CCIshd[[i]] <- CCIres[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCIshd) <- names(CCIres_pos)
+names(CCIshd) <- names(CCIres)
 
 ## combine the SHDs
 SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>% 
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
   tidyr::unnest(value) %>% 
@@ -202,7 +202,7 @@ prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
   tidyr::unnest(value) %>% 
@@ -245,7 +245,7 @@ rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>%
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
   tidyr::unnest(value) %>% 
@@ -302,7 +302,7 @@ unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>%
   tidyr::pivot_longer(cols = -c(id, n, statistics), names_to = "condition", values_to = "value") %>% 
   mutate(
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
-    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LV", "without LV"),
+    latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>% 
   relocate(where(is.character), .before = where(is.numeric))
@@ -346,7 +346,7 @@ shdplot_ranB_pos <- SHD_ranB %>%
   ggtitle("(a) SHD")  +
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(filename = "results/samplingbeta_pos_shd.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+# ggsave(shdplot_ranB_pos, filename = "results/samplingbeta_pos_shd.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 
 
@@ -367,7 +367,7 @@ precisionplot_ranB_pos <- prec_ranB %>%
   labs(title = "(b) Precision", x = "", y = "") +
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(filename = "results/samplingbeta_pos_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+# ggsave(precisionplot_ranB_pos, filename = "results/samplingbeta_pos_prec.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 
 ## plot recall
@@ -387,8 +387,7 @@ recallplot_ranB_pos <- rec_ranB %>%
   labs(title = "(c) Recall", x = "", y = "")+
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(filename = "results/samplingbeta_pos_rec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
-
+# ggsave(recallplot_ranB_pos, filename = "results/samplingbeta_pos_recall.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 ## plot uncertainty 
 uncertaintyplot_ranB_pos <- unc_ranB %>%  tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
@@ -407,8 +406,7 @@ uncertaintyplot_ranB_pos <- unc_ranB %>%  tidyr::pivot_wider(names_from = statis
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(d) Uncertainty") 
 # save the plot
-# ggsave(filename = "results/samplingbeta_pos_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
-
+# ggsave(uncertaintyplot_ranB_pos, filename = "results/samplingbeta_pos_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 # combine the plots
 ggpubr::ggarrange(shdplot_ranB_pos, precisionplot_ranB_pos, 

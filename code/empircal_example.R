@@ -19,6 +19,8 @@ library(qgraph)
 library(pcalg)
 library(ggplot2)
 library(dplyr)
+library(CCI.KP)
+library(furrr)
 
 ## source all the necessary functions
 source("code/R/CCD_fnc.R")
@@ -37,6 +39,16 @@ ocd <- mcnally[,17:26] %>% apply(., 2, as.numeric)
 # trans_dep <- huge::huge.npn(depression)
 # trans_ocd <- huge::huge.npn(ocd)
 
+## subsampling (for robustness ..by Lourens)
+plan(multisession)
+subsample_size <- 1000
+subsamples <- 1:subsample_size %>% 
+  future_map(~depression %>% 
+        as_tibble %>% 
+        # sample 90% from the original data
+        slice_sample(prop=0.9),
+        .options = furrr_options(seed=123))
+
 
 ## =======================================
 ## 2. Estimate GGM with GLASSO 
@@ -53,6 +65,7 @@ qgraph(glassoFitdep, layout = "spring", theme="colorblind",
 ## 3. Estimate PAGs using CCD, FCI and CCI
 ## =======================================
 set.seed(123)
+alpha <- 0.01
 ## estimate the PAG on depression symptoms by running CCD
 # run CCD
 ccd_mcnally_dep <- ccdKP(df=depression, dataType = "continuous", alpha=0.01)
@@ -69,6 +82,38 @@ fci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01,
 cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01, 
     labels = colnames(depression), p = ncol(depression), verbose=TRUE) %>% .$maag %>% plotAG
 
+
+## run CCD on subsamples
+ccd_subsample_dep <- subsamples %>% 
+  map(~ccdKP(df=.x, dataType = "continuous", alpha=alpha))
+# create an adjacency matrix for PAG
+mat_subsample_dep <- ccd_subsample_dep %>% 
+  map(~CreateAdjMat(.x, length(.x$nodes)))
+
+save(mat_subsample_dep, file="data/empirical/mat_subsample_dep.RData")
+
+
+# plot the PAG
+ccd_pag_subsample <- plotPAG(ccd_mcnally_dep, mat_mcnally_dep)
+
+
+## run FCI on subsamples
+fci_subsample_dep <- subsamples %>%
+  map(~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+           alpha = alpha, doPdsep = TRUE, selectionBias= FALSE,
+           labels = colnames(.x)) %>% 
+        .@amat
+  )
+save(fci_subsample_dep, file="data/empirical/fci_subsample_dep.RData")
+
+
+## run CCI on subsamples
+cci_subsample_dep <- subsamples %>%
+  map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha,
+           labels = colnames(.x), p = ncol(.x)) %>% 
+        .$maag
+  )
+save(cci_subsample_dep, file="data/empirical/cci_subsample_dep.RData")
 
 
 ## =======================================
@@ -88,8 +133,19 @@ MyTheme2 <-  theme(plot.title = element_text(family = "Palatino", size = 14, hju
                    panel.border = element_rect(color = "#DCDCDC", fill = NA)
 )
 
+# Just distribution
+dist <- as.data.frame(depression) %>%
+  tidyr::pivot_longer(where(is.numeric)) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(aes(y = after_stat(density)),bins = 10) +
+  geom_density(adjust=1.5)+
+  facet_wrap(~name) +
+  theme_minimal() +
+  MyTheme2
+# ggsave(dist, filename = "results/dep_dist.pdf", width = 20, height = 13, dpi = 300, units = "cm")
+
 # original data distribution
-p1 <- depression %>%
+p1 <- as.data.frame(depression) %>%
   tidyr::pivot_longer(where(is.numeric)) %>%
   ggplot(aes(x = value)) +
   geom_histogram(bins = 10) +
