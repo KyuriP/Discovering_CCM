@@ -90,7 +90,7 @@ ccd_subsample_dep <- subsamples %>%
 mat_subsample_dep <- ccd_subsample_dep %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 
-save(mat_subsample_dep, file="data/empirical/mat_subsample_dep.RData")
+# save(mat_subsample_dep, file="data/empirical/mat_subsample_dep.RData")
 
 
 # plot the PAG
@@ -104,7 +104,7 @@ fci_subsample_dep <- subsamples %>%
            labels = colnames(.x)) %>% 
         .@amat
   )
-save(fci_subsample_dep, file="data/empirical/fci_subsample_dep.RData")
+# save(fci_subsample_dep, file="data/empirical/fci_subsample_dep.RData")
 
 
 ## run CCI on subsamples
@@ -114,6 +114,7 @@ cci_subsample_dep <- subsamples %>%
         .$maag
   )
 save(cci_subsample_dep, file="data/empirical/cci_subsample_dep.RData")
+
 
 
 ## =======================================
