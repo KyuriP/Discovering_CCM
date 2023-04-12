@@ -238,14 +238,3 @@ Thesis Defense
 </tbody>
 </table>
 
-
-Research Seminar / Markdown  
-
-Ask about the empirical open data set : ethical consent?
-
-—Markdown Archive
-don’t specify your own path
-sessionInfo!! 
-make sure to use the seed.
-
-
