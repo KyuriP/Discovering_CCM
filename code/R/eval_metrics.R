@@ -1,13 +1,15 @@
 ## ============================================================================
 ## Description
 #
-# This script contains six functions for computing evaluation metrics for algorithm performance: 
+# This script contains six functions for computing evaluation metrics 
+# for algorithm performance: 
 # `precision_recall`, `uncertainty`,`SHD`,
 # `high_freq`, `prop_correct`, and `prop_uncertain`.
 #
 ## ============================================================================
 
 library(magrittr) # for pipes used in functions
+
 
 #' Compute precision and recall
 #' @param truepag adjacency matrix of true ancestral graph
@@ -57,8 +59,6 @@ precision_recall <- function(truepag, estimatedpag){
               recall_head = rec_head,
               average_recall = avg_rec))
 }
-
-
 
 
 
@@ -134,6 +134,8 @@ SHD <- function(truepag, estimatedpag){
 }
 
 
+
+
 #' Create an adjacency matrix consisting of the most frequent edge-endpoint
 #'
 #' @param amat list of adjacency matrices
@@ -159,6 +161,8 @@ high_freq <- function(amat, p){
   dimnames(freq) <- list(paste0("X", 1:p), paste0("X", 1:p))
   return(freq)
 }
+
+
 
 
 #' Compute the proportion of correct estimation per cell 
@@ -196,6 +200,7 @@ prop_uncertain <- function(amat, p){
   # return the proportion of circle endpoint (i.e., uncertainty rate) out of the whole estimated sets
   return(uncertain)
 }
+
 
 
 
@@ -247,6 +252,8 @@ precision2 <- function(truepag, estimatedpag){
   # return average precision value
   return(average_precision = avg_pre)
 }
+
+
 
 
 #' Compute only average recall 

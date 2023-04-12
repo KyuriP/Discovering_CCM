@@ -1,19 +1,19 @@
 ## =============================================================================
 ## Description
 # 
-# This script contains all the code for the secondary analysis with 
+# This script contains code for the secondary analysis with 
 # randomly sampled coefficients for the regression matrix B.
 #
-# Purpose: to gauge how much the results of the main analysis are dependent on 
-# the specific weights we specified.
+# Purpose: to determine how much the results of the main analysis 
+# depend on the specific weights that were specified. 
 #
-# As is the case with the main analysis, there are in total 8 models and
-# we generate 500 datasets from each model.
+# As is the case with the main analysis, there are in total 8 models considered
+# and 500 datasets are generated from each model.
 #
 # The content is as follows:
 # 0. Preparation: we source and load necessary functions & packages and generate data.
 # 1. Generate data: we generate data based on randomly sampled B matrix at every iteration. 
-# 2. Run algorithms: we again run three algorithms CCD, FCI, and CCI then estimate PAGs.
+# 2. Run algorithms: we run three algorithms CCD, FCI, and CCI, then estimate PAGs.
 # 3. Evaluate performance: we compute structural Hamming distance, precision, recall,
 # and uncertainty rate for each condition.
 # 4. Create figures: we create figures for each evaluation metric comparing the 

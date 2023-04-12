@@ -162,7 +162,7 @@ ccdKP <- function (df, dataType = "continuous", numCategoriesToDiscretize = 4,
 }
 
 
-############################################################
+## ----------------------------------------------------------------------
 loadContinuousData <- function(df){
   node_names <- colnames(df)
   node_list <- .jnew("java/util/ArrayList")
@@ -182,7 +182,8 @@ loadContinuousData <- function(df){
   return(boxData)
 }
 
-############################################################
+
+## ----------------------------------------------------------------------
 loadDiscreteData <- function(df){
   node_names <- colnames(df)
   node_list <- .jnew("java/util/ArrayList")
@@ -220,14 +221,16 @@ loadDiscreteData <- function(df){
   return(boxData)
 }
 
-############################################################
+
+## ----------------------------------------------------------------------
 extractTetradNodes <- function(resultGraph){
   nods <- resultGraph$getNodes()
   V <- sapply(as.list(nods), with, toString())
   return(V)
 }
 
-############################################################
+
+## ----------------------------------------------------------------------
 extractTetradEdges <- function(resultGraph){
   eds <- resultGraph$getEdges()
   fgs_edges <- c()

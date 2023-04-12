@@ -1,20 +1,21 @@
 ## =============================================================================
-## Purpose: to investigate B5 dense case 
+## Purpose: to investigate the unexpected patterns from the B5 dense cases.
+#
 #
 ## Description
 #
-# This script contains code for investigating "B5 dense" case where we observed
-# as N became larger, the performance became worse.
+# This script contains code for investigating the observed phenomenon 
+# where the performance in the "B5 dense" case worsens as the sample size N increases.
 # We presumed that the inducing path between X2 and X5 plays a role in
-# getting the correct orientation when N is relatively small.
+# achieving the correct orientation when N is relatively small.
 #
 # To test our hypothesis, we examined the partial correlations between
 # X2 and X5 per different sample sizes and looked into what was happening in
 # each step of the algorithm.
 #
 # The first part concerns examining the partial correlations between X2 and x5
-# and the second part concerns partial correlation test; whether it is significant
-# or not significant as sample size (N) becomes larger.
+# and the second part concerns conditional independence test; 
+# whether it is significant or not significant as sample size (N) becomes larger.
 ## =============================================================================
 
 

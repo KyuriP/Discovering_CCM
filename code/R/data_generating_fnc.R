@@ -6,6 +6,8 @@
 ## Then, it generates the data according to the specified B matrix.
 ## ============================================================================
 
+
+
 #' Check equilibrium state
 #'
 #' @param B the square regression matrix

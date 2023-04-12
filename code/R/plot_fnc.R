@@ -2,13 +2,14 @@
 ## It contains four functions:
 ## `CreateAdjMat`, `extracttriples`, `extractnode`, and `plotPAG`.
 ##
-## Purpose: It plots a partial ancestral graph.
-## `plotPAG` is specifically designed for ccd object.
+## Purpose: It plots a partial ancestral graph (PAG).
+## `plotPAG` is specifically designed for the ccd object.
 ## `plotAG` plots a PAG given an (ancestral) adjacency matrix.
 ## ============================================================================
 
 ## load necessary package
 library(Rgraphviz)
+
 
 
 #' Create adjacency matrix
@@ -49,6 +50,7 @@ CreateAdjMat <- function(ccd.obj, p){
 }
 
 
+
 #' Extract triples
 #'
 #' @param triples the triples in PAG from a ccd object
@@ -67,6 +69,7 @@ extracttriples <- function(triples) {
   lastnode <- stringr::str_trim(sapply(triplesets, function(x) x[[3]]))
   return(data.frame(fistnode = firstnode, middlenode= middlenode, lastnode=lastnode))
 }
+
 
 
 #' Extract middle node in a triple
@@ -100,6 +103,7 @@ extractnode <- function(triples) {
 #'   lastnode <- stringr::str_trim(sapply(triplesets, function(x) x[[3]]))
 #'   return(data.frame(fistnode = firstnode, middlenode= middlenode, lastnode=lastnode))
 #' }
+
 
 
 #' Plot PAG (partial ancestral graph) for CCD algorithm

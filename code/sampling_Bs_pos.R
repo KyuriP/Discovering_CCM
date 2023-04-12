@@ -1,15 +1,14 @@
 ## =============================================================================
 ## Description
 # 
-# This script contains all the code for the secondary analysis with 
-# randomly sampled coefficients for the regression matrix B "only positive values".
+# This script contains all the code to perform the secondary analysis with 
+# randomly sampled coefficients for the regression matrix B with "only positive values".
 #
-# Purpose: to assess the dependence of the results from the main analysis on 
-# the specified weights by randomly sampling coefficients for the regression matrix 
-# B with "only positive values" 
-# (we simulate a positive manifold to examine if there is any impact on the results).
+# Purpose: to examine the impact of the specified weights on the results of the 
+# main analysis, and to determine if there are any differences when randomly 
+# sampling B weights from both negative and positive values.
 #
-# The rest set up is exactly the same as `sampling_Bs.R`.
+# The rest set up is the same as `sampling_Bs.R`.
 ## =============================================================================
 
 ## ======================

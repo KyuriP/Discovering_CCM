@@ -1,4 +1,3 @@
-
 #' Create true ancestral graph adjacency matrix
 #'
 #' @param trueadj true directed (cyclic) graph adjacency matrix ([i,j] = 1 means i -> j)
