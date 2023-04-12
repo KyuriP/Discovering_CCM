@@ -1,0 +1,334 @@
+---
+title: "Cyclic Causal Model Discovery in Psychology"
+subtitle: "Inferring Causal Relations from Observational Data"
+institute: "December 14, 2022"
+author: "Kyuri Park"
+format: 
+  revealjs:
+    embed-resources: true
+    # template-partials:
+    #   - title-slide.html
+    logo: img/logo.black.png
+    footer: "Methodology and Statistics for the Behavioural, Biomedical and Social Sciences"
+    theme: [default, custom.scss]
+    slide-number: c/t
+    transition: fade
+    transition-speed: slow
+    background-transition: fade
+    preview-links: auto
+    # chalkboard:
+    #   boardmarker-width: 5
+from: markdown+emoji
+title-slide-attributes:
+    data-background-image: img/bg4.png
+    data-background-size: "cover"
+    data-background-opacity: "1"
+execute:
+  echo: false
+bibliography: main_ref.bib
+csl: "apa.csl"
+---
+
+
+## Network Theory in Psychology
+
+Mental disorder is produced by direct causal interactions between symptoms that reinforce each other via feedback loops. [@BorsboomCramer2013].
+
+::: r-stack
+![](img/cycle1.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle2.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle3.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle4.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle5.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle2.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle3.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle4.png){.fragment fig-align="center" width="450"}
+
+![](img/cycle5.png){.fragment fig-align="center" width="450"}
+:::
+
+
+
+## Inferring causality from observational data
+
+
+
+```{r, fig.show='hide'}
+library(qgraph); library(dplyr); library(RColorBrewer); library(pcalg)
+
+# set seed
+set.seed(123)
+
+dat <- read.csv("data/ocd_dep.csv")
+p1 <- EBICglasso(cor(dat), n = nrow(dat), gamma = 0.6) %>% 
+               qgraph(layout = "spring",
+                      theme= "colorblind",  
+                      groups = list(Depression = 1:16, OCD = 17:26), 
+                      color = brewer.pal(8, "Pastel2")[c(1,2)], 
+                      vsize = 5, 
+                      cut = 0, label.scale=TRUE, 
+                      title ="Statistical Network", 
+                      title.cex =3, legend=F) 
+## estimate CPDAG
+pc.fit <- pc(suffStat = list(C = cor(dat), n = nrow(dat)),
+             indepTest = gaussCItest, ## indep.test: partial correlations
+             alpha=0.01, labels = colnames(dat))
+p2 <- qgraph(pc.fit, title = "Directed Acyclic Graph (DAG)", layout = "spring", title.cex =3)
+
+```
+
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| fig.height = 12
+qgraph(p1)
+```
+
+:::
+
+::: {.column .fragment width="50%"}
+
+```{r}
+#| fig.height = 12
+qgraph(p2)
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+##  {background-image="img/bg_sl2.png"}
+
+::: columns
+::: {.column .r-stretch width="10%"}
+:::
+
+::: {.column .r-stretch .fragment .semi-fade-out width="45%"}
+Directed Acyclic Graph (DAG)
+
+
+```{r}
+varnames <- c("X","Y","Z")
+Adj <- matrix(c(0,0,0,
+                1,0,1,
+                1,0,0), 3,3, byrow = TRUE,
+              dimnames = list(varnames,varnames))
+laymat <- rbind(c(-1,-1),
+                c(1,-1),
+                c(0,1))
+qgraph(Adj, 
+       layout = laymat, 
+       vsize = 10, esize = 10, asize = 10)
+```
+
+:::
+
+::: {.column .r-stretch .fragment .grow width="45%"}
+Directed Cyclic Graph (DCG)
+
+
+```{r}
+varnames <- c("X","Y","Z")
+Adj <- matrix(c(0,1,0,
+                0,0,1,
+                1,0,0), 3,3, byrow = TRUE,
+              dimnames = list(varnames,varnames))
+laymat <- rbind(c(-1,-1),
+                c(1,-1),
+                c(0,1))
+qgraph(Adj, 
+       layout = laymat, 
+       vsize = 10, esize = 10, asize = 10, unCol = "darkgreen")
+```
+
+:::
+:::
+
+<br><br>
+
+::: {.fragment style="line-height: 1.5;"}
+[Problem]{style="color:#cc0000; font-weight: bold"}: Estimating a cyclic causal model is fundamentally very difficult. Relaxing the acyclicity assumption entails much of theoretical complication.\
+:::
+
+
+------------------------------------------------------------------------
+
+## Solutions exist {background-image="img/bg_sl3.png"}
+
+-   Cyclic Causal Discovery (CCD) [@richardson1996]
+
+-   Fast Causal Inference (FCI) [@mooij20a]
+
+-   Cyclic Causal Inference (CCI) [@strobl2019]
+
+
+
+## Solutions exist, [but...]{style="color:#cc0000"} {background-image="img/bg_sl3.png"}
+
+![](img/tab1.png){fig-align="center"}
+
+::: {.fragment style="text-align: center"}
+PAG: *Partial Ancestral Graph* ?\
+PAAG: *Partially-oriented MAAG* ?\
+MAAG: *Maximal Almost Ancestral Graph* ?
+:::
+
+
+------------------------------------------------------------------------
+
+## Project goals {background-image="img/bg_sl33.png"}
+
+<br>
+
+::: {style="line-height: 2.3;"}
+1.  Give an [accessible overview]{.fragment .highlight-current-red} of the algorithms <br>
+2.  Investigate the [performance]{.fragment .highlight-current-red} of each algorithm <br>
+3.  Apply to the [empirical]{.fragment .highlight-current-red} data
+:::
+
+
+------------------------------------------------------------------------
+
+## Example
+
+![](img/presentation_ex.png){fig-align="center" style="width: 1100px;"}
+
+<!-- ## Comparison metrics {background-image="img/bg_sl4.png"} -->
+
+<!-- (top algorithm applies to empirical data) -->
+
+
+------------------------------------------------------------------------
+
+## Summary {background-image="img/bg_sl5.png"}
+
+<br>
+
+::: {style="font-size: 1.1em; line-height: 1.3;"}
+-   [Causal inference]{.fragment .highlight-red} is the fundamental interest in science.
+
+-   The underlying dynamic processes of many systems [contain cycles]{.fragment .highlight-red}.
+
+-   Learning [cyclic causal models]{.fragment .highlight-red} from observational data is challenging.
+
+-   Our study will showcase the [cyclic causal discovery algorithms]{.fragment .highlight-red} that are potentially suitable for typical psychological observational data.
+
+<!-- - Empirical researchers should be equipped with a [valid tool]{.fragment .highlight-red} to infer causality. -->
+:::
+
+
+
+------------------------------------------------------------------------
+
+## References {background-image="img/bg_sl.png"}
+
+<br>
+
+::: {#refs}
+:::
+
+
+------------------------------------------------------------------------
+
+## Evaluation metrics {background-image="img/bg_sl4.png"}
+
+::: {style="font-size: 0.9em; line-height: 1.3;"}
+-   Precision = $\frac{TP} {(TP + FP)} = \frac{a}{(a + d + g)}$
+-   Recall = $\frac{TP} {(TP + FN)} = \frac{a}{(a + b + c)}$
+-   Uncertainty rate = $\frac{\text{Number of circle endpoints} (\circ)}{\text{Total number of possible endpoints}}$
+:::
+
+![](img/confusionmatrix.png){fig-align="center"}
+
+
+------------------------------------------------------------------------
+
+## Simulation settings {background-image="img/bg_sl2.png"}
+
+![](img/simsetting3.png){fig-align="center"}
+
+
+
+------------------------------------------------------------------------
+
+## Theoretical Complications {background-image="img/bg_sl3.png"}
+
+-   [*Global Markov property*]{style="color:#cc0000"} is no longer guaranteed.
+
+    -   [Need extra restrictions on $P$ (e.g., linearly independent error terms ($\varepsilon$))]{style="font-size: 0.7em"}
+
+-   Cyclic model is [not always *statistically identified*]{style="color:#cc0000"} (even in linear case).
+
+    -   [many equivalent models !]{style="font-size: 0.7em"}
+
+-   [*Equilibrium*]{.highlight-red} *state* is necessary ([All $|\lambda| < 1$]{style="color:#cc0000"}).
+
+
+
+------------------------------------------------------------------------
+
+## Output Graphs {background-image="img/bg_sl4.png"}
+
+::: {#outputgraph .panel-tabset}
+### CPDAG
+![](img/cpdagforslide.png){fig-align="center" width="600"}
+
+### PAG
+
+![](img/CCDsummary.png){fig-align="center" width="650"}
+
+### PAAG
+![](img/CCIsummary.png){fig-align="center" width="900"}
+:::
+
+
+------------------------------------------------------------------------
+
+## Possible Practical Application
+
+-   Personalized psychotherapy (target symptoms)
+
+-   Medical: effective treatment design
+
+::: r-stack
+![](img/hypothetical1.png){.fragment fig-align="center" width="550"}
+
+![](img/hypothetical2.png){.fragment fig-align="center" width="550"}
+:::
+
+
+
+------------------------------------------------------------------------
+
+## Follow-up {background-image="img/bg_sl.png"}
+
+Possible combination with different types of causal discovery algorithm. $\rightarrow$ [Hybrid!]{style="color:#cc0000"}
+
+[CCD [+ GES (greedy equivalence search)]{style="color:#cc0000"}]{.fragment fragment-index="3"}
+
+::: r-stack
+![](img/extension.true.png){.fragment .fade-in-then-out fig-align="center" width="450" fragment-index="1"}
+
+![](img/extension.est.png){.fragment .fade-in-then-out fig-align="center" width="450" fragment-index="2"}
+
+![](img/extension.comb.png){.fragment fig-align="center" width="450" fragment-index="3"}
+:::
+
+
+## Thank you {background-image="img/bg_sl33.png"}
+
+![](img/boris.png){.fragment .grow fig-align="center" width="500"}
+
+
+
+
