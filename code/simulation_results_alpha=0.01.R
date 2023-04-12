@@ -45,21 +45,29 @@ res_ccd5psparse <- mat_5psparse %>%
 
 # UNCERTAINTY
 uncer_ccd5psparse <- mat_5psparse %>% 
-  map_depth(2, ~uncertainty(.x)) %>% do.call("cbind", .) %>% apply(., 2, unlist) %>%  as.data.frame %>% 
+  map_depth(2, ~uncertainty(.x)) %>% 
+  do.call("cbind", .) %>% 
+  apply(., 2, unlist) %>%  
+  as.data.frame %>% 
   rename_with(~ paste0("N = ", N))
 # average uncertainty
 colMeans(uncer_ccd5psparse, na.rm=T)
 
 # SHD
 SHD_ccd5psparse <- mat_5psparse %>% 
-  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% do.call("cbind", .) %>% apply(., 2, unlist) %>%  as.data.frame %>% rename_with(~ paste0("N = ", N))
+  map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
+  do.call("cbind", .) %>% 
+  apply(., 2, unlist) %>%  
+  as.data.frame %>% 
+  rename_with(~ paste0("N = ", N))
 # average SHD
 colMeans(SHD_ccd5psparse)
 
 ## FCI
 res_fci5psparse <- fci_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_fci5psparse <- fci_5psparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -78,7 +86,8 @@ colMeans(SHD_fci5psparse)
 ## CCI
 res_cci5psparse <- cci_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_cci5psparse <- cci_5psparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -99,7 +108,8 @@ colMeans(SHD_cci5psparse)
 ## CCD
 res_ccd5pdense <- mat_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame()
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame()
 # UNCERTAINTY
 uncer_ccd5pdense <- mat_5pdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -116,7 +126,8 @@ colMeans(SHD_ccd5pdense)
 ## FCI
 res_fci5pdense <- fci_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_fci5pdense <- fci_5pdense%>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -133,7 +144,8 @@ colMeans(SHD_fci5pdense)
 ## CCI
 res_cci5pdense <- cci_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY 
 uncer_cci5pdense <- cci_5pdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -174,7 +186,8 @@ colMeans(SHD_ccd10psparse)
 ## FCI
 res_fci10psparse <- fci_10psparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_fci10psparse <- fci_10psparse%>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -191,7 +204,8 @@ colMeans(SHD_fci10psparse)
 ## CCI
 res_cci10psparse <- cci_10psparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_cci10psparse <- cci_10psparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -212,7 +226,8 @@ colMeans(SHD_cci10psparse)
 ## CCD
 res_ccd10pdense  <- mat_10pdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_ccd10pdense  <- mat_10pdense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -250,7 +265,8 @@ colMeans(SHD_fci10pdense)
 ## CCI
 res_cci10pdense <- cci_10pdense %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_cci10pdense <- cci_10pdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -270,7 +286,8 @@ colMeans(SHD_cci10pdense)
 ## CCD
 res_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -289,7 +306,8 @@ colMeans(SHD_ccd5pLVsparse)
 ## FCI
 res_fci5pLVsparse  <- fci_5pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_fci5pLVsparse <- fci_5pLVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -308,7 +326,8 @@ colMeans(SHD_fci5pLVsparse)
 ## CCI
 res_cci5pLVsparse <- cci_5pLVsparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_cci5pLVsparse <- cci_5pLVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -328,7 +347,8 @@ colMeans(SHD_cci5pLVsparse)
 ## CCD
 res_ccd5pLVdense  <- mat_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_ccd5pLVdense  <- mat_5pLVdense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -347,7 +367,8 @@ colMeans(SHD_ccd5pLVdense)
 ## FCI
 res_fci5pLVdense  <- fci_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_fci5pLVdense <- fci_5pLVdense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -366,7 +387,8 @@ colMeans(SHD_fci5pLVdense)
 ## CCI
 res_cci5pLVdense  <- cci_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV , .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_cci5pLVdense  <- cci_5pLVdense  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -386,7 +408,8 @@ colMeans(SHD_cci5pLVdense )
 ## CCD
 res_ccd10pLVsparse   <- mat_10pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_ccd10pLVsparse  <- mat_10pLVsparse  %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -405,7 +428,8 @@ colMeans(SHD_ccd10pLVsparse)
 ## FCI
 res_fci10pLVsparse <- fci_10pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_fci10pLVsparse <- fci_10pLVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -424,7 +448,8 @@ colMeans(SHD_fci10pLVsparse)
 ## CCI 
 res_cci10pLVsparse <- cci_10pLVsparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_cci10pLVsparse <- cci_10pLVsparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -444,7 +469,8 @@ colMeans(SHD_cci10pLVsparse)
 ## CCD
 res_ccd10pLVdense   <- mat_10pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_ccd10pLVdense  <- mat_10pLVdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -463,7 +489,8 @@ colMeans(SHD_ccd10pLVdense)
 ## FCI
 res_fci10pLVdense <- fci_10pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_fci10pLVdense <- fci_10pLVdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -482,7 +509,8 @@ colMeans(SHD_fci10pLVdense)
 ## CCI
 res_cci10pLVdense <- cci_10pLVdense %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>%  as.data.frame() 
 # UNCERTAINTY
 uncer_cci10pLVdense <- cci_10pLVdense %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -518,7 +546,8 @@ pre_rec <- list(
         # add sample size (N) info
         rename_with(~paste0(.x, "N = ", rep(N, each=8)))  %>%
         # get the average and sd
-        dplyr::summarise(across(everything(.), list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T))))) %>% 
+        dplyr::summarise(across(everything(.), list(mean = ~mean(., na.rm=T), 
+                                                    sd = ~sd(., na.rm=T))))) %>% 
   bind_rows() %>% 
   mutate(algorithm = rep(c("CCD", "FCI", "CCI"), 8),
          condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", 
@@ -695,7 +724,8 @@ recall_plot <- pre_rec %>%
   # add scattered points
   geom_point(size=1) +
   # add interquartile range (IQR)
-  geom_ribbon(aes(ymin=average_recall_mean+qnorm(0.25)*average_recall_sd, ymax=average_recall_mean+qnorm(0.75)*average_recall_sd), alpha=0.15, color=NA) +
+  geom_ribbon(aes(ymin=average_recall_mean+qnorm(0.25)*average_recall_sd, 
+                  ymax=average_recall_mean+qnorm(0.75)*average_recall_sd), alpha=0.15, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -721,7 +751,8 @@ uncertainty_plot <- uncertainties %>%
   # add scattered points
   geom_point(size=1) + 
   # add interquartile range (IQR)
-  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, 
+                  ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
