@@ -83,40 +83,6 @@ cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01,
     labels = colnames(depression), p = ncol(depression), verbose=TRUE) %>% .$maag %>% plotAG
 
 
-## run CCD on subsamples
-ccd_subsample_dep <- subsamples %>% 
-  map(~ccdKP(df=.x, dataType = "continuous", alpha=alpha))
-# create an adjacency matrix for PAG
-mat_subsample_dep <- ccd_subsample_dep %>% 
-  map(~CreateAdjMat(.x, length(.x$nodes)))
-
-# save(mat_subsample_dep, file="data/empirical/mat_subsample_dep.RData")
-
-
-# plot the PAG
-ccd_pag_subsample <- plotPAG(ccd_mcnally_dep, mat_mcnally_dep)
-
-
-## run FCI on subsamples
-fci_subsample_dep <- subsamples %>%
-  map(~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-           alpha = alpha, doPdsep = TRUE, selectionBias= FALSE,
-           labels = colnames(.x)) %>% 
-        .@amat
-  )
-# save(fci_subsample_dep, file="data/empirical/fci_subsample_dep.RData")
-
-
-## run CCI on subsamples
-cci_subsample_dep <- subsamples %>%
-  map(~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha,
-           labels = colnames(.x), p = ncol(.x)) %>% 
-        .$maag
-  )
-save(cci_subsample_dep, file="data/empirical/cci_subsample_dep.RData")
-
-
-
 ## =======================================
 ## 4. Extra: Transformed data distribution
 ## =======================================
