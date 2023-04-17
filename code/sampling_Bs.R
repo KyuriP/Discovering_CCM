@@ -142,9 +142,9 @@ truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pde
 # save(CCIres, file = "data/largedata_n500/CCIres2_randomB.Rdata")
 
 # load results
-load("data/largedata_n500/CCDres2_randomB.Rdata")
-load("data/largedata_n500/FCIres2_randomB.Rdata")
-load("data/largedata_n500/CCIres2_randomB.Rdata")
+load("data/randomB_n500/CCDres2_randomB.Rdata")
+load("data/randomB_n500/FCIres2_randomB.Rdata")
+load("data/randomB_n500/CCIres2_randomB.Rdata")
 
 
 
@@ -375,11 +375,12 @@ shdplot_ranB <- SHD_ranB %>%
   theme_minimal() +
   MyTheme + 
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), scales = "free_y", switch="y") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   ggtitle("(a) SHD")  +
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(filename = "results/samplingbeta_shd.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_shd.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot precision
@@ -395,11 +396,12 @@ precisionplot_ranB <- prec_ranB %>%
   theme_minimal() +
   MyTheme + 
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(title = "(b) Precision", x = "", y = "") +
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(filename = "results/samplingbeta_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot recall
@@ -415,11 +417,12 @@ recallplot_ranB <- rec_ranB %>%
   theme_minimal() +
   MyTheme + 
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(title = "(c) Recall", x = "", y = "")+
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(filename = "results/samplingbeta_rec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_rec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot uncertainty 
@@ -436,19 +439,20 @@ uncertaintyplot_ranB <- unc_ranB %>%  tidyr::pivot_wider(names_from = statistics
   theme_minimal() +
   MyTheme + 
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   ggtitle("(d) Uncertainty") 
 # save the plot
-# ggsave(filename = "results/samplingbeta_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 
 # combine the plots
 ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, recallplot_ranB, uncertaintyplot_ranB, nrow=4, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+#ggsave(filename = "figures/samplingbeta_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
 ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
-# ggsave(filename = "results/samplingbeta_result1.pdf", width = 25, height = 22, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_result1.pdf", width = 25, height = 22, dpi = 300, units = "cm")
 ggpubr::ggarrange(recallplot_ranB, uncertaintyplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
-# ggsave(filename = "results/samplingbeta_result2.pdf", width = 25, height = 22, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_result2.pdf", width = 25, height = 22, dpi = 300, units = "cm")
 
 
 
@@ -465,7 +469,8 @@ dense5pshd <- SHD_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(x="", y="", title = "") +
   theme_minimal() +
   MyTheme + 
@@ -481,7 +486,8 @@ dense5pprec <-prec_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(x="", y="", title = "") +
   theme_minimal() +
   MyTheme + 
@@ -497,7 +503,8 @@ dense5prec <- rec_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(x="", y="", title = "") +
   theme_minimal() +
   MyTheme + 
@@ -513,7 +520,8 @@ dense5punc <- unc_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(x="", y="", title = "") +
   theme_minimal() +
   MyTheme + 
@@ -523,4 +531,4 @@ dense5punc <- unc_ranB |> filter(condition == "B5dense") |>
 # combine the plots
 ggpubr::ggarrange(dense5pshd, dense5pprec, dense5prec, dense5punc, ncol=2, nrow=2, common.legend = TRUE, legend = "bottom")
 # save the plot
-# ggsave(filename = "results/samplingbeta_dense5p.pdf", width = 17, height = 13, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_dense5p_label10.pdf", width = 17, height = 13, dpi = 300, units = "cm")

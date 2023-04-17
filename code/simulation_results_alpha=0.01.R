@@ -680,11 +680,12 @@ SHDs %>%
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
   # manually specify the x-axis break
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   ggtitle("SHD") 
 
 # save the plot
-# ggsave(filename = "results/SHD_alpha0.01.pdf", width = 25, height = 13, dpi = 300, units = "cm")
+# ggsave(filename = "figures/SHD_alpha0.01_label10.pdf", width = 25, height = 13, dpi = 300, units = "cm")
 
 
 
@@ -709,7 +710,8 @@ precision_plot <- pre_rec %>%
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(title = "(a) Precision", x = "", y = "")
 
 
@@ -735,7 +737,8 @@ recall_plot <- pre_rec %>%
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(title = "(b) Recall", x = "", y = "")
 
 # combine the plots together
@@ -763,13 +766,14 @@ uncertainty_plot <- uncertainties %>%
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
   # manually specify the x-axis break
-  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   ggtitle("(c) Uncertainty")
 
 # combine the plots
 ggpubr::ggarrange(precision_plot, recall_plot, uncertainty_plot, nrow=3, common.legend = TRUE, legend = "bottom")
 
 # save the plot
-# ggsave(filename = "results/prec-recall-uncer_alpha0.01.pdf", width = 25, height = 30, dpi = 300, units = "cm")
+# ggsave(filename = "figures/prec-recall-uncer_alpha0.01_10label.pdf", width = 25, height = 30, dpi = 300, units = "cm")
 
 

@@ -108,7 +108,7 @@ for(j in 1:500){
 }
 # specify dim names
 rownames(count) <- c("marginal", "conditional on X1", "conditional on X3", "conditional on X4", "conditional on X1 & X4", "conditional on X1 & X3", "conditional on X3 & X4", "conditional on X1 & X3 & X4")
-colnames(count) <- c("N=50" , "N=150", "N=500", "N=1000", "N=1500", "N=2000", "N=3000", "N=4000", "N=5000", "N=10000")
+colnames(count) <- c("N=50" , "N=150", "N=500", "N=1000", "N=2000", "N=3000", "N=4000", "N=5000", "N=7500", "N=10000")
 
 # show table
 count

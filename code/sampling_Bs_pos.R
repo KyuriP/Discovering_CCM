@@ -108,9 +108,9 @@ CCIres_pos <- simdatalist %>%
 truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, trueag_10psparseLV, trueag_10pdenseLV)
 
 # load results
-load("data/largedata_posB/CCDres3_pos.Rdata") # CCDres
-load("data/largedata_posB/FCIres3_pos.Rdata") # FCIres
-load("data/largedata_posB/CCIres3_pos.Rdata") # CCIres
+load("data/randomB_pos/CCDres3_pos.Rdata") # CCDres
+load("data/randomB_pos/FCIres3_pos.Rdata") # FCIres
+load("data/randomB_pos/CCIres3_pos.Rdata") # CCIres
 
 
 

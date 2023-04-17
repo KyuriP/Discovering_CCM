@@ -39,16 +39,6 @@ ocd <- mcnally[,17:26] %>% apply(., 2, as.numeric)
 # trans_dep <- huge::huge.npn(depression)
 # trans_ocd <- huge::huge.npn(ocd)
 
-## subsampling (for robustness ..by Lourens)
-plan(multisession)
-subsample_size <- 1000
-subsamples <- 1:subsample_size %>% 
-  future_map(~depression %>% 
-        as_tibble %>% 
-        # sample 90% from the original data
-        slice_sample(prop=0.9),
-        .options = furrr_options(seed=123))
-
 
 ## =======================================
 ## 2. Estimate GGM with GLASSO 
