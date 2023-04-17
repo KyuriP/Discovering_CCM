@@ -16,7 +16,7 @@
 #    frequency table and get the value that occurs the most frequently. Here, we 
 #    apply the cut-off, where the most frequent value needs to occur more than 70% 
 #    of the time. Otherwise, it is discarded.
-# 5. Plot the PAGs: given the constructed adjacency matricess from step 4, 
+# 5. Plot the PAGs: given the constructed adjacency matrices from step 4, 
 #    we plot the PAGs.
 ## =============================================================================
 
