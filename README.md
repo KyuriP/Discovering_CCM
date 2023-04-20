@@ -10,19 +10,6 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 ## Structure
 ```
 ├── Thesis_KP.Rproj
-├── empirical_example
-│   ├── data
-│   ├── empircal_example.R
-│   └── subsampling_emp.R
-├── figures
-│   ├── Fig1_DAG_DCG_GGM.pdf
-│   ├── ...
-│   └── FigJ1_McNallydistribution.pdf
-├── others
-│   ├── FETC-approval
-│   ├── Presentation
-│   ├── Proposal
-│   └── Research Report
 ├── simulation
 │   ├── Investigate_B5dense.R
 │   ├── data
@@ -36,21 +23,35 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 │   ├── varying_alpha.R
 │   ├── simulation_code.R
 │   └── simulation_results.R
+├── empirical_example
+│   ├── data
+│   ├── empircal_example.R
+│   └── subsampling_emp.R
+├── utils
+│    ├── CCD_fnc.R
+│    ├── data_generating_fnc.R
+│    ├── eval_metrics.R
+│    ├── plot_fnc.R
+│    ├── searchAM_KP_fnc.R
+│    └── true_ancestral.R
 ├── supplementary_material
 │   ├── Supplementary_material.html
 │   ├── Supplementary_material.qmd
 │   ├── ...
 │   └── style.css
-└── utils
-    ├── CCD_fnc.R
-    ├── data_generating_fnc.R
-    ├── eval_metrics.R
-    ├── plot_fnc.R
-    ├── searchAM_KP_fnc.R
-    └── true_ancestral.R
+├── figures
+│   ├── Fig1_DAG_DCG_GGM.pdf
+│   ├── ...
+│   └── FigJ1_McNallydistribution.pdf
+└── others
+    ├── FETC-approval
+    ├── Presentation
+    ├── Proposal
+    └── Research Report
 ```
 
 ## Descrition
+
 **Description Table Here.**
 
 
