@@ -6,6 +6,7 @@
 </div>
 <br>
 
+This repository serves as an archive for the thesis project *Discovering Cyclic Causal Models in Psychological Research*. 
 
 ## Structure
 ```
