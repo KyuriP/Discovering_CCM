@@ -1,7 +1,10 @@
-<img src="https://github.com/KyuriP/Thesis_KP/blob/main/cyclelogo.png" width=10% height=10%>  **MSBBSS Thesis Project** 
-# Discovering Cyclic Causal Models in Psychological Research 
 
-This repository serves as an archive for the thesis project *Discovering Cyclic Causal Models in Psychological Research*. 
+<div align="left">
+<img src="https://github.com/KyuriP/Thesis_KP/blob/main/cyclelogo.png" width=10% height=10% align="left">
+<h3> <i>MSBBSS Thesis Project</i></h4>
+<h1> Discovering Cyclic Causal Models in Psychological Research </h1>
+</div>
+<br>
 
 
 ## Structure
