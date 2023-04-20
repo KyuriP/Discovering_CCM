@@ -23,20 +23,17 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 │   ├── Presentation
 │   ├── Proposal
 │   └── Research Report
-├── sensitivity_analyses
+├── simulation
+│   ├── Investigate_B5dense.R
 │   ├── data
 │   │   ├── randomB_n1000
 │   │   ├── randomB_n500
 │   │   ├── randomB_pos
 │   │   └── varyingalpha
+│   │   └── fixedB_n500
 │   ├── sampling_Bs.R
 │   ├── sampling_Bs_pos.R
-│   └── varying_alpha.R
-├── simulation
-│   ├── Investigate_B5dense.R
-│   ├── data
-│   │   └── fixedB_n500
-│   ├── density_simulation.R
+│   ├── varying_alpha.R
 │   ├── simulation_code.R
 │   └── simulation_results.R
 ├── supplementary_material
