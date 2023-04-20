@@ -11,18 +11,13 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 ```
 ├── Thesis_KP.Rproj
 ├── simulation
-│   ├── Investigate_B5dense.R
 │   ├── data
-│   │   ├── randomB_n1000
-│   │   ├── randomB_n500
-│   │   ├── randomB_pos
-│   │   └── varyingalpha
-│   │   └── fixedB_n500
 │   ├── sampling_Bs.R
 │   ├── sampling_Bs_pos.R
 │   ├── varying_alpha.R
 │   ├── simulation_code.R
-│   └── simulation_results.R
+│   ├── simulation_results.R
+│   └── Investigate_B5dense.R
 ├── empirical_example
 │   ├── data
 │   ├── empircal_example.R
@@ -36,9 +31,8 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 │    └── true_ancestral.R
 ├── supplementary_material
 │   ├── Supplementary_material.html
-│   ├── Supplementary_material.qmd
 │   ├── ...
-│   └── style.css
+│   └── Supplementary_material.qmd
 ├── figures
 │   ├── Fig1_DAG_DCG_GGM.pdf
 │   ├── ...
