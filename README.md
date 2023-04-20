@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/576782527.svg)](https://zenodo.org/badge/latestdoi/576782527)
+
 ***MSBBSS Thesis Project***
 <div align="left">
 <img src="https://github.com/KyuriP/Thesis_KP/blob/main/cyclelogo.png" width=10% height=10% align="left">
