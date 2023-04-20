@@ -50,7 +50,8 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 
 
 ## Ethics & Access
-Approval for this study has been granted by the Ethical Review Board of the Faculty of Social and
+All data are simulated in this study except for the one used in the emprical analysis, which is publicly available on the [Psychological Medicine Journal webpage](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900\#supplementary-materials).
+Ethics approval for this study has been granted by the Ethical Review Board of the Faculty of Social and
 Behavioural Sciences [(FETC)](https://ferb.sites.uu.nl/) at Utrecht University, with reference numbers 22-1810 and 22-1825 (see the confirmation of approval: [fetcapproval1.pdf](https://github.com/KyuriP/Thesis_KP/blob/main/others/FETC-approval/fetcapproval1.pdf), [fetcapproval2.pdf](https://github.com/KyuriP/Thesis_KP/blob/main/others/FETC-approval/fetcapproval2.pdf)).
 
 This repository, which serves as an archive of the study is accessible to the public on [GitHub](https://github.com/KyuriP/Thesis_KP) under the license type of `GNU General Public License v3.0`. 
