@@ -9,7 +9,6 @@ editor: visual
 
 - Table1 assumptions: independent errors are not necessary for FCI. Whenever errors are dependent, there is an equivalent model to the independent error case, using a latent variable that explains the correlations among the error terms. This is described in Spirtes (1994)
 
-
 - on page 13 you discuss in step 3 the conditions to obtain B <- C. I think one condition is missing, which you discuss after (see pdf).
 
 
@@ -26,3 +25,10 @@ editor: visual
 - (don't forget to mention the seed?)
 
 - make the repo public and get the doi for the repo --> correct the citation
+
+
+## Check with Oisin
+
+- alpha level reference
+- Figures x-axis labels
+- Appendices...

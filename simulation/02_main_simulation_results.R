@@ -683,8 +683,14 @@ SHDs %>%
   # create a facet
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
   # manually specify the x-axis break
+  # 1) log10 transformation with unequally spaced labels
   # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
-  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  # 2) log 10 transformation, trying to get the equal spaced labels with log transformation
+  # scale_x_continuous(trans= "log10", breaks=c(50, 100, 250, 500, 1000, 2500, 5000, 10000)) +
+  # 3) real N values with equally spaced labels
+  # scale_x_continuous(breaks=c(seq(1000, 10000, by = 1000),10000)) +
+  # 4) N as factor and equally spaced labels: 
+  # then need to change N as factor: ggplot(aes(x= factor(N, levels= c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000))...
   ggtitle("SHD") 
 
 # save the plot
