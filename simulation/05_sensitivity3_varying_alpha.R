@@ -6,24 +6,29 @@
 # As is the case with the main simulation study, there are in total 8 models and
 # we generate 500 datasets from each model.
 #
-# The content is as follows:
+# The content is as follows.
 # 0. Preparation: we source and load necessary functions & packages and generate data.
+#
 # 1. Run algorithms: we again run three algorithms CCD, FCI, and CCI then estimate PAGs.
+#
 # 2. Evaluate performance: we compute structural Hamming distance, precision, recall,
 # and uncertainty rate for each condition.
+#
 # 3. Organize results: we make neat data frames of resulting values of evaluation
 # metrics from each algorithm.
+#
 # 4. Create figures: we create figures for each evaluation metric comparing the 
 # performance of each algorithm per condition.
 ## =============================================================================
+
 
 ## ========================
 ## 0. Preparation
 ## ========================
 # source the simulation study results
-source("code/simulation_code.R")
-source("code/R/eval_metrics.R")
-source("code/R/true_ancestral.R")
+source("simulation/01_main_simulation.R")
+source("utils/eval_metrics.R")
+source("utils/true_ancestral.R")
 
 # load packages
 library(dplyr)

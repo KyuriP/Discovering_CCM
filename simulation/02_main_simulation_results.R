@@ -7,12 +7,15 @@
 # Second part of this script concerns creating figures.
 #
 #
-# The content is as follows:
+# The content is as follows.
 # 0. Preparation: we source and load necessary functions & packages.
+#
 # 1. Evaluate performance: we compute structural Hamming distance, precision, recall,
 # and uncertainty rate for each condition (8 conditions in total).
+#
 # 2. Organize results: we make neat data frames of resulting values of evaluation
 # metrics from each algorithm.
+#
 # 3. Create figures: we create figures for each evaluation metric comparing the 
 # performance of each algorithm per condition.
 ## ============================================================================
@@ -22,7 +25,7 @@
 ## 0. Preparation
 ## ========================
 # source the simulation study results
-source("code/simulation_code.R")
+source("simulation/01_main_simulation.R")
 
 # load packages
 library(dplyr)

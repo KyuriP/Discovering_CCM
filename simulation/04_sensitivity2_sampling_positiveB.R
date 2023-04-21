@@ -8,14 +8,14 @@
 # main analysis, and to determine if there are any differences when randomly 
 # sampling B weights from both negative and positive values.
 #
-# The rest set up is the same as `sampling_Bs.R`.
+# The rest set up is the same as `03_sensitivity1_samplingB.R`.
 ## =============================================================================
 
 ## ======================
 ## 0. Preparation
 ## ======================
 # source the simulation study results
-source("code/simulation_code.R")
+source("simulation/01_main_simulation.R")
 # load packages
 library(dplyr)
 library(purrr)

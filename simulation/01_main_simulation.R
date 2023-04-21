@@ -15,24 +15,24 @@
 # and generates the PAGs is currently commented out. 
 # If interested, simply uncomment those lines and run the code.
 #
-# The script is organized as follows:
+# The script is organized as follows.
 # 0. Preparation: necessary functions and packages are sourced and loaded.
 # 1 - 8. Simulation: code to generate data and run algorithms.
 # 9. Analysis of algorithm running time.
 ## =============================================================================
 
 
-## ========================
+## =============================================================================
 ## 0. Preparation
-## ========================
+## =============================================================================
 
 ## source all the necessary functions
-source("code/R/CCD_fnc.R")
-source("code/R/plot_fnc.R")
-source("code/R/searchAM_KP_fnc.R")
-source("code/R/data_generating_fnc.R")
-source("code/R/eval_metrics.R")
-source("code/R/true_ancestral.R")
+source("utils/CCD_fnc.R")
+source("utils/plot_fnc.R")
+source("utils/searchAM_KP_fnc.R")
+source("utils/data_generating_fnc.R")
+source("utils/eval_metrics.R")
+source("utils/true_ancestral_fnc.R")
 
 ## load necessary packages
 library(magrittr)
@@ -73,9 +73,9 @@ set.seed(123)
 
 
 
-## ====================
-## 1. 5p - sparse
-## ====================
+## =============================================================================
+## 1. 5p - sparse condition
+## =============================================================================
 # specify B matrix
 B5sparse = matrix(c(0, 0, 0, 0, 0,
                     1, 0, 0.8, 0, 0,
@@ -93,7 +93,8 @@ layout5 = matrix(c(0,1,
 
 par(mfrow=c(1,2))
 # true 5p sparse DCG
-true5psparse <- qgraph(t(B5sparse), layout=layout5, labels = colnames(B5sparse), theme="colorblind")
+true5psparse <- qgraph(t(B5sparse), layout=layout5, 
+                       labels = colnames(B5sparse), theme="colorblind")
 
 ## Data generating
 # equilibrium check
@@ -161,9 +162,9 @@ load("data/fixedB_n500/cci_5psparse.RData")
 
 
 
-## ====================
-## 2. 5p - dense
-## ====================
+## =============================================================================
+## 2. 5p - dense condition
+## =============================================================================
 # specify B matrix
 B5dense = matrix(c(0, 0, 0, 0, 0,
                    1.4, 0, 0.8, 0, 0,
@@ -172,7 +173,8 @@ B5dense = matrix(c(0, 0, 0, 0, 0,
                    1, 0, 0, 0, 0), 5, 5, byrow = T)
 colnames(B5dense) <- c("X1", "X2", "X3", "X4", "X5")
 par(mfrow=c(1,2))
-true5pdense <- qgraph(t(B5dense), layout=layout5, labels = colnames(B5dense), theme="colorblind")
+true5pdense <- qgraph(t(B5dense), layout=layout5, 
+                      labels = colnames(B5dense), theme="colorblind")
 
 ## Data generating
 # equilibrium check
@@ -213,7 +215,8 @@ load("data/fixedB_n500/mat_5pdense.RData")
 ## Run FCI algorithm
 # fci_5pdense <- simdata_5pdense %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
+#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+#                     labels = colnames(.x)) %>% .@amat # extract amat
 #   )
 # save(fci_5pdense, file="data/fixedB_n500/fci_5pdense.RData")
 load("data/fixedB_n500/fci_5pdense.RData")
@@ -224,7 +227,8 @@ load("data/fixedB_n500/fci_5pdense.RData")
 
 ## Run CCI algorithm
 # cci_5pdense <- simdata_5pdense %>%
-#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
+#                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag
 #   )
 # save(cci_5pdense, file="data/fixedB_n500/cci_5pdense.RData")
 load("data/fixedB_n500/cci_5pdense.RData")
@@ -235,9 +239,9 @@ load("data/fixedB_n500/cci_5pdense.RData")
 
 
 
-## ====================
-## 3. 10p - sparse
-## ====================
+## =============================================================================
+## 3. 10p - sparse condition
+## =============================================================================
 
 B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 
@@ -263,7 +267,8 @@ layout10 = matrix(c(0,1,
                     4, 1,
                     7, 1),10,2,byrow = T)
 par(mfrow=c(1,2))
-true10psparse <- qgraph(t(B10sparse), layout = layout10, labels = colnames(B10sparse), theme="colorblind")
+true10psparse <- qgraph(t(B10sparse), layout = layout10, 
+                        labels = colnames(B10sparse), theme="colorblind")
 
 ## Data generating
 # equilibrium check
@@ -311,7 +316,8 @@ load("data/fixedB_n500/mat_10psparse.RData")
 ## Run FCI algorithm
 # fci_10psparse <- simdata_10psparse %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+#                     labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 # save(fci_10psparse, file="data/fixedB_n500/fci_10psparse.RData")
 load("data/fixedB_n500/fci_10psparse.RData")
@@ -322,7 +328,8 @@ load("data/fixedB_n500/fci_10psparse.RData")
 
 ## Run CCI algorithm
 # cci_10psparse <- simdata_10psparse %>%
-#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
+#                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag
 #   )
 # save(cci_10psparse, file="data/fixedB_n500/cci_10psparse.RData")
 load("data/fixedB_n500/cci_10psparse.RData")
@@ -333,9 +340,9 @@ load("data/fixedB_n500/cci_10psparse.RData")
 
 
 
-## ====================
-## 4. 10p - dense
-## ====================
+## =============================================================================
+## 4. 10p - dense condition
+## =============================================================================
 B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0.3, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 
                     0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -360,7 +367,8 @@ layout10 = matrix(c(0,1,
                     7, 1),10,2,byrow = T)
 
 par(mfrow=c(1,2))
-true10pdense <- qgraph(t(B10dense), layout = layout10, labels = colnames(B10dense), theme="colorblind")
+true10pdense <- qgraph(t(B10dense), layout = layout10, 
+                       labels = colnames(B10dense), theme="colorblind")
 
 ## Data generating
 # equilibrium check
@@ -405,7 +413,8 @@ load("data/fixedB_n500/mat_10pdense.RData")
 ## Run FCI algorithm
 # fci_10pdense <- simdata_10pdense  %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # exxtract amat
+#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+#                     labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
 # save(fci_10pdense, file="data/fixedB_n500/fci_10pdense.RData")
 load("data/fixedB_n500/fci_10pdense.RData")
@@ -416,7 +425,10 @@ load("data/fixedB_n500/fci_10pdense.RData")
 
 ## Run CCI algorithm
 # cci_10pdense  <- simdata_10pdense %>%
-#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
+#                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
+#             # convert some logical matrix (0, 1 only) to a numeric matrix 
+#             # while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pdense, file="data/fixedB_n500/cci_10pdense.RData")
 load("data/fixedB_n500/cci_10pdense.RData")
@@ -427,9 +439,9 @@ load("data/fixedB_n500/cci_10pdense.RData")
 
 
 
-## ====================
-## 5. 5p with LV sparse
-## ====================
+## =============================================================================
+## 5. 5p with LV sparse condition
+## =============================================================================
 # specify B matrix
 B5_lvsparse = matrix(c(0, 0, 0, 0, 0, 1,
                        0, 0, 0.4, 0, 0, 1,
@@ -447,7 +459,8 @@ layout5_lv = matrix(c(0,1,
                       2,1,
                       -1, 0.5),6,2,byrow = T)
 par(mfrow=c(1,2))
-true5p_lvsparse <- qgraph(t(B5_lvsparse), layout=layout5_lv, labels = colnames(B5_lvsparse), theme="colorblind")
+true5p_lvsparse <- qgraph(t(B5_lvsparse), layout=layout5_lv, 
+                          labels = colnames(B5_lvsparse), theme="colorblind")
 
 
 ## Data generating
@@ -491,7 +504,8 @@ load("data/fixedB_n500/mat_5pLVsparse.RData")
 ## Run FCI algorithm
 # fci_5pLVsparse <- simdata_5pLVsparse  %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat # extract amat
+#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+#                     labels = colnames(.x)) %>% .@amat # extract amat
 #   )
 # save(fci_5pLVsparse, file="data/fixedB_n500/fci_5pLVsparse.RData")
 load("data/fixedB_n500/fci_5pLVsparse.RData")
@@ -502,7 +516,10 @@ load("data/fixedB_n500/fci_5pLVsparse.RData")
 
 ## Run CCI algorithm
 # cci_5pLVsparse  <- simdata_5pLVsparse %>%
-#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
+#                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
+#             # convert some logical matrix (0, 1 only) to a numeric matrix 
+#             # while keeping a matrix format 
 #   )
 # 
 # save(cci_5pLVsparse, file="data/fixedB_n500/cci_5pLVsparse.RData")
@@ -514,9 +531,9 @@ load("data/fixedB_n500/cci_5pLVsparse.RData")
 
 
 
-## ====================
-## 6. 5p with LV dense
-## ====================
+## =============================================================================
+## 6. 5p with LV dense condition
+## =============================================================================
 B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
                       0, 0, 0.4, 0, 0, 1,
                       0, 0, 0, 0.5, 0,0,
@@ -532,7 +549,8 @@ layout5_lv = matrix(c(0,1,
                       2,1,
                       -1, 0.5),6,2,byrow = T)
 par(mfrow=c(1,2))
-true5p_lvdense <- qgraph(t(B5_lvdense), layout=layout5_lv, labels = colnames(B5_lvdense), theme="colorblind")
+true5p_lvdense <- qgraph(t(B5_lvdense), layout=layout5_lv, 
+                         labels = colnames(B5_lvdense), theme="colorblind")
 
 ## Data generating
 # equilibrium check
@@ -570,7 +588,8 @@ load("data/fixedB_n500/mat_5pLVdense.RData")
 ## Run FCI algorithm
 # fci_5pLVdense <- simdata_5pLVdense  %>%
 #   map_depth(2, ~fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat
+#                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+#                     labels = colnames(.x)) %>% .@amat
 #   )
 
 # save(fci_5pLVdense, file="data/fixedB_n500/fci_5pLVdense.RData")
@@ -582,7 +601,8 @@ load("data/fixedB_n500/fci_5pLVdense.RData")
 
 ## Run CCI algorithm
 # cci_5pLVdense  <- simdata_5pLVdense %>%
-#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
+#                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
 #   )
 
 # save(cci_5pLVdense, file="data/fixedB_n500/cci_5pLVdense.RData")
@@ -594,9 +614,9 @@ load("data/fixedB_n500/cci_5pLVdense.RData")
 
 
 
-## ====================
-## 7. 10p with LV sparse
-## ====================
+## =============================================================================
+## 7. 10p with LV sparse condition
+## =============================================================================
 # specify B matrix
 B10_lvsparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0.7,
@@ -626,7 +646,8 @@ layout10LV2 = matrix(c(0, 1,
                        8, 0,
                        3, 2), 12, 2, byrow = T)
 par(mfrow=c(1,2))
-true10pLVsparse <- qgraph(t(B10_lvsparse), layout = layout10LV2, labels = colnames(B10_lvsparse), theme="colorblind")
+true10pLVsparse <- qgraph(t(B10_lvsparse), layout = layout10LV2, 
+                          labels = colnames(B10_lvsparse), theme="colorblind")
 ## Data generating
 # equilibrium check
 equilibrium_check(B10_lvsparse)
@@ -679,7 +700,8 @@ load("data/fixedB_n500/fci_10pLVsparse.RData")
 #   map_depth(2, ~plotAG(.x))
 ## Run CCI algorithm
 # cci_10pLVsparse  <- simdata_10pLVsparse %>%
-#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
+#                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
 # save(cci_10pLVsparse, file="data/fixedB_n500/cci_10pLVsparse.RData")
 load("data/fixedB_n500/cci_10pLVsparse.RData")
@@ -690,9 +712,9 @@ load("data/fixedB_n500/cci_10pLVsparse.RData")
 
 
 
-## ====================
-## 8. 10p with LV dense
-## ====================
+## =============================================================================
+## 8. 10p with LV dense condition
+## =============================================================================
 # specify B matrix
 B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0.5, 0, 1.4, 0, 0, 0, 0, 0, 0, 0, 0, 1.1,
@@ -721,7 +743,8 @@ layout10LV2 = matrix(c(0, 1,
                        8, 0,
                        3, 2), 12, 2, byrow = T)
 par(mfrow=c(1,2))
-true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV2, labels = colnames(B10_lvdense), theme="colorblind")
+true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV2, 
+                         labels = colnames(B10_lvdense), theme="colorblind")
 ## Data generating
 # equilibrium check
 equilibrium_check(B10_lvdense)
@@ -777,7 +800,8 @@ load("data/fixedB_n500/fci_10pLVdense.RData")
 
 ## Run CCI algorithm
 # cci_10pLVdense  <- simdata_10pLVdense  %>%
-#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  # convert some logical matrix (0, 1 only) to a numeric matrix while keeping a matrix format (lost the row names but they are not needed)
+#   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
+#                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
 #   )
 # save(cci_10pLVdense, file="data/fixedB_n500/cci_10pLVdense.RData")
 load("data/fixedB_n500/cci_10pLVdense.RData")
@@ -788,9 +812,9 @@ load("data/fixedB_n500/cci_10pLVdense.RData")
 
 
 
-## =========================
+## =============================================================================
 ## 9. Algorithm running time 
-## =========================
+## =============================================================================
 
 #remotes::install_github("joshuaulrich/microbenchmark")
 library(microbenchmark)

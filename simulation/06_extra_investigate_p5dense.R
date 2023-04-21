@@ -20,7 +20,7 @@
 
 
 # source the simulation study results
-source("code/simulation_code.R")
+source("simulation/01_main_simulation.R")
 
 # load packages
 library(dplyr)

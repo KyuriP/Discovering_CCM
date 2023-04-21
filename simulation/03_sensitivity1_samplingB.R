@@ -10,23 +10,29 @@
 # As is the case with the main analysis, there are in total 8 models considered
 # and 500 datasets are generated from each model.
 #
-# The content is as follows:
+# The content is as follows.
 # 0. Preparation: we source and load necessary functions & packages and generate data.
+#
 # 1. Generate data: we generate data based on randomly sampled B matrix at every iteration. 
+#
 # 2. Run algorithms: we run three algorithms CCD, FCI, and CCI, then estimate PAGs.
+#
 # 3. Evaluate performance: we compute structural Hamming distance, precision, recall,
 # and uncertainty rate for each condition.
+#
 # 4. Create figures: we create figures for each evaluation metric comparing the 
 # performance of each algorithm per condition.
+#
 # 5. Create an extra figure: we show the performance under 5p dense 
 # without a latent confounder condition (Figure 18 in the paper).
 ## =============================================================================
+
 
 ## ======================
 ## 0. Preparation
 ## ======================
 # source the simulation study results
-source("code/simulation_code.R")
+source("simulation/01_main_simulation.R")
 # load packages
 library(dplyr)
 library(purrr)
