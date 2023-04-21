@@ -13,24 +13,24 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 ```
 ├── Thesis_KP.Rproj
 ├── simulation
-│   ├── data
-│   ├── sampling_Bs.R
-│   ├── sampling_Bs_pos.R
-│   ├── varying_alpha.R
-│   ├── simulation_code.R
-│   ├── simulation_results.R
-│   └── Investigate_B5dense.R
+│   ├── 01_main_simulation.R
+│   ├── 02_main_simulation_results.R
+│   ├── 03_sensitivity1_samplingB.R
+│   ├── 04_sensitivity2_sampling_positiveB.R
+│   ├── 05_sensitivity3_varying_alpha.R
+│   ├── 06_extra_investigate_p5dense.R
+│   └── data
 ├── empirical_example
-│   ├── data
-│   ├── empircal_example.R
-│   └── subsampling_emp.R
+│   ├── 01_empircal_analysis.R
+│   ├── 02_sensitivity_analysis.R
+│   └── data
 ├── utils
 │    ├── CCD_fnc.R
 │    ├── data_generating_fnc.R
 │    ├── eval_metrics.R
 │    ├── plot_fnc.R
 │    ├── searchAM_KP_fnc.R
-│    └── true_ancestral.R
+│    └── true_ancestral_fnc.R
 ├── supplementary_material
 │   ├── Supplementary_material.html
 │   ├── ...
