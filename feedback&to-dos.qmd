@@ -1,0 +1,28 @@
+---
+title: "Feedback & To-dos"
+format: pdf
+editor: visual
+---
+
+## Lourens
+- p.6: here you use no subscript for conditional independence and the subscript G for d-separation in the graph. But later this is not always consistent. Maybe just check for inconsistency
+
+- Table1 assumptions: independent errors are not necessary for FCI. Whenever errors are dependent, there is an equivalent model to the independent error case, using a latent variable that explains the correlations among the error terms. This is described in Spirtes (1994)
+
+
+- on page 13 you discuss in step 3 the conditions to obtain B <- C. I think one condition is missing, which you discuss after (see pdf).
+
+
+## EJ
+
+- rename "others" folder & clarify (maybe just take each folder out and have them independently: presentation, research report, etc..).
+
+- a separate README for the supp.material --> attach the link for the html file.
+
+- check all the scripts if they run according to the restructured folders and renamed files.
+
+- Add the description for the folders/files : make sure it is clear how to reproduce the study results.
+
+- (don't forget to mention the seed?)
+
+- make the repo public and get the doi for the repo --> correct the citation
