@@ -7,8 +7,24 @@
 </div>
 <br>
 
+## Introduction
+
 This repository serves as an archive for the thesis project ***Discovering Cyclic Causal Models in Psychological Research***. 
 It contains the `R` code, data, figures, manuscript, supplementary material, and other relevant files related to the project.
+
+<details>
+           <summary><b><i>Abstract</i></b></summary>
+           <p> 
+Statistical network models have become popular tools for analyzing multivariate psychological data. 
+In empirical practice, network parameters are often interpreted as reflecting causal relationships – an approach that can be characterized as a form of causal discovery. 
+Recent research has shown that undirected network models are likely to perform poorly as causal discovery tools in the context of discovering acyclic causal structures, a task for which many alternative methods are available. 
+However, acyclic causal models are likely unsuitable for many psychological phenomena, such as psychopathologies, which are often characterized by cycles or feedback loop relationships between symptoms. 
+A number of cyclic causal discovery methods have been developed, largely in the computer science literature, but they are not as well studied or widely applied in empirical practice. 
+In this paper, we provide an accessible introduction to the basics of cyclic causal discovery for empirical researchers. 
+We examine three different cyclic causal discovery methods and investigate their performance in typical psychological research contexts by means of a simulation study. We also demonstrate the practical applicability of these methods using an empirical example and conclude the paper with a discussion of how the insights we gain from cyclic causal discovery relate to statistical network analysis.
+           </p>
+         </details>
+
 
 ## Structure
 ```
