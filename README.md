@@ -8,17 +8,18 @@
 <br>
 
 This repository serves as an archive for the thesis project *Discovering Cyclic Causal Models in Psychological Research*. 
+It contains the R code, data, figures, manuscript, supplementary material, and other relevant files related to the project.
 
 ## Structure
 ```
 ├── Thesis_KP.Rproj
 ├── simulation
-│   ├── 01_main_simulation.R
-│   ├── 02_main_simulation_results.R
-│   ├── 03_sensitivity1_samplingB.R
-│   ├── 04_sensitivity2_sampling_positiveB.R
-│   ├── 05_sensitivity3_varying_alpha.R
-│   ├── 06_extra_investigate_p5dense.R
+│   ├── 01_simulation.R
+│   ├── 02_simulation_results.R
+│   ├── 03_sensitivity_analysis1.R
+│   ├── 04_sensitivity_analysis2.R
+│   ├── 05_sensitivity_analysis3.R
+│   ├── 06_extra_analysis.R
 │   └── data
 ├── empirical_example
 │   ├── 01_empircal_analysis.R
@@ -48,7 +49,28 @@ This repository serves as an archive for the thesis project *Discovering Cyclic 
 
 ## Descrition
 
-**Description Table Here.**
+
+The scripts contain the following:
+
+| Folder                                     | Contents                                                         |
+| :----------------------------------------- | :--------------------------------------------------------------- |
+| [`simulation`](./simulation)       | It contains all `R` scripts required to run the simulation study.  <br> - `01_simulation.R`: simulate models, generate data, and run the algorithms. <br> - `02_simulation_results.R`: evaluate performance of algorithms and create figures. <br> - `03_sensitivity_analysis1.R`: run the secondary simulation with randomly sampled coefficients for the regression matrix B. <br> - `04_sensitivity_analysis2.R`: conduct the secondary simulation by randomly sampling coefficients with *positive* values for the regression matrix B. <br> - `05_sensitivity_analysis3.R`: run secondary analysis  with varying alpha levels. <br> - `06_extra_analysis.R`: investigate the unexpected patterns in the B5 dense conditions from the main simulation study.<br> - `data`: output objects from all simulations are stored as `Rdata` files due to considerable processing time involved.      |
+| [`empirical_example`](./empirical_example) | It contains all R scripts required to run the empirical analysis. <br> - `01_empirical_analysis.R`: run empirical analysis (apply the CCD, FCI and CCI algorithms to an empirical data from [McNally et al. (2017)](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900#supplementary-materials). <br> - `02_sensitivity_analysis.R`: perform the stability analysis on the empirical data (*Appendix I* in the paper). <br> - `data`: raw data that is publicly available [here](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900#supplementary-materials) and output objects from the sensitivity analysis saved as `Rdata` files.               |
+| [`utils`](./utils)               | It includes all the supporting functions required to run the `R` scripts mentioned above. |
+| [`manuscript`](./manuscript)               | It contains all relevant files associated with the main manuscript. |
+| [`supplementary_material`](./supplementary_material)           |It contains all files related to the supplementary material of the paper. The supplementary material can be accessed via this (link)[https://kyurip.quarto.pub/discovering-cyclic-causal-models/].|
+| [`figures`](./figures)               | It contains all the figures that are included in the paper.                    |
+| [`others`](./others)               | It contains all types of subsidiary files  created during the course of the project (e.g., research proposal, presentation, interim report).                        |
+
+
+
+| Folder            | Content                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|:------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| manuscript        | Contains all files belonging to the manuscript <br> - References in `thesis.bib` <br> - Stylesheet for Journal of Mathematical Psychology <br> - Text and code to create figures in `manuscript_volker.Rmd` <br> - Output document `manuscript_volker.pdf` <br> - Required `Latex` packages in `preamble.tex` <br> - Required frontpage in `frontmatter.tex`                                                                                                                                                                                                                    |
+| scripts           | All scripts of the simulations. <br> `00_run_simulations.R` - This script loads all required packages (install first, if required) and runs all individual simulation scripts. <br> `[simulation-number]_[simulation-title].R` - All individual simulation scripts are numbered such that they correspond to the simulations in the paper. <br> `functions.R` - Is a separate file that contains functions to simulate data and obtain results. <br> Note that the code to create the figures and tables in the paper are specified in the `.Rmd` file `manuscript_volker.Rmd`. |
+| output            | `[simulation-number]_[simulation-title].RData` - Output of each simulation (data.frame with all simulation outcomes).                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| DataCpp           | Contains the self-written package `DataCpp` which is required to simulate multivariate normal data in `C++` when distributing the simulations over different cores (using `R`-packages `future` and `furrr`)                                                                                                                                                                                                                                                                                                                                                                    |
+| notes-other-files | Rather self explanatory, this folder contains random files and thoughts that developed somewhere during the project (this ranges from presentations about the topic, the initial project proposal, an intermediate report and some meeting notes).                                                                                                                                                                                                                                                                                                                              |
 
 
 ## Ethics & Access
