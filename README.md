@@ -48,6 +48,10 @@ We examine three different cyclic causal discovery methods and investigate their
 │    ├── plot_fnc.R
 │    ├── searchAM_KP_fnc.R
 │    └── true_ancestral_fnc.R
+├── manuscript
+│   ├── thesis.tex
+│   ├── ...
+│   └── kyuriapa.bst
 ├── supplementary_material
 │   ├── Supplementary_material.html
 │   ├── ...
