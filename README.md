@@ -5,7 +5,7 @@
 <img src="https://github.com/KyuriP/Thesis_KP/blob/main/cyclelogo.png" width=10% height=10% align="left">
 <h1> Discovering Cyclic Causal Models in Psychological Research </h1>
 </div>
-<br>
+
 
 ## Introduction
 
