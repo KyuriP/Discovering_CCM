@@ -1,5 +1,6 @@
 ## =============================================================================
-## Purpose: to investigate the unexpected patterns from the B5 dense cases.
+## Purpose: to investigate the unexpected patterns in the B5 dense conditions 
+# from the main simulation study. 
 #
 #
 ## Description
