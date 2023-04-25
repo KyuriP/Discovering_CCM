@@ -31,4 +31,14 @@ editor: visual
 
 - alpha level reference
 - Figures x-axis labels
-- Appendices...
+- Appendices...(CCD Appendix A is not actually mentioned in the main text)
+- algorithm running time in appendix?
+
+## To-dos
+- Readme add description table and clean up
+- Code annotate properly
+- Seed.. explain what? ask Rens
+- Make defense slides
+- 
+
+ 

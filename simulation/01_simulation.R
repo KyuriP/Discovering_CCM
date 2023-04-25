@@ -819,52 +819,73 @@ load("simulation/data/fixedB_n500/cci_10pLVdense.RData")
 #remotes::install_github("joshuaulrich/microbenchmark")
 library(microbenchmark)
 
-# compute the algorithm running time using n = 1000
+# specify n, alpha, and dataset to use
+n <- 1e3
+alpha <- 0.05
+dataset <- list(simdata_5psparse[[1]][[1]], simdata_5pdense[[1]][[1]],
+                simdata_10psparse[[1]][[1]], simdata_10pdense[[1]][[1]],
+                simdata_5pLVsparse[[1]][[1]], simdata_5pLVdense[[1]][[1]],
+                simdata_10pLVsparse[[1]][[1]],simdata_10pLVsparse[[1]][[1]])
+
+# compute the algorithm running time 
 times <- microbenchmark(
-  ccd_5psparse = ccdKP(df=simdata_5psparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_5psparse = fci(list(C = cor(simdata_5psparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5psparse[[1]][[1]])),
-  cci_5psparse = cci(list(C = cor(simdata_5psparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5psparse[[1]][[1]])),
+  ccd_5psparse = ccdKP(df=dataset[[1]], dataType = "continuous", alpha = alpha),
+  fci_5psparse = fci(list(C = cor(dataset[[1]]), n = n),indepTest = gaussCItest, 
+                     alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[1]])),
+  cci_5psparse = cci(list(C = cor(dataset[[1]]), n = n), gaussCItest, 
+                     alpha = alpha, p=ncol(dataset[[1]])),
 
-  ccd_5pdense = ccdKP(df=simdata_5pdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_5pdense = fci(list(C = cor(simdata_5pdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pdense[[1]][[1]])),
-  cci_5pdense = cci(list(C = cor(simdata_5pdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pdense[[1]][[1]])),
+  ccd_5pdense = ccdKP(df=dataset[[2]], dataType = "continuous", alpha = alpha),
+  fci_5pdense = fci(list(C = cor(dataset[[2]]), n = n),indepTest = gaussCItest, 
+                    alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[2]])),
+  cci_5pdense = cci(list(C = cor(dataset[[2]]), n = n), gaussCItest, 
+                    alpha = alpha, p=ncol(dataset[[2]])),
 
-  ccd_10psparse = ccdKP(df=simdata_10psparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_10psparse = fci(list(C = cor(simdata_10psparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(simdata_10psparse[[1]][[1]])),
-  cci_10psparse = cci(list(C = cor(simdata_10psparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10psparse[[1]][[1]])),
+  ccd_10psparse = ccdKP(df=dataset[[3]], dataType = "continuous", alpha = alpha),
+  fci_10psparse = fci(list(C = cor(dataset[[3]]), n = n),indepTest = gaussCItest, 
+                      alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[3]])),
+  cci_10psparse = cci(list(C = cor(dataset[[3]]), n = n), gaussCItest, 
+                      alpha = alpha, p=ncol(dataset[[3]])),
 
-  ccd_10pdense = ccdKP(df=simdata_10pdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_10pdense = fci(list(C = cor(simdata_10pdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest, alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pdense[[1]][[1]])),
-  cci_10pdense = cci(list(C = cor(simdata_10pdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pdense[[1]][[1]])),
+  ccd_10pdense = ccdKP(df=dataset[[4]], dataType = "continuous", alpha = alpha),
+  fci_10pdense = fci(list(C = cor(dataset[[4]]), n = 1e3),indepTest=gaussCItest, 
+                     alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[4]])),
+  cci_10pdense = cci(list(C = cor(dataset[[4]]), n = 1e3), gaussCItest, 
+                     alpha = alpha, p=ncol(dataset[[4]])),
 
-  ccd_5pLVsparse = ccdKP(df=simdata_5pLVsparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_5pLVsparse = fci(list(C = cor(simdata_5pLVsparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
-                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLVsparse[[1]][[1]])),
-  cci_5pLVsparse = cci(list(C = cor(simdata_5pLVsparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLVsparse[[1]][[1]])),
+  ccd_5pLVsparse = ccdKP(df=dataset[[5]], dataType = "continuous", alpha = alpha),
+  fci_5pLVsparse = fci(list(C = cor(dataset[[5]]), n = n),indepTest=gaussCItest,
+                alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[5]])),
+  cci_5pLVsparse = cci(list(C = cor(dataset[[5]]), n = n), gaussCItest, 
+                       alpha = alpha, p=ncol(dataset[[5]])),
 
-  ccd_5pLVdense = ccdKP(df=simdata_5pLVdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_5pLVdense = fci(list(C = cor(simdata_5pLVdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
-                       alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_5pLVdense[[1]][[1]])),
-  cci_5pLVdense = cci(list(C = cor(simdata_5pLVdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_5pLVdense[[1]][[1]])),
+  ccd_5pLVdense = ccdKP(df=dataset[[6]], dataType = "continuous", alpha = alpha),
+  fci_5pLVdense = fci(list(C = cor(dataset[[6]]), n = n),indepTest=gaussCItest,
+                       alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[6]])),
+  cci_5pLVdense = cci(list(C = cor(dataset[[6]]), n = n), gaussCItest, 
+                      alpha=alpha, p=ncol(dataset[[6]])),
   
-  ccd_10pLVsparse = ccdKP(df=simdata_10pLVsparse[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_10pLVsparse = fci(list(C = cor(simdata_10pLVsparse[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
-                alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLVsparse[[1]][[1]])),
-  cci_10pLVsparse = cci(list(C = cor(simdata_10pLVsparse[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLVsparse[[1]][[1]])),
+  ccd_10pLVsparse = ccdKP(df=dataset[[7]], dataType = "continuous", alpha = alpha),
+  fci_10pLVsparse = fci(list(C = cor(dataset[[7]]), n = n),indepTest=gaussCItest,
+                alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[7]])),
+  cci_10pLVsparse = cci(list(C = cor(dataset[[7]]), n = n), gaussCItest, 
+                        alpha = alpha, p=ncol(dataset[[7]])),
   
-  ccd_10pLVdense = ccdKP(df=simdata_10pLVdense[[1]][[1]], dataType = "continuous", alpha = 0.05),
-  fci_10pLVdense = fci(list(C = cor(simdata_10pLVdense[[1]][[1]]), n = 1e3),indepTest=gaussCItest,
-                        alpha = 0.05, selectionBias= FALSE, labels = colnames(simdata_10pLVdense[[1]][[1]])),
-  cci_10pLVdense = cci(list(C = cor(simdata_10pLVdense[[1]][[1]]), n = 1e3), gaussCItest, alpha=0.05, p=ncol(simdata_10pLVdense[[1]][[1]]))
+  ccd_10pLVdense = ccdKP(df=dataset[[8]], dataType = "continuous", alpha = alpha),
+  fci_10pLVdense = fci(list(C = cor(dataset[[8]]), n = n),indepTest=gaussCItest,
+                        alpha = alpha, selectionBias= FALSE, labels = colnames(dataset[[8]])),
+  cci_10pLVdense = cci(list(C = cor(dataset[[8]]), n = n), gaussCItest, 
+                       alpha = alpha, p=ncol(dataset[[8]]))
   
 )
 
+# results
 times <- times %>%
   mutate(algorithm = substr(expr, 1, 3),
          condition = stringr::str_split(expr, "_", simplify=T)[,2])
 
-## plot the results
-times %>%
+# plot the result
+timeplot <- times %>%
   ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", 
                                            "5pLVsparse","5pLVdense", "10pLVsparse","10pLVdense")), 
              y = log(time), col= factor(algorithm))) +
@@ -872,7 +893,18 @@ times %>%
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", 
        subtitle = "Time in milliseconds (ms)") +
+  scale_x_discrete(labels=c("5p sparse", "5p dense", "10p sparse", "10p dense", 
+                            "5p sparse LC","5p dense LC", "10p sparse LC","10p dense LC")) +
   theme_classic() +
-  theme(axis.text.x = element_text(face = "bold", angle=40, margin = margin(t = 13)))
+  theme(axis.text.x = element_text(face = "bold", margin = margin(t = 13)),
+        plot.title = element_text(face = "bold", family = "Palatino", size = 15),
+        plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15),
+        axis.text=element_text(face = "bold",family = "Palatino", size = 11),
+        axis.title = element_text(face = "bold",family = "Palatino", size = 12),
+        legend.text = element_text(face = "bold", family = "Palatino", size = 12),
+        legend.position="bottom") 
+
+# save the plot
+# ggsave(timeplot, filename = "figures/algo_time.pdf", width = 25, height = 13, dpi = 300, units = "cm")
 
 

@@ -104,7 +104,8 @@ sampleranB2 <- function(B, LV=NULL, seed=123){
 }
 
 ## create all simulated data using random B 
-simdata_woLV <- list(B5sparse = B5sparse, B5dense = B5dense, B10sparse =  B10sparse, B10dense = B10dense) %>% 
+simdata_woLV <- list(B5sparse = B5sparse, B5dense = B5dense, 
+                     B10sparse = B10sparse, B10dense = B10dense) %>% 
   map(~
         sampleranB2(.x)
       )
@@ -131,26 +132,30 @@ CCDres <- simdatalist %>%
 
 FCIres <- simdatalist %>% 
   map_depth(3, ~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-                                   alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+                                   alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+                     labels = colnames(.x)) %>% .@amat 
   )
 
 CCIres <- simdatalist %>% 
-  map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
+  map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, 
+                     labels = colnames(.x), p = ncol(.x)) %>% .$maag 
   )
 
 
 # true adj.matrices
-truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, trueag_10psparseLV, trueag_10pdenseLV)
+truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, 
+                 trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, 
+                 trueag_10psparseLV, trueag_10pdenseLV)
 
 
-# save(CCDres, file ="data/largedata_n500/CCDres2_randomB.Rdata")
-# save(FCIres, file = "data/largedata_n500/FCIres2_randomB.Rdata")
-# save(CCIres, file = "data/largedata_n500/CCIres2_randomB.Rdata")
+# save(CCDres, file ="simulation/data/randomB_n500/CCDres2_randomB.Rdata")
+# save(FCIres, file = "simulation/data/randomB_n500/FCIres2_randomB.Rdata")
+# save(CCIres, file = "simulation/data/randomB_n500/CCIres2_randomB.Rdata")
 
 # load results
-load("data/randomB_n500/CCDres2_randomB.Rdata")
-load("data/randomB_n500/FCIres2_randomB.Rdata")
-load("data/randomB_n500/CCIres2_randomB.Rdata")
+load("simulation/data/randomB_n500/CCDres2_randomB.Rdata")
+load("simulation/data/randomB_n500/FCIres2_randomB.Rdata")
+load("simulation/data/randomB_n500/CCIres2_randomB.Rdata")
 
 
 
@@ -475,9 +480,9 @@ dense5pshd <- SHD_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
-  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
-  labs(x="", y="", title = "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  labs(x="N", y="", title = "") +
   theme_minimal() +
   MyTheme + 
   ggtitle("(a) SHD") 
@@ -492,12 +497,12 @@ dense5pprec <-prec_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
-  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
-  labs(x="", y="", title = "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  labs(x="N", y="", title = "") +
   theme_minimal() +
   MyTheme + 
-  ggtitle("(b) precision") 
+  ggtitle("(b) Precision") 
 
 # recall plot
 dense5prec <- rec_ranB |> filter(condition == "B5dense") |>
@@ -509,12 +514,12 @@ dense5prec <- rec_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
-  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
-  labs(x="", y="", title = "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  labs(x="N", y="", title = "") +
   theme_minimal() +
   MyTheme + 
-  ggtitle("(c) recall") 
+  ggtitle("(c) Recall") 
 
 # uncertainty plot
 dense5punc <- unc_ranB |> filter(condition == "B5dense") |>
@@ -526,15 +531,16 @@ dense5punc <- unc_ranB |> filter(condition == "B5dense") |>
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  # scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
-  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
-  labs(x="", y="", title = "") +
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  labs(x="N", y="", title = "") +
   theme_minimal() +
   MyTheme + 
-  ggtitle("(d) uncertainty") 
+  ggtitle("(d) Uncertainty") 
 
 
 # combine the plots
 ggpubr::ggarrange(dense5pshd, dense5pprec, dense5prec, dense5punc, ncol=2, nrow=2, common.legend = TRUE, legend = "bottom")
 # save the plot
+# ggsave(filename = "figures/samplingbeta_dense5p.pdf", width = 17, height = 13, dpi = 300, units = "cm")
 # ggsave(filename = "figures/samplingbeta_dense5p_label10.pdf", width = 17, height = 13, dpi = 300, units = "cm")

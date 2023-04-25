@@ -69,7 +69,8 @@ sampleranB2 <- function(B, LV=NULL, seed=123){
 }
 
 ## create all simulated data using random B 
-simdata_woLV <- list(B5sparse = B5sparse, B5dense = B5dense, B10sparse =  B10sparse, B10dense = B10dense) %>% 
+simdata_woLV <- list(B5sparse = B5sparse, B5dense = B5dense, 
+                     B10sparse =  B10sparse, B10dense = B10dense) %>% 
   map(~
         sampleranB2(.x)
   )
@@ -97,15 +98,19 @@ CCDres_pos <- simdatalist %>%
 
 FCIres_pos <- simdatalist %>% 
   map_depth(3, ~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, labels = colnames(.x)) %>% .@amat 
+                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+                     labels = colnames(.x)) %>% .@amat 
   )
 
 CCIres_pos <- simdatalist %>% 
-  map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
+  map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, 
+                     labels = colnames(.x), p = ncol(.x)) %>% .$maag 
   )
 
 # true adj.matrices
-truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, trueag_10psparseLV, trueag_10pdenseLV)
+truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, 
+                 trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, 
+                 trueag_10psparseLV, trueag_10pdenseLV)
 
 # load results
 load("data/randomB_pos/CCDres3_pos.Rdata") # CCDres
