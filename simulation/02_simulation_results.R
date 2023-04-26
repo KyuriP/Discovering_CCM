@@ -25,7 +25,7 @@
 ## 0. Preparation
 ## ========================
 # source the simulation study results
-source("simulation/01_main_simulation.R")
+source("simulation/01_simulation.R")
 
 # load packages
 library(dplyr)

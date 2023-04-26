@@ -24,8 +24,7 @@ editor: visual
 
 - (don't forget to mention the seed?)
 
-- make the repo public and get the doi for the repo --> correct the citation
-
+-
 
 ## Check with Oisin
 
@@ -36,9 +35,10 @@ editor: visual
 
 ## To-dos
 - Readme add description table and clean up
-- Code annotate properly
+- Add guide/recommendation to reproduce the study
+- Code annotate properly !! and consistently
 - Seed.. explain what? ask Rens
 - Make defense slides
-- 
+- READEME on ho to reproduce: has to be cleaned up. and better phrasing.
 
  

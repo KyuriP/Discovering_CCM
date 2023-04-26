@@ -31,7 +31,7 @@ source("utils/CCD_fnc.R")
 source("utils/plot_fnc.R")
 source("utils/searchAM_KP_fnc.R")
 source("utils/data_generating_fnc.R")
-source("utils/eval_metrics.R")
+source("utils/eval_metrics_fnc.R")
 source("utils/true_ancestral_fnc.R")
 
 ## load necessary packages
@@ -82,7 +82,7 @@ B5sparse = matrix(c(0, 0, 0, 0, 0,
                     0, 0, 0, 0.9, 0,
                     0, 0.7, 0, 0, 1.5,
                     0, 0, 0, 0, 0), 5, 5, byrow = T)
-colnames(B5sparse) <- c("X1", "X2", "X3", "X4", "X5")
+dimnames(B5sparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 
 # specify layout
 layout5 = matrix(c(0,1,
@@ -167,11 +167,11 @@ load("simulation/data/fixedB_n500/cci_5psparse.RData")
 ## =============================================================================
 # specify B matrix
 B5dense = matrix(c(0, 0, 0, 0, 0,
-                   1.4, 0, 0.8, 0, 0,
+                   1, 0, 0.8, 0, 0,
                    0, 0, 0, 0.9, 0,
-                   0, 0.7, 0, 0, 1,
+                   0, 0.7, 0, 0, 1.5,
                    1, 0, 0, 0, 0), 5, 5, byrow = T)
-colnames(B5dense) <- c("X1", "X2", "X3", "X4", "X5")
+dimnames(B5dense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 par(mfrow=c(1,2))
 true5pdense <- qgraph(t(B5dense), layout=layout5, 
                       labels = colnames(B5dense), theme="colorblind")
@@ -345,15 +345,15 @@ load("simulation/data/fixedB_n500/cci_10psparse.RData")
 ## =============================================================================
 B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0.3, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 
-                    0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-                    0, 0, 1, 0, 0, 0.5, 0, 0, 0, 0, 
-                    0, 0, 0.6, 1, 0, 0, 0, 0, 0, 0, 
-                    0, 0, 0, 0, 0.9, 0, 0.5, 0, 0, 0, 
+                    0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 
+                    0, 0.4, 0, 1, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0.8, 0, 0.5, 0, 0, 0, 
                     0, 0, 0, 0, 0, 0, 0, 0, 0.8, 1, 
-                    0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0.7, 
+                    0, 0, 0, 0, 0, 0, 1, 0, 0, 0.4, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 10, 10, byrow = T)
-colnames(B10dense) <- c(paste("X", 1:10, sep=""))
+dimnames(B10sparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
 # specify layout
 layout10 = matrix(c(0,1,
                     2,1,
@@ -444,13 +444,13 @@ load("simulation/data/fixedB_n500/cci_10pdense.RData")
 ## =============================================================================
 # specify B matrix
 B5_lvsparse = matrix(c(0, 0, 0, 0, 0, 1,
-                       0, 0, 0.4, 0, 0, 1,
-                       0, 0, 0, 0.5, 0,0,
+                       0, 0, 0.8, 0, 0, 1,
+                       0, 0, 0, 0.9, 0,0,
                        0, 0.7, 0, 0, 1.5,0,
                        0, 0, 0, 0, 0,0,
                        0,0,0,0,0,0), 6, 6, byrow = T)
-colnames(B5_lvsparse) <- c("X1", "X2", "X3", "X4", "X5", "L1")
-
+dimnames(B5_lvsparse) <- list(c(paste("X", 1:5, sep=""), "L1"), 
+                              c(paste("X", 1:5, sep=""), "L1"))
 # specify layout
 layout5_lv = matrix(c(0,1,
                       0,0,
@@ -535,12 +535,13 @@ load("simulation/data/fixedB_n500/cci_5pLVsparse.RData")
 ## 6. 5p with LV dense condition
 ## =============================================================================
 B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
-                      0, 0, 0.4, 0, 0, 1,
-                      0, 0, 0, 0.5, 0,0,
-                      0, 0.7, 0, 0, 0.5, 0,
-                      0.6, 0, 0, 0, 0,0,
-                      0,0,0,0,0,0), 6, 6, byrow = T)
-colnames(B5_lvdense) <- c("X1", "X2", "X3", "X4", "X5", "L1")
+                      0, 0, 0.8, 0, 0, 1,
+                      0, 0, 0, 0.9, 0, 0,
+                      0, 0.7, 0, 0, 1.5, 0,
+                      1, 0, 0, 0, 0, 0,
+                      0, 0, 0, 0, 0, 0), 6, 6, byrow = T)
+dimnames(B5_lvsparse) <- list(c(paste("X", 1:5, sep=""), "L1"), 
+                              c(paste("X", 1:5, sep=""), "L1"))
 # specify layout
 layout5_lv = matrix(c(0,1,
                       0,0,
@@ -630,8 +631,8 @@ B10_lvsparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 0,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 12, 12, byrow = T)
-# colnames(B10_lvsparse) <- c(paste("X", 1:10, sep=""), "L1")
-colnames(B10_lvsparse) <- c(paste("X", 1:10, sep=""), "L1", "L2")
+dimnames(B10_lvsparse) <- list(c(paste("X", 1:10, sep=""), "L1", "L2"), 
+                               c(paste("X", 1:10, sep=""), "L1", "L2"))
 # specify layout
 layout10LV2 = matrix(c(0, 1,
                        2, 1,
@@ -717,18 +718,19 @@ load("simulation/data/fixedB_n500/cci_10pLVsparse.RData")
 ## =============================================================================
 # specify B matrix
 B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                       0.5, 0, 1.4, 0, 0, 0, 0, 0, 0, 0, 0, 1.1,
+                       0.5, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0.7,
                        0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 1, 0, 0, 0.9, 0, 0, 0, 0, 0, 0,
-                       0, 0, 1.2, 0.8, 0, 0, 0, 0, 0, 0, 0, 0.7,
+                       0, 0, 0.7, 0, 0, 0.9, 0, 0, 0, 0, 0, 0,
+                       0, 0, 1.2, 1, 0, 0, 0, 0, 0, 0, 0, 0.7,
                        0, 0, 0, 0, 0.8, 0, 0.5, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0, 1.4, 0.5, 0.4, 0,
-                       0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0.6, 0,
+                       0, 0, 0, 0, 0, 0, 0, 0, 0.8, 0.5, 0.4, 0,
+                       0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0.8, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 12, 12, byrow = T)
-colnames(B10_lvdense) <- c(paste("X", 1:10, sep=""), "L1", "L2")
+dimnames(B10_lvsparse) <- list(c(paste("X", 1:10, sep=""), "L1", "L2"), 
+                               c(paste("X", 1:10, sep=""), "L1", "L2"))
 # specify layout
 layout10LV2 = matrix(c(0, 1,
                        2, 1,
