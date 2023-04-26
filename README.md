@@ -78,6 +78,11 @@ We examine three different cyclic causal discovery methods and investigate their
 | [`figures`](./figures)               | It contains all the figures that are included in the paper.                    |
 | [`others`](./others)               | It contains all types of subsidiary files  created during the course of the project (e.g., research proposal, presentation, interim report).                        |
 
+## Instructions for reproducing
+If interested in reproducing the results of:
+- simulation study, please refer to [`guide_simuation`](./simulation/README.md).
+- empirical anlaysis, please refer to [`guide_empirical`](./empirical_example/README.md).
+
 
 ## Ethics & Access
 All data are simulated in this study except for the one used in the emprical analysis, which is publicly available on the [Psychological Medicine Journal](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900\#supplementary-materials) webpage.
