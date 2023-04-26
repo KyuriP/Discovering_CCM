@@ -7,7 +7,6 @@
 </div>
 
 
-## Introduction
 
 This repository serves as an archive for the thesis project ***Discovering Cyclic Causal Models in Psychological Research***. 
 It contains the `R` code, data, figures, manuscript, supplementary material, and other subsidiary files related to the project.
