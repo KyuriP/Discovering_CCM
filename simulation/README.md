@@ -1,4 +1,4 @@
-## How to reproduce the findings of the simulation study
+## How to reproduce the results of the simulation study
 
 >`01_simulation.R` and `02_simulation_result.R` concern the main simulation study.
 The rest of files contain respective analyses that are conducted as sensitivity checks, except for `06_extra_analysis.R`, which investigates the unexpected patterns observed in the main simulation study.
