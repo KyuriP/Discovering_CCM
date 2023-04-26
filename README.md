@@ -66,7 +66,7 @@ We examine three different cyclic causal discovery methods and investigate their
     └── Research Report
 ```
 
-## Descrition
+## Description
 
 | Folder                                     | Contents                                                         |
 | :----------------------------------------- | :--------------------------------------------------------------- |
