@@ -22,8 +22,6 @@ editor: visual
 
 - Add the description for the folders/files : make sure it is clear how to reproduce the study results.
 
-- (don't forget to mention the seed?)
-
 -
 
 ## Check with Oisin
@@ -37,7 +35,6 @@ editor: visual
 - Readme add description table and clean up
 - Add guide/recommendation to reproduce the study
 - Code annotate properly !! and consistently
-- Seed.. explain what? ask Rens
 - Make defense slides
 - READEME on ho to reproduce: has to be cleaned up. and better phrasing.
 

@@ -71,29 +71,29 @@ MyTheme3 <-  theme(
 
 # ggplot histograms
 bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partialX3, 
-          "partial_X4" = partialX4, "partial_X1&X3" = partialX1X3, "partial_X1&X4" = partialX1X4, 
-          "partial_X3&X4" = partialX3X4, "partial_X1&X3&X4" = partialX1X3X4) %>% 
+          "partial_X4" = partialX4, "partial_X1 & X3" = partialX1X3, "partial_X1 & X4" = partialX1X4, 
+          "partial_X3 & X4" = partialX3X4, "partial_X1 & X3 & X4" = partialX1X3X4) %>% 
   tidyr::pivot_longer(cols=everything(), names_to = "id", values_to = "cors") %>% 
   group_by(id) %>% 
   mutate(means=mean(cors), min = min(cors)) %>% 
   ggplot(aes(x=cors)) + 
-  geom_histogram(fill="gray", col="white") + 
-  # adjust the x-axis ticks
-  scale_x_continuous(breaks = scales::pretty_breaks(3)) +
+  geom_histogram(fill="gray", col="white", bins=25) + 
   # add mean values in text
   geom_text(aes(x = min, y = 50, hjust= -0.1, 
                 label = paste0("mean = ", round(means,2)), family = "Palatino"), 
             size=5, col='#8b0000') +
   facet_wrap(~ factor(id, levels=c("marginal", "partial_X1", "partial_X3", 
-                                   "partial_X4", "partial_X1&X3", "partial_X1&X4", 
-                                   "partial_X3&X4", "partial_X1&X3&X4")), 
+                                   "partial_X4", "partial_X1 & X3", "partial_X1 & X4", 
+                                   "partial_X3 & X4", "partial_X1 & X3 & X4")), 
              nrow=2, ncol=4, scales = "free_x") +
+  # adjust the x-axis ticks
+  scale_x_continuous(breaks = scales::pretty_breaks(3)) +
   # add lines for the mean values
   geom_vline(aes(xintercept = means, group = id), colour = '#8b0000', linetype=2, linewidth=0.4 ) + 
   # apply the theme
   theme_minimal() + MyTheme3 +
   labs(x ="", y="count")
-ggsave(filename = "results/partialcorr.pdf", width = 28, height = 15, dpi = 300, units = "cm")
+# ggsave(filename = "figures/partialcorr.pdf", width = 28, height = 15, dpi = 300, units = "cm")
 
 
 ## ============================================
