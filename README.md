@@ -78,7 +78,7 @@ We examine three different cyclic causal discovery methods and investigate their
 | [`figures`](./figures)               | It contains all the figures that are included in the paper.                    |
 | [`others`](./others)               | It contains all types of subsidiary files  created during the course of the project (e.g., research proposal, presentation, interim report).                        |
 
-## Instructions for reproducing
+## Reproducing study
 If interested in reproducing the results of:
 - simulation study, please refer to [`guide_simuation`](./simulation/README.md).
 - empirical anlaysis, please refer to [`guide_empirical`](./empirical_example/README.md).
