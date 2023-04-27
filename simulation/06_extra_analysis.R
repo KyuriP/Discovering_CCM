@@ -59,10 +59,10 @@ for(j in 1:500){
 ## Create histograms of partial correlations
 # specify the common figure theme
 MyTheme3 <-  theme(
-                  axis.text=element_text(face = "bold",family = "Palatino", size = 11),
+                  axis.text=element_text(face = "bold",family = "Palatino", size = 15),
                   axis.text.x = element_text(hjust = 1.2, vjust =1.2),
-                  axis.title = element_text(face = "bold",family = "Palatino", size = 12),
-                  strip.text = element_text(face="bold", size=13, family = "Palatino"),
+                  axis.title = element_text(face = "bold",family = "Palatino", size = 16),
+                  strip.text = element_text(face="bold", size=17, family = "Palatino"),
                   strip.background = element_rect(fill="#f0f0f0", linetype = "solid", color="gray"),
                   strip.placement = "outside",
                   panel.border = element_rect(color = "#DCDCDC", fill = NA),
@@ -75,13 +75,15 @@ bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partia
           "partial_X3 & X4" = partialX3X4, "partial_X1 & X3 & X4" = partialX1X3X4) %>% 
   tidyr::pivot_longer(cols=everything(), names_to = "id", values_to = "cors") %>% 
   group_by(id) %>% 
-  mutate(means=mean(cors), min = min(cors)) %>% 
+  mutate(means= round(mean(cors),3), min = min(cors)) %>% 
   ggplot(aes(x=cors)) + 
   geom_histogram(fill="gray", col="white", bins=25) + 
   # add mean values in text
-  geom_text(aes(x = min, y = 50, hjust= -0.1, 
-                label = paste0("mean = ", round(means,2)), family = "Palatino"), 
-            size=5, col='#8b0000') +
+  geom_text(aes(x = min, y = 60, hjust= -0.01, 
+                # label formatting
+                label = paste0("M = ", formatC(means, 3, format="f")), 
+                family = "Palatino", fontface = "italic"), size=5.5, col='#8b0000') +
+  # create faceted plot
   facet_wrap(~ factor(id, levels=c("marginal", "partial_X1", "partial_X3", 
                                    "partial_X4", "partial_X1 & X3", "partial_X1 & X4", 
                                    "partial_X3 & X4", "partial_X1 & X3 & X4")), 
@@ -93,7 +95,7 @@ bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partia
   # apply the theme
   theme_minimal() + MyTheme3 +
   labs(x ="", y="count")
-# ggsave(filename = "figures/partialcorr.pdf", width = 28, height = 15, dpi = 300, units = "cm")
+ggsave(filename = "figures/partialcorr.pdf", width = 35, height = 18, dpi = 300, units = "cm")
 
 
 ## ============================================
