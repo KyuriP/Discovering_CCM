@@ -28,6 +28,10 @@ We examine three different cyclic causal discovery methods and investigate their
 ## Structure
 ```
 ├── Thesis_KP.Rproj
+├── manuscript
+│   ├── thesis.tex
+│   ├── ...
+│   └── kyuriapa.bst
 ├── simulation
 │   ├── 01_simulation.R
 │   ├── 02_simulation_results.R
@@ -47,10 +51,6 @@ We examine three different cyclic causal discovery methods and investigate their
 │    ├── plot_fnc.R
 │    ├── searchAM_KP_fnc.R
 │    └── true_ancestral_fnc.R
-├── manuscript
-│   ├── thesis.tex
-│   ├── ...
-│   └── kyuriapa.bst
 ├── supplementary_material
 │   ├── Supplementary_material.html
 │   ├── ...
