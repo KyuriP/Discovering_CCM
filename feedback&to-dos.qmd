@@ -35,10 +35,9 @@ editor: visual
 - Add guide/recommendation to reproduce the study
 - Code annotate properly !! and consistently
 - Make defense slides
-- READEME on ho to reproduce: has to be cleaned up. and better phrasing.
+- READEME on how to reproduce: has to be cleaned up. and better phrasing.
 - README: espcially manuscript folder needs to be updated when the manucript is finalized.
 
  
 ## phrasing
-
 - Data generation: N(0,1) or just say "standard normal random variables"

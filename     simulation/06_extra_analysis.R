@@ -1,25 +1,33 @@
 ## =============================================================================
-## Purpose: to investigate the unexpected patterns in the B5 dense conditions 
-# from the main simulation study. 
-#
+## Purpose
+# To investigate the unexpected patterns (i.e., brief dips and spikes in the
+# performance graphs) in the "B5 dense" conditions from the main simulation study. 
 #
 ## Description
+# This script contains code for investigating the observed phenomenon where the 
+# performance in the "B5 dense" cases deteriorates as the sample size N increases.
 #
-# This script contains code for investigating the observed phenomenon 
-# where the performance in the "B5 dense" case worsens as the sample size N increases.
 # We presumed that the inducing path between X2 and X5 plays a role in
 # achieving the correct orientation when N is relatively small.
 #
 # To test our hypothesis, we examined the partial correlations between
 # X2 and X5 per different sample sizes and looked into what was happening in
 # each step of the algorithm.
+## =============================================================================
+# The content is as follows.
+# 0. Preparation: we source and load necessary functions & packages.
+# 
+# 1. Examining partial correlation: we examine all  partial correlations 
+#    between X2 and X5.
 #
-# The first part concerns examining the partial correlations between X2 and x5
-# and the second part concerns conditional independence test; 
-# whether it is significant or not significant as sample size (N) becomes larger.
+# 2. Testing conditional independencies: we check the results of conditional 
+#    independence tests; whether it is significant or not significant as 
+#    sample size (N) becomes larger.
 ## =============================================================================
 
-
+## =============================================================================
+## 0. Preparation
+## =============================================================================
 # source the simulation study results
 source("simulation/01_simulation.R")
 
@@ -31,9 +39,9 @@ library(ggpubr)
 library(ppcor)
 
 
-## ======================================
-## PART I: examining partial correlations
-## ======================================
+## =============================================================================
+## 1. Examining partial correlations
+## =============================================================================
 ## Check every partial correlations between X2 and X5
 marginal <- c()
 partialX1 <- c()
@@ -98,9 +106,9 @@ bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partia
 ggsave(filename = "figures/partialcorr.pdf", width = 35, height = 18, dpi = 300, units = "cm")
 
 
-## ============================================
-## PART II: testing conditional independencies
-## ============================================
+## =============================================================================
+## 2. Testing conditional independencies
+## =============================================================================
 ## Create a table counting how many times it was significant given alpha = 0.05
 count <- matrix(0, 8, 10)
 indep <- matrix(NA, 8, 10)

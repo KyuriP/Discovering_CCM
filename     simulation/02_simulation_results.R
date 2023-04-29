@@ -1,29 +1,33 @@
 ## ============================================================================
 ## Description
 #
-# This script contains code for creating the overall result figure (Figure 14 & Figure 15).
-# First part of this script concerns creating a neat dataframe of each evaluation metrics 
-# (precision, recall, and uncertainty rate) including their mean and standard deviation (SD) values.
-# Second part of this script concerns creating figures.
+# This script creates the overall result figure (Figure 14 & Figure 15).
 #
+# (i) First part of this script concerns creating a neat dataframe of 
+# each evaluation metrics (precision, recall, and uncertainty rate)
+# including their mean and standard deviation (SD) values.
 #
-# The content is as follows.
+# (ii) Second part of this script concerns creating the figures.
+## =============================================================================
+## The content is as follows.
 # 0. Preparation: we source and load necessary functions & packages.
 #
-# 1. Evaluate performance: we compute structural Hamming distance, precision, recall,
-# and uncertainty rate for each condition (8 conditions in total).
+# 1. Evaluate performance: we compute structural Hamming distance, precision, 
+# recall, and uncertainty rate for each condition (8 conditions in total).
 #
-# 2. Organize results: we make neat data frames of resulting values of evaluation
-# metrics from each algorithm.
+# 2. Organize results: we make neat data frames of resulting values of 
+# evaluation metrics from each algorithm.
 #
 # 3. Create figures: we create figures for each evaluation metric comparing the 
 # performance of each algorithm per condition.
 ## ============================================================================
 
 
-## ========================
+
+## =============================================================================
 ## 0. Preparation
-## ========================
+## =============================================================================
+
 # source the simulation study results
 source("simulation/01_simulation.R")
 
@@ -36,11 +40,12 @@ library(ggh4x)
 
 
 
-## ============================
+## =============================================================================
 ## 1. Evaluating performance
-## ============================
-
-## 5P SPARSE ##
+## =============================================================================
+## ================
+## 5P sparse 
+## ================
 ## CCD
 res_ccd5psparse <- mat_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
@@ -107,7 +112,9 @@ SHD_cci5psparse <- cci_5psparse %>%
 colMeans(SHD_cci5psparse)
 
 
-## 5P DENSE ##
+## ================
+## 5P dense 
+## ================
 ## CCD
 res_ccd5pdense <- mat_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
@@ -163,7 +170,9 @@ SHD_cci5pdense <- cci_5pdense %>%
 colMeans(SHD_cci5pdense)
 
 
-## 10P SPARSE ##
+## ================
+## 10P sparse 
+## ================
 ## CCD
 res_ccd10psparse <- mat_10psparse %>% 
   map_depth(2, 
@@ -225,7 +234,9 @@ SHD_cci10psparse <- cci_10psparse %>%
 colMeans(SHD_cci10psparse)
 
 
-## 10P DENSE ##
+## ================
+## 5P dense 
+## ================
 ## CCD
 res_ccd10pdense  <- mat_10pdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
@@ -285,7 +296,10 @@ SHD_cci10pdense <- cci_10pdense %>%
 # average SHD
 colMeans(SHD_cci10pdense)
 
-## 5P SPARSE LV ##
+
+## ================
+## 5P sparse w/ LV 
+## ================
 ## CCD
 res_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
@@ -346,7 +360,10 @@ SHD_cci5pLVsparse <- cci_5pLVsparse %>%
 # average SHD
 colMeans(SHD_cci5pLVsparse)
 
-## 5P DENSE LV ##
+
+## ================
+## 5P dense w/ LV 
+## ================
 ## CCD
 res_ccd5pLVdense  <- mat_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
@@ -407,7 +424,10 @@ SHD_cci5pLVdense  <- cci_5pLVdense  %>%
 # average SHD
 colMeans(SHD_cci5pLVdense )
 
-## 10P SPARSE LV ##
+
+## ================
+## 10P sparse w/ LV 
+## ================
 ## CCD
 res_ccd10pLVsparse   <- mat_10pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
@@ -468,7 +488,10 @@ SHD_cci10pLVsparse <- cci_10pLVsparse %>%
 # average SHD
 colMeans(SHD_cci10pLVsparse)
 
-## 10P DENSE LV ##
+
+## ================
+## 10P dense w/ LV 
+## ================
 ## CCD
 res_ccd10pLVdense   <- mat_10pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
@@ -531,17 +554,18 @@ colMeans(SHD_cci10pLVdense)
 
 
 
-## ============================
+## =============================================================================
 ## 2. Create neat dataframe
-## ============================
+## =============================================================================
 
 ## Compute average precision & recall and corresponding sd for each condition
 pre_rec <- list(
   # put all the results together in a list
-  res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10psparse, res_fci10psparse, 
-  res_cci10psparse, res_ccd5pdense, res_fci5pdense, res_cci5pdense, res_ccd10pdense, 
-  res_fci10pdense, res_cci10pdense, res_ccd5pLVsparse, res_fci5pLVsparse, res_cci5pLVsparse, 
-  res_ccd5pLVdense, res_fci5pLVdense, res_cci5pLVdense, res_ccd10pLVsparse, res_fci10pLVsparse,
+  res_ccd5psparse, res_fci5psparse, res_cci5psparse, res_ccd10psparse, 
+  res_fci10psparse, res_cci10psparse, res_ccd5pdense, res_fci5pdense, 
+  res_cci5pdense, res_ccd10pdense, res_fci10pdense, res_cci10pdense, 
+  res_ccd5pLVsparse, res_fci5pLVsparse, res_cci5pLVsparse, res_ccd5pLVdense, 
+  res_fci5pLVdense, res_cci5pLVdense, res_ccd10pLVsparse, res_fci10pLVsparse,
   res_cci10pLVsparse, res_ccd10pdense,  res_fci10pLVdense, res_cci10pLVdense
 ) %>% 
   # transpose df
@@ -554,15 +578,19 @@ pre_rec <- list(
   bind_rows() %>% 
   mutate(algorithm = rep(c("CCD", "FCI", "CCI"), 8),
          condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", 
-                           "5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense"), each=3),
+                           "5p_LVsparse", "5p_LVdense", "10p_LVsparse", 
+                           "10p_LVdense"), each=3),
          netsize = stringr::str_split(condition, "_", simplify=T)[,1],
-         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LC", "without LC"),
-         densities = stringr::str_remove(stringr::str_split(condition, "_", simplify=T)[,2], "LV")
+         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, 
+                            "with LC", "without LC"),
+         densities = stringr::str_remove(
+           stringr::str_split(condition, "_", simplify=T)[,2], "LV")
   ) %>%
   # brings the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric)) %>% 
   # convert it to a long format
-  tidyr::pivot_longer(!c(algorithm, condition, netsize, latentvar, densities), names_to = "metric", values_to = "value") %>% 
+  tidyr::pivot_longer(!c(algorithm, condition, netsize, latentvar, densities), 
+                      names_to = "metric", values_to = "value") %>% 
   # Add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(metric, "(?<=[N =])\\d+"),
          metric = stringr::str_replace_all(metric, "[0-9.]+|[N =]", "")) 
@@ -583,7 +611,8 @@ uncertainties <- bind_rows(
   "FCI_10p-LVsparse" = uncer_fci10pLVsparse, "CCI_10p-LVsparse" = uncer_cci10pLVsparse,
   "CCD_5p-LVdense" = uncer_ccd5pLVdense, "FCI_5p-LVdense" = uncer_fci5pLVdense, 
   "CCI_5p-LVdense" = uncer_cci5pLVdense, "CCD_10p-LVdense" = uncer_ccd10pLVdense, 
-  "FCI_10p-LVdense" = uncer_fci10pLVdense, "CCI_10p-LVdense" = uncer_cci10pLVdense, .id = "id"
+  "FCI_10p-LVdense" = uncer_fci10pLVdense, "CCI_10p-LVdense" = uncer_cci10pLVdense, 
+  .id = "id"
 ) %>% 
   group_by(id) %>% 
   # get the average and sd
@@ -592,13 +621,17 @@ uncertainties <- bind_rows(
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
          condition = stringr::str_split(id, "_", simplify = T)[,2],
          netsize = stringr::str_split(condition, "-", simplify=T)[,1],
-         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LC", "without LC"),
-         densities = stringr::str_remove(stringr::str_split(condition, "-", simplify=T)[,2], "LV")
+         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, 
+                            "with LC", "without LC"),
+         densities = stringr::str_remove(
+           stringr::str_split(condition, "-", simplify=T)[,2], "LV")
   ) %>% 
   # convert it to a long format
-  tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), names_to = "name", values_to = "value") %>% 
+  tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
+                      names_to = "name", values_to = "value") %>% 
   # Add sample size column (N) & clean up the column name 
-  mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
+  mutate(N = stringr::str_extract(
+    stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
   dplyr::select(-id, -name) %>%  
   relocate(where(is.character), .before = where(is.numeric))
@@ -619,7 +652,8 @@ SHDs <- bind_rows(
   "FCI_10p-LVsparse" = SHD_fci10pLVsparse, "CCI_10p-LVsparse" = SHD_cci10pLVsparse, 
   "CCD_5p-LVdense" = SHD_ccd5pLVdense, "FCI_5p-LVdense" = SHD_fci5pLVdense, 
   "CCI_5p-LVdense" = SHD_cci5pLVdense, "CCD_10p-LVdense" = SHD_ccd10pLVdense, 
-  "FCI_10p-LVdense" = SHD_fci10pLVdense, "CCI_10p-LVdense" = SHD_cci10pLVdense, .id = "id"
+  "FCI_10p-LVdense" = SHD_fci10pLVdense, "CCI_10p-LVdense" = SHD_cci10pLVdense, 
+  .id = "id"
 ) %>% 
   group_by(id) %>% 
   # get the average and sd
@@ -628,35 +662,40 @@ SHDs <- bind_rows(
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
          condition = stringr::str_split(id, "_", simplify = T)[,2],
          netsize = stringr::str_split(condition, "-", simplify=T)[,1],
-         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, "with LC", "without LC"),
-         densities = stringr::str_remove(stringr::str_split(condition, "-", simplify=T)[,2], "LV")
+         latentvar = ifelse(stringr::str_detect(condition, "LV")==TRUE, 
+                            "with LC", "without LC"),
+         densities = stringr::str_remove(stringr::str_split
+                                         (condition, "-", simplify=T)[,2], "LV")
   ) %>% 
   # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
                       names_to = "name", values_to = "value") %>% 
   # Add sample size column (N) & clean up the column name 
-  mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
+  mutate(N = stringr::str_extract(
+    stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
   dplyr::select(-id, -name) %>%  
   relocate(where(is.character), .before = where(is.numeric)) 
 
 
 
-
-## ============================
+## =============================================================================
 ## 3. Create figures
-## ============================
+## =============================================================================
 
 ## specify the common figure theme
-MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", size = 15, hjust=0.5),
-                  plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15, hjust=0.5),
+MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
+                                            size = 15, hjust=0.5),
+                  plot.subtitle = element_text(face = "italic", family = "Palatino", 
+                                               size = 15, hjust=0.5),
                   axis.text=element_text(face = "bold",family = "Palatino", size = 11),
                   axis.text.x = element_text(angle = 45, hjust = 1.2, vjust =1.2),
                   axis.title = element_text(face = "bold",family = "Palatino", size = 12),
                   legend.text = element_text(face = "bold", family = "Palatino", size = 12),
                   legend.position="bottom",
                   strip.text = element_text(face="bold", size=13, family = "Palatino"),
-                  strip.background = element_rect(fill="#f0f0f0", linetype = "solid", color="gray"),
+                  strip.background = element_rect(fill="#f0f0f0", linetype = "solid", 
+                                                  color="gray"),
                   strip.placement = "outside",
                   panel.border = element_rect(color = "#DCDCDC", fill = NA),
                   panel.spacing.y = unit(4, "mm")
@@ -665,14 +704,16 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 
 ## SHD figure
 SHDs %>%
-  tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= as.numeric(N), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
+  tidyr::pivot_wider(names_from = statistics, values_from = value) %>% 
+  ggplot(aes(x = as.numeric(N), y = means, group = algorithm, 
+             colour = algorithm, fill = algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
-  geom_point(size=1) + 
+  geom_point(size = 1) + 
   # add interquartile range (IQR)
-  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  geom_ribbon(aes(ymin = means+qnorm(0.25)*sds, ymax = means+qnorm(0.75)*sds), 
+              alpha=0.15, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -681,7 +722,9 @@ SHDs %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  
+                      scales = "free_y", switch="y") +
   # manually specify the x-axis break
   # 1) log10 transformation with unequally spaced labels
   # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
@@ -709,7 +752,9 @@ precision_plot <- pre_rec %>%
   # add scattered points
   geom_point(size=1) +
   # add interquartile range (IQR)
-  geom_ribbon(aes(ymin=average_precision_mean+qnorm(0.25)*average_precision_sd, ymax=average_precision_mean+qnorm(0.75)*average_precision_sd), alpha=0.15, color=NA) +
+  geom_ribbon(aes(ymin=average_precision_mean+qnorm(0.25)*average_precision_sd, 
+                  ymax=average_precision_mean+qnorm(0.75)*average_precision_sd), 
+              alpha=0.15, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -717,7 +762,9 @@ precision_plot <- pre_rec %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
   # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
@@ -736,7 +783,8 @@ recall_plot <- pre_rec %>%
   geom_point(size=1) +
   # add interquartile range (IQR)
   geom_ribbon(aes(ymin=average_recall_mean+qnorm(0.25)*average_recall_sd, 
-                  ymax=average_recall_mean+qnorm(0.75)*average_recall_sd), alpha=0.15, color=NA) +
+                  ymax=average_recall_mean+qnorm(0.75)*average_recall_sd), 
+              alpha=0.15, color=NA) +
   # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
@@ -744,7 +792,8 @@ recall_plot <- pre_rec %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
   # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
@@ -773,14 +822,16 @@ uncertainty_plot <- uncertainties %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  
+                      scales = "free_y", switch="y") +
   # manually specify the x-axis break
   scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   ggtitle("(c) Uncertainty")
 
 # combine the plots
-ggpubr::ggarrange(precision_plot, recall_plot, uncertainty_plot, nrow=3, common.legend = TRUE, legend = "bottom")
+ggpubr::ggarrange(precision_plot, recall_plot, uncertainty_plot, nrow=3, 
+                  common.legend = TRUE, legend = "bottom")
 
 # save the plot
 # ggsave(filename = "figures/prec-recall-uncer_alpha0.01_10label.pdf", width = 25, height = 30, dpi = 300, units = "cm")

@@ -1,30 +1,33 @@
 ## =============================================================================
 ## Description
 #
-# This script contains all the code for the secondary analysis 
-# with varying alpha levels.
+# This script contains the code for the secondary analysis 
+# with varying alpha levels based on the sample size (N).
+#
 # As is the case with the main simulation study, there are in total 8 models and
 # we generate 500 datasets from each model.
-#
+## =============================================================================
 # The content is as follows.
-# 0. Preparation: we source and load necessary functions & packages and generate data.
+# 0. Preparation: we source and load necessary functions & packages and 
+#    generate data with varying alpha levels based on the sample size (N).
 #
-# 1. Run algorithms: we again run three algorithms CCD, FCI, and CCI then estimate PAGs.
+# 1. Run algorithms: we run three algorithms CCD, FCI, and CCI on the simulated 
+#    data then estimate PAGs.
 #
-# 2. Evaluate performance: we compute structural Hamming distance, precision, recall,
-# and uncertainty rate for each condition.
+# 2. Evaluate performance: we compute structural Hamming distance, precision, 
+#    recall, and uncertainty rate for each condition.
 #
-# 3. Organize results: we make neat data frames of resulting values of evaluation
-# metrics from each algorithm.
+# 3. Organize results: we make neat data frames of resulting values of evaluation 
+#    metrics from each algorithm.
 #
 # 4. Create figures: we create figures for each evaluation metric comparing the 
-# performance of each algorithm per condition.
+#    performance of each algorithm per condition.
 ## =============================================================================
 
 
-## ========================
+## =============================================================================
 ## 0. Preparation
-## ========================
+## =============================================================================
 # source the simulation study results
 source("simulation/01_simulation.R")
 source("utils/eval_metrics_fnc.R")
@@ -63,7 +66,8 @@ generatesimdat <- function(B, N, LV = NULL, seed=123){
 
 ## Generate data
 # models without LV
-simdat_alphawoLV <- list(B5sparse = B5sparse, B5dense = B5dense, B10sparse =  B10sparse, B10dense = B10dense) %>% 
+simdat_alphawoLV <- list(B5sparse = B5sparse, B5dense = B5dense, 
+                         B10sparse =  B10sparse, B10dense = B10dense) %>% 
   map(~generatesimdat(.x, N)
   )
 # 5p models with LV
@@ -80,9 +84,9 @@ simdata_alpha10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvden
 simdat_alpha <- append(simdat_alphawoLV, append(simdata_alpha5pwLV, simdata_alpha10pwLV))
 simdat_alpha2 <- simdat_alpha %>% bind_rows(.id="id")
 
-## ============================
+## =============================================================================
 ## 1. Running algorithms
-## ============================
+## =============================================================================
 ## =============
 ## B5 sparse 
 ## =============
@@ -357,9 +361,9 @@ for(i in 1:length(N)){
 }
 
 
-## ============================
+## =============================================================================
 ## 2. Evaluating performance 
-## ============================
+## =============================================================================
 ## =============
 ## B5 sparse
 ## =============
@@ -773,9 +777,9 @@ SHD_cci10pLVdense2 <- CCIB10_LVdense %>%
 
 
 
-## ============================
+## =============================================================================
 ## 3. Create neat dataframes
-## ============================
+## =============================================================================
 
 ## Compute average precision & recall and corresponding sd for each condition
 pre_rec2 <- list(
@@ -880,9 +884,9 @@ SHDs2 <- bind_rows(
 
 
 
-## ============================
+## =============================================================================
 ## 4. Create figures
-## ============================
+## =============================================================================
 
 ## specify the common figure theme
 MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", size = 15, hjust=0.5),

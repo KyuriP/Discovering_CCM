@@ -1,19 +1,34 @@
 ## =============================================================================
 ## Description
 # 
-# This script contains all the code to perform the secondary analysis with 
-# randomly sampled coefficients for the regression matrix B with "only positive values".
+# This script contains the code to perform the secondary analysis with randomly 
+# sampled coefficients for the regression matrix B with "only positive values".
 #
 # Purpose: to examine the impact of the specified weights on the results of the 
 # main analysis, and to determine if there are any differences when randomly 
 # sampling B weights from both negative and positive values.
 #
-# The rest set up is the same as `03_sensitivity1_samplingB.R`.
+# The remaining setup is identical to that of `03_sensitivity_analysis1.R`.
+## =============================================================================
+# The content is as follows.
+# 0. Preparation: we source and load necessary functions and packages.
+#
+# 1. Generate data: we generate data based on randomly sampled B matrix 
+#    at every iteration. 
+#
+# 2. Run algorithms: we apply three algorithms -- CCD, FCI, and CCI -- to each 
+#    of the simulated datasets then estimate PAGs.
+#
+# 3. Evaluate performance: we compute structural Hamming distance, precision, 
+#    recall, and uncertainty rate for each of the estimated PAGs.
+#
+# 4. Create figures: we create figures for each evaluation metric comparing the 
+#    performance of each algorithm per condition.
 ## =============================================================================
 
-## ======================
+## =============================================================================
 ## 0. Preparation
-## ======================
+## =============================================================================
 # source the simulation study results
 source("simulation/01_simulation.R")
 # load packages
@@ -26,9 +41,9 @@ library(ggh4x)
 ## set the seed
 set.seed(123)
 
-## ======================
+## =============================================================================
 ## 1. Generate data 
-## ======================
+## =============================================================================
 
 # specify the sample sizes
 N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
@@ -88,9 +103,9 @@ simdata_10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %
 simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 
 
-## ======================
+## =============================================================================
 ## 2. Run algorithms
-## ======================
+## =============================================================================
 CCDres_pos <- simdatalist %>% 
   map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
   map_depth(3, ~CreateAdjMat(.x, length(.x$nodes)))
@@ -120,9 +135,9 @@ load("data/randomB_pos/CCIres3_pos.Rdata") # CCIres
 
 
 
-## =========================
+## =============================================================================
 ## 3. Evaluate performance
-## =========================
+## =============================================================================
 
 ## SHD
 CCDshd <- list()
@@ -313,9 +328,9 @@ unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>%
 
 
 
-## ===================================
+## =============================================================================
 ## 4. Plot the figures for comparison
-## ===================================
+## =============================================================================
 ## specify the common figure theme
 MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", size = 15, hjust=0.5),
                   plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15, hjust=0.5),

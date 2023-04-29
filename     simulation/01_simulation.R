@@ -1,10 +1,10 @@
 ## =============================================================================
 ## Description
 #
-# The code in this script is used to generate data from various models 
-# that are used in the main simulation study (with fixed B matrices). 
+# This script generates data from different models that are utilized in 
+# the main simulation study with fixed B matrices.
 #
-# The script includes a total of 8 models: 5nodes-sparse, 5nodes-dense, 
+# A total of eight different models are included: 5nodes-sparse, 5nodes-dense, 
 # 10nodes-sparse, 10nodes-dense, 5nodes-sparse with latent variables (LV), 
 # 5nodes-dense with LVs, 10nodes-sparse with LVs, and 10nodes-dense with LVs.
 #
@@ -14,11 +14,13 @@
 # Due to the long processing time, the code that executes the algorithms 
 # and generates the PAGs is currently commented out. 
 # If interested, simply uncomment those lines and run the code.
-#
-# The script is organized as follows.
+## =============================================================================
+## The script is organized as follows.
 # 0. Preparation: necessary functions and packages are sourced and loaded.
+#
 # 1 - 8. Simulation: code to generate data and run algorithms.
-# 9. Analysis of algorithm running time.
+#
+# 9. Analysis of algorithm running time (extra).
 ## =============================================================================
 
 
@@ -76,6 +78,8 @@ set.seed(123)
 ## =============================================================================
 ## 1. 5p - sparse condition
 ## =============================================================================
+
+## Model specification
 # specify B matrix
 B5sparse = matrix(c(0, 0, 0, 0, 0,
                     1, 0, 0.8, 0, 0,
@@ -83,7 +87,6 @@ B5sparse = matrix(c(0, 0, 0, 0, 0,
                     0, 0.7, 0, 0, 1.5,
                     0, 0, 0, 0, 0), 5, 5, byrow = T)
 dimnames(B5sparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-
 # specify layout
 layout5 = matrix(c(0,1,
                    0,0,
@@ -96,17 +99,7 @@ par(mfrow=c(1,2))
 true5psparse <- qgraph(t(B5sparse), layout=layout5, 
                        labels = colnames(B5sparse), theme="colorblind")
 
-## Data generating
-# equilibrium check
-equilibrium_check(B5sparse)
-# generate data (sample size as specified above)
-simdata_5psparse <- N %>% future_map(function(z) {
-  replicate(n = n,
-            expr = gen_dat(B5sparse, N = z),  
-            simplify = FALSE)
-}, .options = furrr_options(seed=123))
-
-## True ancestral graph (AG)
+# true ancestral graph (AG)
 dcg_5psparse <- matrix(c(0,1,0,0,0,
                          0,0,0,1,0,
                          0,1,0,0,0,
@@ -116,6 +109,17 @@ trueag_5psparse <- true_ancestral(dcg_5psparse, gen_dat(B5sparse), gaussCItest)
 dimnames(trueag_5psparse) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 # plot true AG
 plotAG(trueag_5psparse)
+
+
+## Data generating
+# equilibrium check
+equilibrium_check(B5sparse)
+# generate data (sample size as specified above)
+simdata_5psparse <- N %>% future_map(function(z) {
+  replicate(n = n,
+            expr = gen_dat(B5sparse, N = z),  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
 
 
 ## Run CCD algorithm
@@ -165,6 +169,8 @@ load("simulation/data/fixedB_n500/cci_5psparse.RData")
 ## =============================================================================
 ## 2. 5p - dense condition
 ## =============================================================================
+
+## Model specification
 # specify B matrix
 B5dense = matrix(c(0, 0, 0, 0, 0,
                    1, 0, 0.8, 0, 0,
@@ -173,8 +179,20 @@ B5dense = matrix(c(0, 0, 0, 0, 0,
                    1, 0, 0, 0, 0), 5, 5, byrow = T)
 dimnames(B5dense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
 par(mfrow=c(1,2))
+# true 5p dense DCG
 true5pdense <- qgraph(t(B5dense), layout=layout5, 
                       labels = colnames(B5dense), theme="colorblind")
+# true ancestral graph (AG)
+dcg_5pdense <- matrix(c(0,1,0,0,1,
+                        0,0,0,1,0,
+                        0,1,0,0,0,
+                        0,0,1,0,0,
+                        0,0,0,1,0), 5,5,byrow=T)
+trueag_5pdense <- true_ancestral(dcg_5pdense, gen_dat(B5dense), gaussCItest)
+dimnames(trueag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
+# plot true AG
+plotAG(trueag_5pdense)
+
 
 ## Data generating
 # equilibrium check
@@ -186,16 +204,6 @@ simdata_5pdense <- N %>% future_map(function(z) {
             simplify = FALSE)
 }, .options = furrr_options(seed=123))
 
-
-# True Ancestral Graph
-dcg_5pdense <- matrix(c(0,1,0,0,1,
-                        0,0,0,1,0,
-                        0,1,0,0,0,
-                        0,0,1,0,0,
-                        0,0,0,1,0), 5,5,byrow=T)
-trueag_5pdense <- true_ancestral(dcg_5pdense, gen_dat(B5dense), gaussCItest)
-dimnames(trueag_5pdense) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(trueag_5pdense)
 
 ## Run CCD algorithm
 # ccd_5pdense <- simdata_5pdense %>%
@@ -243,6 +251,8 @@ load("simulation/data/fixedB_n500/cci_5pdense.RData")
 ## 3. 10p - sparse condition
 ## =============================================================================
 
+## Model specification
+# specify B matrix
 B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 
                      0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -254,7 +264,6 @@ B10sparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 
                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 10, 10, byrow = T)
 dimnames(B10sparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
-
 # specify layout
 layout10 = matrix(c(0,1,
                     2,1,
@@ -267,21 +276,11 @@ layout10 = matrix(c(0,1,
                     4, 1,
                     7, 1),10,2,byrow = T)
 par(mfrow=c(1,2))
+# true 10p sparse DCG
 true10psparse <- qgraph(t(B10sparse), layout = layout10, 
                         labels = colnames(B10sparse), theme="colorblind")
 
-## Data generating
-# equilibrium check
-equilibrium_check(B10sparse)
-
-# generate data (sample size as specified above)
-simdata_10psparse <- N %>% future_map(function(z) {
-  replicate(n = n,
-            expr = gen_dat(B10sparse, N = z),  
-            simplify = FALSE)
-}, .options = furrr_options(seed=123))
-
-## True Ancestral Graph
+# true ancestral graph (AG)
 dcg_10psparse <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
                           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                           0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 
@@ -293,9 +292,22 @@ dcg_10psparse <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
                           0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
                           0, 0, 0, 0, 0, 0, 0, 0, 1, 0), 10, 10, byrow = T)
 trueag_10psparse <- true_ancestral(dcg_10psparse, gen_dat(B10sparse), gaussCItest)
-dimnames(trueag_10psparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+dimnames(trueag_10psparse) <- list(paste("X", 1:10, sep=""), 
+                                   paste("X", 1:10, sep=""))
 # plot true AG
 plotAG(trueag_10psparse)
+
+
+## Data generating
+# equilibrium check
+equilibrium_check(B10sparse)
+# generate data (sample size as specified above)
+simdata_10psparse <- N %>% future_map(function(z) {
+  replicate(n = n,
+            expr = gen_dat(B10sparse, N = z),  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
+
 
 ## Run CCD algorithm
 # ccd_10psparse <- simdata_10psparse %>%
@@ -343,6 +355,9 @@ load("simulation/data/fixedB_n500/cci_10psparse.RData")
 ## =============================================================================
 ## 4. 10p - dense condition
 ## =============================================================================
+
+## Model specification
+# specify B matrix
 B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0.3, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 
                     0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -367,20 +382,10 @@ layout10 = matrix(c(0,1,
                     7, 1),10,2,byrow = T)
 
 par(mfrow=c(1,2))
+# true 10p dense DCG
 true10pdense <- qgraph(t(B10dense), layout = layout10, 
                        labels = colnames(B10dense), theme="colorblind")
-
-## Data generating
-# equilibrium check
-equilibrium_check(B10dense)
-# generate data (sample size as specified above)
-simdata_10pdense <- N %>% future_map(function(z) {
-  replicate(n = n,
-            expr = gen_dat(B10dense, N = z),  
-            simplify = FALSE)
-}, .options = furrr_options(seed=123))
-
-## True Ancestral Graph
+# true ancestral graph (AG)
 dcg_10pdense <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                          0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 
@@ -392,8 +397,22 @@ dcg_10pdense <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
                          0, 0, 0, 0, 0, 0, 1, 0, 1, 0), 10, 10, byrow = T)
 trueag_10pdense <- true_ancestral(dcg_10pdense, gen_dat(B10dense), gaussCItest)
-dimnames(trueag_10pdense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+dimnames(trueag_10pdense) <- list(paste("X", 1:10, sep=""), 
+                                  paste("X", 1:10, sep=""))
+# plot AG
 plotAG(trueag_10pdense)
+
+
+## Data generating
+# equilibrium check
+equilibrium_check(B10dense)
+# generate data (sample size as specified above)
+simdata_10pdense <- N %>% future_map(function(z) {
+  replicate(n = n,
+            expr = gen_dat(B10dense, N = z),  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
+
 
 ## Run CCD algorithm
 # ccd_10pdense <- simdata_10pdense  %>%
@@ -427,8 +446,6 @@ load("simulation/data/fixedB_n500/fci_10pdense.RData")
 # cci_10pdense  <- simdata_10pdense %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
-#             # convert some logical matrix (0, 1 only) to a numeric matrix 
-#             # while keeping a matrix format (lost the row names but they are not needed)
 #   )
 # save(cci_10pdense, file="simulation/data/fixedB_n500/cci_10pdense.RData")
 load("simulation/data/fixedB_n500/cci_10pdense.RData")
@@ -442,6 +459,8 @@ load("simulation/data/fixedB_n500/cci_10pdense.RData")
 ## =============================================================================
 ## 5. 5p with LV sparse condition
 ## =============================================================================
+
+## Model specification
 # specify B matrix
 B5_lvsparse = matrix(c(0, 0, 0, 0, 0, 1,
                        0, 0, 0.8, 0, 0, 1,
@@ -459,8 +478,21 @@ layout5_lv = matrix(c(0,1,
                       2,1,
                       -1, 0.5),6,2,byrow = T)
 par(mfrow=c(1,2))
+# true 5p sparse w/LV DCG
 true5p_lvsparse <- qgraph(t(B5_lvsparse), layout=layout5_lv, 
                           labels = colnames(B5_lvsparse), theme="colorblind")
+# true ancestral graph (AG)
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_5psparseLV <- matrix(c(0, 2, 0, 0, 0, 
+                           2, 0, 0, 1, 0, 
+                           0, 1, 0, 0, 0,
+                           0, 0, 1, 0, 0,
+                           0, 0, 0, 1, 0), 5, 5, byrow = T)
+trueag_5psparseLV <- true_ancestral(dcg_5psparseLV, gen_dat(B5_lvsparse), gaussCItest)
+dimnames(trueag_5psparseLV) <- list(paste("X", 1:5, sep=""), 
+                                    paste("X", 1:5, sep=""))
+# plot AG
+plotAG(trueag_5psparseLV)
 
 
 ## Data generating
@@ -472,18 +504,6 @@ simdata_5pLVsparse <- N %>% future_map(function(z) {
             expr = gen_dat(B5_lvsparse, N = z)[,-6],  
             simplify = FALSE)
 }, .options = furrr_options(seed=123))
-
-
-## True Ancestral Graph
-# [i,j] = [j,i] = 2: a LV exists between i and j
-dcg_5psparseLV <- matrix(c(0, 2, 0, 0, 0, 
-                           2, 0, 0, 1, 0, 
-                           0, 1, 0, 0, 0,
-                           0, 0, 1, 0, 0,
-                           0, 0, 0, 1, 0), 5, 5, byrow = T)
-trueag_5psparseLV <- true_ancestral(dcg_5psparseLV, gen_dat(B5_lvsparse), gaussCItest)
-dimnames(trueag_5psparseLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(trueag_5psparseLV)
 
 
 ## Run CCD algorithm
@@ -518,8 +538,6 @@ load("simulation/data/fixedB_n500/fci_5pLVsparse.RData")
 # cci_5pLVsparse  <- simdata_5pLVsparse %>%
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
-#             # convert some logical matrix (0, 1 only) to a numeric matrix 
-#             # while keeping a matrix format 
 #   )
 # 
 # save(cci_5pLVsparse, file="simulation/data/fixedB_n500/cci_5pLVsparse.RData")
@@ -534,6 +552,9 @@ load("simulation/data/fixedB_n500/cci_5pLVsparse.RData")
 ## =============================================================================
 ## 6. 5p with LV dense condition
 ## =============================================================================
+
+## Model specification
+# specify B matrix
 B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
                       0, 0, 0.8, 0, 0, 1,
                       0, 0, 0, 0.9, 0, 0,
@@ -550,8 +571,22 @@ layout5_lv = matrix(c(0,1,
                       2,1,
                       -1, 0.5),6,2,byrow = T)
 par(mfrow=c(1,2))
+# true 5p dense w/LV DCG
 true5p_lvdense <- qgraph(t(B5_lvdense), layout=layout5_lv, 
                          labels = colnames(B5_lvdense), theme="colorblind")
+# true ancestral graph (AG)
+# [i,j] = [j,i] = 2: a LV exists between i and j
+dcg_5pdenseLV <- matrix(c(0, 2, 0, 0, 1, 
+                          2, 0, 0, 1, 0, 
+                          0, 1, 0, 0, 0,
+                          0, 0, 1, 0, 0,
+                          0, 0, 0, 1, 0), 5, 5, byrow = T)
+trueag_5pdenseLV <- true_ancestral(dcg_5pdenseLV, gen_dat(B5_lvdense), gaussCItest)
+dimnames(trueag_5pdenseLV) <- list(paste("X", 1:5, sep=""), 
+                                   paste("X", 1:5, sep=""))
+# plot AG
+plotAG(trueag_5pdenseLV)
+
 
 ## Data generating
 # equilibrium check
@@ -562,16 +597,7 @@ simdata_5pLVdense <- N %>% future_map(function(z) {
             expr = gen_dat(B5_lvdense, N = z)[,-6],  
             simplify = FALSE)
 }, .options = furrr_options(seed=123))
-## True Ancestral Graph
-# [i,j] = [j,i] = 2: a LV exists between i and j
-dcg_5pdenseLV <- matrix(c(0, 2, 0, 0, 1, 
-                          2, 0, 0, 1, 0, 
-                          0, 1, 0, 0, 0,
-                          0, 0, 1, 0, 0,
-                          0, 0, 0, 1, 0), 5, 5, byrow = T)
-trueag_5pdenseLV <- true_ancestral(dcg_5pdenseLV, gen_dat(B5_lvdense), gaussCItest)
-dimnames(trueag_5pdenseLV) <- list(paste("X", 1:5, sep=""), paste("X", 1:5, sep=""))
-plotAG(trueag_5pdenseLV)
+
 
 ## Run CCD algorithm
 # ccd_5pLVdense <- simdata_5pLVdense  %>%
@@ -618,6 +644,8 @@ load("simulation/data/fixedB_n500/cci_5pLVdense.RData")
 ## =============================================================================
 ## 7. 10p with LV sparse condition
 ## =============================================================================
+
+## Model specification
 # specify B matrix
 B10_lvsparse = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0.7,
@@ -647,18 +675,10 @@ layout10LV2 = matrix(c(0, 1,
                        8, 0,
                        3, 2), 12, 2, byrow = T)
 par(mfrow=c(1,2))
+# true 10p sparse w/LV DCG
 true10pLVsparse <- qgraph(t(B10_lvsparse), layout = layout10LV2, 
                           labels = colnames(B10_lvsparse), theme="colorblind")
-## Data generating
-# equilibrium check
-equilibrium_check(B10_lvsparse)
-# generate data (sample size as specified above)
-simdata_10pLVsparse <- N %>% future_map(function(z) {
-  replicate(n = n,
-            expr = gen_dat(B10_lvsparse, N = z)[,-c(11,12)],  
-            simplify = FALSE)
-}, .options = furrr_options(seed=123))
-## True Ancestral Graph
+# true ancestral graph (AG)
 # [i,j] = [j,i] = 2: a LV exists between i and j
 dcg_10psparseLV <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 
@@ -671,8 +691,22 @@ dcg_10psparseLV <- matrix(c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
                             0, 0, 0, 0, 0, 0, 0, 2, 1, 0), 10, 10, byrow = T)
 trueag_10psparseLV <- true_ancestral(dcg_10psparseLV, gen_dat(B10_lvsparse), gaussCItest)
-dimnames(trueag_10psparseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+dimnames(trueag_10psparseLV) <- list(paste("X", 1:10, sep=""), 
+                                     paste("X", 1:10, sep=""))
+# plot AG
 plotAG(trueag_10psparseLV)
+
+
+## Data generating
+# equilibrium check
+equilibrium_check(B10_lvsparse)
+# generate data (sample size as specified above)
+simdata_10pLVsparse <- N %>% future_map(function(z) {
+  replicate(n = n,
+            expr = gen_dat(B10_lvsparse, N = z)[,-c(11,12)],  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
+
 
 ## Run CCD algorithm
 # ccd_10pLVsparse  <- simdata_10pLVsparse   %>%
@@ -716,6 +750,8 @@ load("simulation/data/fixedB_n500/cci_10pLVsparse.RData")
 ## =============================================================================
 ## 8. 10p with LV dense condition
 ## =============================================================================
+
+## Model specification
 # specify B matrix
 B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0.5, 0, 0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0.7,
@@ -745,18 +781,10 @@ layout10LV2 = matrix(c(0, 1,
                        8, 0,
                        3, 2), 12, 2, byrow = T)
 par(mfrow=c(1,2))
+# true 10p sparse w/LV DCG
 true10pLVdense <- qgraph(t(B10_lvdense), layout = layout10LV2, 
                          labels = colnames(B10_lvdense), theme="colorblind")
-## Data generating
-# equilibrium check
-equilibrium_check(B10_lvdense)
-# generate data (sample size as specified above)
-simdata_10pLVdense <- N %>% future_map(function(z) {
-  replicate(n = n,
-            expr = gen_dat(B10_lvdense, N = z)[,-c(11,12)],  
-            simplify = FALSE)
-}, .options = furrr_options(seed=123))
-## True Ancestral Graph
+# true ancestral graph (AG)
 # [i,j] = [j,i] = 2: a LV exists between i and j
 dcg_10pdenseLV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 
@@ -769,15 +797,29 @@ dcg_10pdenseLV <- matrix(c(0, 1, 1, 0, 0, 0, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
                            0, 0, 0, 0, 0, 0, 1, 2, 1, 0), 10, 10, byrow = T)
 trueag_10pdenseLV <- true_ancestral(dcg_10pdenseLV, gen_dat(B10_lvdense), gaussCItest)
-dimnames(trueag_10pdenseLV) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+dimnames(trueag_10pdenseLV) <- list(paste("X", 1:10, sep=""), 
+                                    paste("X", 1:10, sep=""))
+# plot AG
 plotAG(trueag_10pdenseLV)
 
+
+## Data generating
+# equilibrium check
+equilibrium_check(B10_lvdense)
+# generate data (sample size as specified above)
+simdata_10pLVdense <- N %>% future_map(function(z) {
+  replicate(n = n,
+            expr = gen_dat(B10_lvdense, N = z)[,-c(11,12)],  
+            simplify = FALSE)
+}, .options = furrr_options(seed=123))
+
+
 ## Run CCD algorithm
-ccd_10pLVdense  <- simdata_10pLVdense   %>%
-  map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
-  )
-mat_10pLVdense   <- ccd_10pLVdense %>% 
-  map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
+# ccd_10pLVdense  <- simdata_10pLVdense   %>%
+#   map_depth(2, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)
+#   )
+# mat_10pLVdense   <- ccd_10pLVdense %>% 
+#   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
 # save(ccd_10pLVdense, file="simulation/data/fixedB_n500/ccd_10pLVdense.RData")
 # save(mat_10pLVdense, file="simulation/data/fixedB_n500/mat_10pLVdense.RData")
@@ -828,6 +870,7 @@ dataset <- list(simdata_5psparse[[1]][[1]], simdata_5pdense[[1]][[1]],
                 simdata_10psparse[[1]][[1]], simdata_10pdense[[1]][[1]],
                 simdata_5pLVsparse[[1]][[1]], simdata_5pLVdense[[1]][[1]],
                 simdata_10pLVsparse[[1]][[1]],simdata_10pLVsparse[[1]][[1]])
+
 
 ## compute the algorithm running time 
 # times <- microbenchmark(
@@ -910,5 +953,3 @@ timeplot <- times %>%
 
 # save the plot
 # ggsave(timeplot, filename = "figures/algo_time.pdf", width = 25, height = 13, dpi = 300, units = "cm")
-
-

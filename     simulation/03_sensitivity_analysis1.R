@@ -4,33 +4,35 @@
 # This script contains code for the secondary analysis with 
 # randomly sampled coefficients for the regression matrix B.
 #
-# Purpose: to determine how much the results of the main analysis 
+# Purpose: to determine the extent to which the results of the main analysis 
 # depend on the specific weights that were specified. 
 #
 # As is the case with the main analysis, there are in total 8 models considered
 # and 500 datasets are generated from each model.
-#
+## =============================================================================
 # The content is as follows.
-# 0. Preparation: we source and load necessary functions & packages and generate data.
+# 0. Preparation: we source and load necessary functions and packages.
 #
-# 1. Generate data: we generate data based on randomly sampled B matrix at every iteration. 
+# 1. Generate data: we generate data based on randomly sampled B matrix 
+#    at every iteration. 
 #
-# 2. Run algorithms: we run three algorithms CCD, FCI, and CCI, then estimate PAGs.
+# 2. Run algorithms: we apply three algorithms -- CCD, FCI, and CCI -- to each 
+#    of the simulated datasets then estimate PAGs.
 #
-# 3. Evaluate performance: we compute structural Hamming distance, precision, recall,
-# and uncertainty rate for each condition.
+# 3. Evaluate performance: we compute structural Hamming distance, precision, 
+#    recall, and uncertainty rate for each of the estimated PAGs.
 #
 # 4. Create figures: we create figures for each evaluation metric comparing the 
-# performance of each algorithm per condition.
+#    performance of each algorithm per condition.
 #
 # 5. Create an extra figure: we show the performance under 5p dense 
-# without a latent confounder condition (Figure 18 in the paper).
+#    without a latent confounder condition (Figure 18 in the paper).
 ## =============================================================================
 
 
-## ======================
+## =============================================================================
 ## 0. Preparation
-## ======================
+## =============================================================================
 # source the simulation study results
 source("simulation/01_simulation.R")
 # load packages
@@ -43,9 +45,9 @@ library(ggh4x)
 ## set the seed
 set.seed(123)
 
-## ======================
+## =============================================================================
 ## 1. Generate data 
-## ======================
+## =============================================================================
 
 # specify the sample sizes
 N <- c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)
@@ -122,9 +124,9 @@ simdata_10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %
 
 simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 
-## ======================
+## =============================================================================
 ## 2. Run algorithms
-## ======================
+## =============================================================================
 CCDres <- simdatalist %>% 
   map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
   map_depth(3, ~CreateAdjMat(.x, length(.x$nodes)))
@@ -161,9 +163,9 @@ load("simulation/data/randomB_n500/CCIres2_randomB.Rdata")
 
 
 
-## =========================
+## =============================================================================
 ## 3. Evaluate performance
-## =========================
+## =============================================================================
 
 ## SHD
 CCDshd <- list()
@@ -354,9 +356,9 @@ unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>%
 
 
 
-## ===================================
+## =============================================================================
 ## 4. Plot the figures for comparison
-## ===================================
+## =============================================================================
 ## specify the common figure theme
 MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", size = 15, hjust=0.5),
                   plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15, hjust=0.5),
@@ -467,9 +469,9 @@ ggpubr::ggarrange(recallplot_ranB, uncertaintyplot_ranB, nrow=2, common.legend =
 
 
 
-## ==========================================
+## =============================================================================
 ## 5. Extract only 5p dense cases (Figure 18)
-## ==========================================
+## =============================================================================
 # shd plot
 dense5pshd <- SHD_ranB |> filter(condition == "B5dense") |>
   tidyr::pivot_wider(names_from = statistics, values_from=value) |>

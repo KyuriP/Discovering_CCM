@@ -1,19 +1,37 @@
 ## =============================================================================
 ## Description
 #
-# This script concerns applying the CCD, FCI and CCI algorithms to an empirical data 
-# from McNally et al. (2017) in order to test the practical applicability of the algorithms.
+# This script concerns applying the CCD, FCI and CCI algorithms to an 
+# empirical data from McNally et al. (2017) in order to test the practical 
+# applicability of the algorithms.
 #
-# The data is obtained from : https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900#supplementary-materials
-
-# It contains the code to create "Figure 18. Estimated statistical network model and PAGs"
+# It contains the code to create "Figure 18. Estimated statistical 
+# network model and PAGs"
+#
+# The data can be obtained from : https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900#supplementary-materials
+## =============================================================================
+# The content is as follows.
+# 1. Preparation: we source the necessary functions and packages. Also, we load
+#    the data from the `data` folder and store each of the depression and OCD 
+#    symptoms separately.
+# 
+# 2. Estimate GGM with GLASSO: we estimate the statistical network model (GGM) 
+#    using glasso regularization with the `qgraph` package.
+#
+# 3. Estimate PAGs using CCD, FCI and CCI: we apply the causal discovery algorithms
+#    and correspondingly estimate the PAGs. Here, we use alpha level of 0.01.
+# 
+# 4. Extra: we experiment with paranormal transformation to examine if it helps 
+#    in approximating the distribution to Gaussian. Please note that this analysis
+#    is an additional exploration and not part of the paper.
 ## =============================================================================
 
 
 
-## =======================================
+
+## =============================================================================
 ## 1. Preparation
-## =======================================
+## =============================================================================
 ## load necessary packages
 library(qgraph)
 library(pcalg)
@@ -40,9 +58,9 @@ ocd <- mcnally[,17:26] %>% apply(., 2, as.numeric)
 # trans_ocd <- huge::huge.npn(ocd)
 
 
-## =======================================
+## =============================================================================
 ## 2. Estimate GGM with GLASSO 
-## =======================================
+## =============================================================================
 ## estimate GGM via graphical LASSO on depression symptoms
 cordep <- cor(depression)
 # found the optimal sparsity by gamma = 1
@@ -51,9 +69,9 @@ qgraph(glassoFitdep, layout = "spring", theme="colorblind",
        nodeNames = colnames(depression), legend.cex = 0.4)
 
 
-## =======================================
+## =============================================================================
 ## 3. Estimate PAGs using CCD, FCI and CCI
-## =======================================
+## =============================================================================
 set.seed(123)
 alpha <- 0.01
 ## estimate the PAG on depression symptoms by running CCD
@@ -73,9 +91,9 @@ cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01,
     labels = colnames(depression), p = ncol(depression), verbose=TRUE) %>% .$maag %>% plotAG
 
 
-## =======================================
+## =============================================================================
 ## 4. Extra: Transformed data distribution
-## =======================================
+## =============================================================================
 # specify my custom plotting theme
 MyTheme2 <-  theme(plot.title = element_text(family = "Palatino", size = 14, hjust=0.5),
                    plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15, hjust=0.5),

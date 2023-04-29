@@ -3,8 +3,7 @@
 #
 # This script contains the code to perform the stability analysis 
 # on the empirical data (Appendix I in the paper).
-# 
-#
+## =============================================================================
 # The script is organized as follows:
 # 1. Preparation: necessary functions and packages are sourced and loaded.
 #
@@ -25,9 +24,9 @@
 ## =============================================================================
 
 
-## =======================================
+## =============================================================================
 ## 1. Preparation
-## =======================================
+## =============================================================================
 ## load necessary packages
 library(dplyr)
 library(furrr)
@@ -42,9 +41,9 @@ source("utils/data_generating_fnc.R")
 source("utils/eval_metrics.R")
 
 
-## =======================================
+## =============================================================================
 ## 2. Create randomly sampled subsets 
-## =======================================
+## =============================================================================
 plan(multisession)
 # specify the number of subsets
 subsample_size <- 1000
@@ -57,9 +56,9 @@ subsamples <- 1:subsample_size %>%
              .options = furrr_options(seed=123))
 
 
-## =======================================
+## =============================================================================
 ## 3. Run algorithms on subsets
-## =======================================
+## =============================================================================
 ## run CCD on subsamples
 ccd_subsample_dep <- subsamples %>% 
   map(~ccdKP(df=.x, dataType = "continuous", alpha=alpha))
@@ -91,9 +90,9 @@ load("data/empirical/fci_subsample_dep.RData")
 load("data/empirical/cci_subsample_dep.RData")
 
 
-## =======================================
+## =============================================================================
 ## 4. Compute the frequencies
-## =======================================
+## =============================================================================
 ## frequency table per cell
 combmat_CCD <- simplify2array(mat_subsample_dep) %>% apply(c(1, 2), table)
 combmat_FCI <- simplify2array(fci_subsample_dep) %>% apply(c(1, 2), table)
@@ -167,9 +166,9 @@ adjmat_CCI <- freqlistCCI %>%
   `dimnames<-`(dimnames(combmat_CCI))
 
 
-## =======================================
+## =============================================================================
 ## 5. Plot the PAGs
-## =======================================
+## =============================================================================
 # plot the PAGs
 plotAG(adjmat_CCD)
 plotAG(adjmat_FCI)
