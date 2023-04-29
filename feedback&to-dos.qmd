@@ -32,10 +32,13 @@ editor: visual
 - algorithm running time in appendix?
 
 ## To-dos
-- Readme add description table and clean up
 - Add guide/recommendation to reproduce the study
 - Code annotate properly !! and consistently
 - Make defense slides
 - READEME on ho to reproduce: has to be cleaned up. and better phrasing.
+- README: espcially manuscript folder needs to be updated when the manucript is finalized.
 
  
+## phrasing
+
+- Data generation: N(0,1) or just say "standard normal random variables"
