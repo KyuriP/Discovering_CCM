@@ -3,8 +3,8 @@
 ## `CreateAdjMat`, `extracttriples`, `extractnode`, and `plotPAG`.
 ##
 ## Purpose: It plots a partial ancestral graph (PAG).
-## `plotPAG` is specifically designed for the ccd object.
-## `plotAG` plots a PAG given an (ancestral) adjacency matrix.
+##          `plotPAG` is specifically designed for the ccd object.
+##          `plotAG` plots a PAG given an (ancestral) adjacency matrix.
 ## ============================================================================
 
 ## load necessary package

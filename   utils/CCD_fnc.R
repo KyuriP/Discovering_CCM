@@ -1,14 +1,15 @@
 ## ============================================================================
 ## It contains five function: `ccdKP`, `loadContinuousData`, `loadDiscreteData`,
-## `extractTetradNodes`, `extractTetradEdges`.
-## The main function is `ccdKP`, which runs the CCD algorithm,
-## and it is dependent on the other four functions.
+## `extractTetradNodes`, and `extractTetradEdges`.
+##
+## The primary function is `ccdKP`, which runs the CCD algorithm,
+## and it is dependent on the other four auxiliary functions.
 ##
 ## Purpose: To run the CCD algorithm.
 ##
-## Note: This is a wrapper function for the CCD algorithm in the Tetrad software.
-## Please check Tetrad for more detailed information
-## on its CCD function (https://sites.google.com/view/tetradcausal).
+## Note: This is a wrapper function for the CCD algorithm in the TETRAD software.
+## For more detailed information on the CCD function, 
+## please refer to TETRAD's documentation (https://sites.google.com/view/tetradcausal).
 ## ============================================================================
 
 ## ====================

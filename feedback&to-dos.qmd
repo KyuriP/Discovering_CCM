@@ -36,7 +36,7 @@ editor: visual
 - Code annotate properly !! and consistently
 - Make defense slides
 - READEME on how to reproduce: has to be cleaned up. and better phrasing.
-- README: espcially manuscript folder needs to be updated when the manucript is finalized.
+- README: especially manuscript folder needs to be updated when the manuscript is finalized.
 
  
 ## phrasing

@@ -2,8 +2,8 @@
 ## It contains a function `searchAM_KP`.
 ##
 ## Purpose: In a DAG, CPDAG, MAG, or PAG, it determines the
-## ancestors/descendants/anteriors/spouses/neighbors/parents/children
-## or possible descendants of a node x (or set of nodes x).
+##          ancestors/descendants/anteriors/spouses/neighbors/parents/children
+##          or possible descendants of a node x (or set of nodes x).
 ## ============================================================================
 
 
