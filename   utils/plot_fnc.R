@@ -175,9 +175,9 @@ plotPAG <- function(ccd.obj, amat)
 
 
 
-## =======================================
-## plotAG function (edited slightly from `pcalg` package)
-## =======================================
+## =============================================================================
+## plotAG function (slightly modified from the pcalg package)
+## =============================================================================
 #' Plot PAG (partial ancestral graph) for FCI and CCI algorithms
 #'
 #' @param amat adjacency matrix of the resulting estimated graph
