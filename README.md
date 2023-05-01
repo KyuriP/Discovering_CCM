@@ -83,6 +83,162 @@ If interested in reproducing the results of:
 - simulation study, please refer to [`guide_simuation`](https://github.com/KyuriP/CCM_Discovery/blob/main/%20%20%20%20simulation/README.md).
 - empirical anlaysis, please refer to [`guide_empirical`](https://github.com/KyuriP/CCM_Discovery/blob/main/%20%20%20empirical_example/README.md).
 
+## Session Information
+<details>
+<summary><b><i>R session & Pacakge information</i></b></summary>
+
+           
+```
+─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────
+ setting  value
+ version  R version 4.2.3 (2023-03-15)
+ os       macOS Ventura 13.0
+ system   aarch64, darwin20
+ ui       RStudio
+ language (EN)
+ collate  en_US.UTF-8
+ ctype    en_US.UTF-8
+ tz       Europe/Amsterdam
+ date     2023-05-01
+ rstudio  2022.07.2+576 Spotted Wakerobin (desktop)
+ pandoc   2.19.2 @ /Applications/RStudio.app/Contents/MacOS/quarto/bin/tools/ (via rmarkdown)
+
+─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────
+ package      * version  date (UTC) lib source
+ abind          1.4-5    2016-07-21 [1] CRAN (R 4.2.0)
+ backports      1.4.1    2021-12-13 [1] CRAN (R 4.2.0)
+ base64enc      0.1-3    2015-07-28 [1] CRAN (R 4.2.0)
+ bdsmatrix      1.3-6    2022-06-03 [1] CRAN (R 4.2.0)
+ BiocGenerics * 0.42.0   2022-04-26 [1] Bioconductor
+ BiocManager  * 1.30.20  2023-02-24 [1] CRAN (R 4.2.0)
+ broom          1.0.4    2023-03-11 [1] CRAN (R 4.2.0)
+ cachem         1.0.7    2023-02-24 [1] CRAN (R 4.2.0)
+ callr          3.7.3    2022-11-02 [1] CRAN (R 4.2.0)
+ car            3.1-2    2023-03-30 [1] CRAN (R 4.2.3)
+ carData        3.0-5    2022-01-06 [1] CRAN (R 4.2.0)
+ CCI.KP       * 0.1.0    2023-01-21 [1] Github (KyuriP/CCI_KP@984bf12)
+ checkmate      2.1.0    2022-04-21 [1] CRAN (R 4.2.0)
+ cli            3.6.1    2023-03-23 [1] CRAN (R 4.2.0)
+ clipr          0.8.0    2022-02-22 [1] CRAN (R 4.2.0)
+ clue           0.3-64   2023-01-31 [1] CRAN (R 4.2.0)
+ cluster        2.1.4    2022-08-22 [1] CRAN (R 4.2.3)
+ codetools      0.2-19   2023-02-01 [1] CRAN (R 4.2.3)
+ colorspace     2.1-0    2023-01-23 [1] CRAN (R 4.2.0)
+ corpcor        1.6.10   2021-09-16 [1] CRAN (R 4.2.0)
+ crayon         1.5.2    2022-09-29 [1] CRAN (R 4.2.0)
+ curl           5.0.0    2023-01-12 [1] CRAN (R 4.2.0)
+ data.table     1.14.8   2023-02-17 [1] CRAN (R 4.2.0)
+ DEoptimR       1.0-11   2022-04-03 [1] CRAN (R 4.2.0)
+ devtools     * 2.4.5    2022-10-11 [1] CRAN (R 4.2.0)
+ digest         0.6.31   2022-12-11 [1] CRAN (R 4.2.0)
+ DOT          * 0.1      2016-04-16 [1] CRAN (R 4.2.0)
+ dplyr        * 1.1.2    2023-04-20 [1] CRAN (R 4.2.0)
+ ellipsis       0.3.2    2021-04-29 [1] CRAN (R 4.2.0)
+ evaluate       0.20     2023-01-17 [1] CRAN (R 4.2.0)
+ fansi          1.0.4    2023-01-22 [1] CRAN (R 4.2.0)
+ fastICA        1.2-3    2021-09-25 [1] CRAN (R 4.2.0)
+ fastmap        1.1.1    2023-02-24 [1] CRAN (R 4.2.0)
+ fdrtool        1.2.17   2021-11-13 [1] CRAN (R 4.2.0)
+ foreign        0.8-84   2022-12-06 [1] CRAN (R 4.2.3)
+ Formula        1.2-5    2023-02-24 [1] CRAN (R 4.2.0)
+ fs             1.6.1    2023-02-06 [1] CRAN (R 4.2.0)
+ furrr        * 0.3.1    2022-08-15 [1] CRAN (R 4.2.0)
+ future       * 1.32.0   2023-03-07 [1] CRAN (R 4.2.0)
+ generics       0.1.3    2022-07-05 [1] CRAN (R 4.2.0)
+ ggh4x        * 0.2.4    2023-04-04 [1] CRAN (R 4.2.0)
+ ggm            2.5      2020-02-16 [1] CRAN (R 4.2.0)
+ ggplot2      * 3.4.2    2023-04-03 [1] CRAN (R 4.2.0)
+ ggpubr       * 0.6.0    2023-02-10 [1] CRAN (R 4.2.0)
+ ggsignif       0.6.4    2022-10-13 [1] CRAN (R 4.2.0)
+ glasso         1.11     2019-10-01 [1] CRAN (R 4.2.0)
+ globals        0.16.2   2022-11-21 [1] CRAN (R 4.2.0)
+ glue           1.6.2    2022-02-24 [1] CRAN (R 4.2.0)
+ graph        * 1.74.0   2022-04-26 [1] Bioconductor
+ gridExtra      2.3      2017-09-09 [1] CRAN (R 4.2.0)
+ gtable         0.3.3    2023-03-21 [1] CRAN (R 4.2.0)
+ gtools         3.9.4    2022-11-27 [1] CRAN (R 4.2.0)
+ Hmisc          5.0-1    2023-03-08 [1] CRAN (R 4.2.0)
+ htmlTable      2.4.1    2022-07-07 [1] CRAN (R 4.2.0)
+ htmltools      0.5.5    2023-03-23 [1] CRAN (R 4.2.3)
+ htmlwidgets    1.6.2    2023-03-17 [1] CRAN (R 4.2.0)
+ httpuv         1.6.9    2023-02-14 [1] CRAN (R 4.2.0)
+ igraph         1.4.1    2023-02-24 [1] CRAN (R 4.2.0)
+ jpeg           0.1-10   2022-11-29 [1] CRAN (R 4.2.0)
+ jsonlite       1.8.4    2022-12-06 [1] CRAN (R 4.2.0)
+ knitr          1.42     2023-01-25 [1] CRAN (R 4.2.0)
+ later          1.3.0    2021-08-18 [1] CRAN (R 4.2.0)
+ lattice        0.21-8   2023-04-05 [1] CRAN (R 4.2.0)
+ lavaan         0.6-15   2023-03-14 [1] CRAN (R 4.2.0)
+ lifecycle      1.0.3    2022-10-07 [1] CRAN (R 4.2.0)
+ listenv        0.9.0    2022-12-16 [1] CRAN (R 4.2.0)
+ magrittr     * 2.0.3    2022-03-30 [1] CRAN (R 4.2.0)
+ MASS         * 7.3-58.3 2023-03-07 [1] CRAN (R 4.2.0)
+ Matrix         1.5-4    2023-04-04 [1] CRAN (R 4.2.0)
+ memoise        2.0.1    2021-11-26 [1] CRAN (R 4.2.0)
+ mime           0.12     2021-09-28 [1] CRAN (R 4.2.0)
+ miniUI         0.1.1.1  2018-05-18 [1] CRAN (R 4.2.0)
+ mnormt         2.1.1    2022-09-26 [1] CRAN (R 4.2.0)
+ munsell        0.5.0    2018-06-12 [1] CRAN (R 4.2.0)
+ nlme           3.1-162  2023-01-31 [1] CRAN (R 4.2.3)
+ nnet           7.3-18   2022-09-28 [1] CRAN (R 4.2.3)
+ parallelly     1.35.0   2023-03-23 [1] CRAN (R 4.2.3)
+ pbapply        1.7-0    2023-01-13 [1] CRAN (R 4.2.0)
+ pbivnorm       0.6.0    2015-01-23 [1] CRAN (R 4.2.0)
+ pcalg        * 2.7-8    2022-12-21 [1] CRAN (R 4.2.0)
+ pillar         1.9.0    2023-03-22 [1] CRAN (R 4.2.0)
+ pkgbuild       1.4.0    2022-11-27 [1] CRAN (R 4.2.0)
+ pkgconfig      2.0.3    2019-09-22 [1] CRAN (R 4.2.0)
+ pkgload        1.3.2    2022-11-16 [1] CRAN (R 4.2.0)
+ plyr           1.8.8    2022-11-11 [1] CRAN (R 4.2.0)
+ png            0.1-8    2022-11-29 [1] CRAN (R 4.2.0)
+ ppcor          1.1      2015-12-03 [1] CRAN (R 4.2.0)
+ prettyunits    1.1.1    2020-01-24 [1] CRAN (R 4.2.0)
+ processx       3.8.0    2022-10-26 [1] CRAN (R 4.2.0)
+ profvis        0.3.7    2020-11-02 [1] CRAN (R 4.2.0)
+ promises       1.2.0.1  2021-02-11 [1] CRAN (R 4.2.0)
+ ps             1.7.4    2023-04-02 [1] CRAN (R 4.2.0)
+ psych          2.3.3    2023-03-18 [1] CRAN (R 4.2.0)
+ purrr        * 1.0.1    2023-01-10 [1] CRAN (R 4.2.0)
+ qgraph       * 1.9.4    2023-03-21 [1] CRAN (R 4.2.0)
+ quadprog       1.5-8    2019-11-20 [1] CRAN (R 4.2.0)
+ R6             2.5.1    2021-08-19 [1] CRAN (R 4.2.0)
+ RBGL           1.72.0   2022-04-26 [1] Bioconductor
+ rcausal      * 1.2.1    2022-09-06 [1] Github (bd2kccd/r-causal@cc74f8d)
+ Rcpp           1.0.10   2023-01-22 [1] CRAN (R 4.2.0)
+ remotes        2.4.2    2021-11-30 [1] CRAN (R 4.2.0)
+ reshape2       1.4.4    2020-04-09 [1] CRAN (R 4.2.0)
+ Rgraphviz    * 2.40.0   2022-04-26 [1] Bioconductor
+ rJava        * 1.0-6    2021-12-10 [1] CRAN (R 4.2.0)
+ rlang          1.1.0    2023-03-14 [1] CRAN (R 4.2.0)
+ rmarkdown      2.21     2023-03-26 [1] CRAN (R 4.2.3)
+ robustbase     0.95-1   2023-03-29 [1] CRAN (R 4.2.0)
+ rpart          4.1.19   2022-10-21 [1] CRAN (R 4.2.3)
+ rstatix        0.7.2    2023-02-01 [1] CRAN (R 4.2.0)
+ rstudioapi     0.14     2022-08-22 [1] CRAN (R 4.2.0)
+ scales         1.2.1    2022-08-20 [1] CRAN (R 4.2.0)
+ sessioninfo    1.2.2    2021-12-06 [1] CRAN (R 4.2.0)
+ sfsmisc        1.1-14   2022-11-24 [1] CRAN (R 4.2.0)
+ shiny          1.7.4    2022-12-15 [1] CRAN (R 4.2.0)
+ stringi        1.7.12   2023-01-11 [1] CRAN (R 4.2.0)
+ stringr        1.5.0    2022-12-02 [1] CRAN (R 4.2.0)
+ tibble         3.2.1    2023-03-20 [1] CRAN (R 4.2.0)
+ tidyr          1.3.0    2023-01-24 [1] CRAN (R 4.2.0)
+ tidyselect     1.2.0    2022-10-10 [1] CRAN (R 4.2.0)
+ urlchecker     1.0.1    2021-11-30 [1] CRAN (R 4.2.0)
+ usethis      * 2.1.6    2022-05-25 [1] CRAN (R 4.2.0)
+ utf8           1.2.3    2023-01-31 [1] CRAN (R 4.2.0)
+ V8             4.2.2    2022-11-03 [1] CRAN (R 4.2.0)
+ vctrs          0.6.2    2023-04-19 [1] CRAN (R 4.2.0)
+ withr          2.5.0    2022-03-03 [1] CRAN (R 4.2.0)
+ xfun           0.38     2023-03-24 [1] CRAN (R 4.2.0)
+ xtable         1.8-4    2019-04-21 [1] CRAN (R 4.2.0)
+
+ [1] /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+```
+
+</details>
 
 ## Ethics & Access
 All data are simulated in this study except for the one used in the emprical analysis, which is publicly available on the [Psychological Medicine Journal](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900\#supplementary-materials) webpage.
