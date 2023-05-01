@@ -30,7 +30,7 @@
 ## 0. Preparation
 ## =============================================================================
 # source the simulation study results
-source("simulation/01_simulation.R")
+source("    simulation/01_simulation.R")
 # load packages
 library(dplyr)
 library(purrr)

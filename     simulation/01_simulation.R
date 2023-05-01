@@ -29,12 +29,12 @@
 ## =============================================================================
 
 ## source all the necessary functions
-source("utils/CCD_fnc.R")
-source("utils/plot_fnc.R")
-source("utils/searchAM_KP_fnc.R")
-source("utils/data_generating_fnc.R")
-source("utils/eval_metrics_fnc.R")
-source("utils/true_ancestral_fnc.R")
+source("  utils/CCD_fnc.R")
+source("  utils/plot_fnc.R")
+source("  utils/searchAM_KP_fnc.R")
+source("  utils/data_generating_fnc.R")
+source("  utils/eval_metrics_fnc.R")
+source("  utils/true_ancestral_fnc.R")
 
 ## load necessary packages
 library(magrittr)

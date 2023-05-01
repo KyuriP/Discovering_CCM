@@ -22,7 +22,6 @@ editor: visual
 
 - Add the description for the folders/files : make sure it is clear how to reproduce the study results.
 
--
 
 ## Check with Oisin
 
@@ -30,6 +29,8 @@ editor: visual
 - Figures x-axis labels
 - Appendices...(CCD Appendix A is not actually mentioned in the main text)
 - algorithm running time in appendix?
+- confusion matrix do we wanna add the column/row of circle and shade that?
+
 
 ## To-dos
 - Add guide/recommendation to reproduce the study
@@ -41,3 +42,4 @@ editor: visual
  
 ## phrasing
 - Data generation: N(0,1) or just say "standard normal random variables"
+- "until they level off" ?.. (sensitivity analyses)

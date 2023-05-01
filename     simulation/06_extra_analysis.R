@@ -29,7 +29,7 @@
 ## 0. Preparation
 ## =============================================================================
 # source the simulation study results
-source("simulation/01_simulation.R")
+source("    simulation/01_simulation.R")
 
 # load packages
 library(dplyr)
@@ -90,7 +90,9 @@ bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partia
   geom_text(aes(x = min, y = 60, hjust= -0.01, 
                 # label formatting
                 label = paste0("M = ", formatC(means, 3, format="f")), 
-                family = "Palatino", fontface = "italic"), size=5.5, col='#8b0000') +
+                family = "Palatino", fontface = "italic"), size=5.5, col='#8b0000',
+            # prevent overplotting text
+            check_overlap = T) +
   # create faceted plot
   facet_wrap(~ factor(id, levels=c("marginal", "partial_X1", "partial_X3", 
                                    "partial_X4", "partial_X1 & X3", "partial_X1 & X4", 
@@ -103,7 +105,7 @@ bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partia
   # apply the theme
   theme_minimal() + MyTheme3 +
   labs(x ="", y="count")
-ggsave(filename = "figures/partialcorr.pdf", width = 35, height = 18, dpi = 300, units = "cm")
+# ggsave(filename = "figures/partialcorr.pdf", width = 35, height = 18, dpi = 300, units = "cm")
 
 
 ## =============================================================================
