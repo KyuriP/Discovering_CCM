@@ -181,7 +181,9 @@ Well, the answer is because estimating cyclic causal models is basically very ch
 -   Cyclic Causal Inference (CCI) [@strobl2019]
 
 ::: notes
-Despite all that, there has been some solutions suggested in the past called CCD, cyclic causal discovery method. FCI, fast causal inference method. And CCI, cyclic causal inference method. So these are three algorithms that can estimate the cyclic causal models.
+Despite all that, there has been some solutions suggested in the past called CCD, cyclic causal discovery FCI, fast causal inference and CCI, cyclic causal inference. So these are three algorithms that can estimate the cyclic causal models.
+
+What I did in my project is I evaluate these three algorithm's performance using a simulation study trying to identify an effective algorithm in recovering the underlying cyclic causal structure.
 :::
 
 
@@ -211,7 +213,12 @@ Despite all that, there has been some solutions suggested in the past called CCD
 
 :::notes
 Then we see the results right here.
-First looking at the structural hamming distance, we see that in general CCI the green line and FCI the yellow line perform better in sparse conditions while CCD the red lines performs better in dense conditions. Remember this is structural hamming distance, so the lower the better. the less steps it takes the better estimated graph it is.
+I used four different evaluation metrics, SHD, precision, recall, and  uncertainty rate.
+SHD stands for structural hamming distance, which is basically counting all the steps going from the estimated graph to the true graph. So lower SHD, the better, meaning that the estimated graph is closer to the true graph, hence taking less steps.
+Here we see that overall the green line has a lower SHD value ...
+
+
+First looking at the structural hamming distance, we see that in general CCI the green line and FCI the yellow line perform better in sparse conditions while CCD the red lines perform better in dense conditions. Remember this is structural hamming distance, so the lower the better. the less steps it takes the better estimated graph it is.
 Another thing to note i that it is a bit strange in 5p dense conditions. We see a bit of dips with the small sample sizes and actually it increases as sample size gets bigger... But for now let's move on.
 
 Then we see precision. Here we see that FCI, the yellow one, actually doesn't do so well. it records almost always the low precision. And also very similar pattern is observed with recall values. 

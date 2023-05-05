@@ -42,11 +42,11 @@ knitr::opts_chunk$set(
 options(warn = -1) 
 
 ## load functions & packages
-source("../utils/CCD_fnc.R")
-source("../utils/plot_fnc.R")
-source("../utils/data_generating_fnc.R")
-source("../utils/eval_metrics_fnc.R")
-source("../utils/true_ancestral_fnc.R")
+source("../  utils/CCD_fnc.R")
+source("../  utils/plot_fnc.R")
+source("../  utils/data_generating_fnc.R")
+source("../  utils/eval_metrics_fnc.R")
+source("../  utils/true_ancestral_fnc.R")
 
 library(magrittr)
 library(purrr)
@@ -72,18 +72,17 @@ set.seed(123)
 # Introduction
 
 Statistical network models have gained popularity in analyzing multivariate psychological data [@borsboom_network_2021]. In empirical practice, network parameters are often interpreted as reflecting causal relationships -- an approach that can be characterized as a form of causal discovery. However, recent research has shown that network models may not perform well as causal discovery tools for discovering acyclic causal structures (DAGs), and alternative methods are preferred for this task [@Ryan2022].
-
-But, acyclic causal models may not be suitable for some psychological phenomena, such as psychopathologies, which we expect to have cycles or feedback loop relationships between symptoms [@borsboom_network_2017]. While cyclic causal discovery methods have been developed in the computer science literature, they are not widely applied or well understood in empirical practice [@Bongers2021, @peters_elements_2017].
-
+But, acyclic causal models may not be suitable for some psychological phenomena, such as psychopathologies, which we expect to have cycles or feedback loop relationships between symptoms [@borsboom_network_2017]. While cyclic causal discovery methods have been developed in the computer science literature, they are not widely applied or well understood in empirical practice [@Bongers2021; @peters_elements_2017].
 To address this gap, the main paper provides an accessible introduction to the basics of cyclic causal discovery for empirical researchers [@Park_Discovering_cyclic_causal_2023]. It examines three different cyclic causal discovery methods --- CCD [@richardson1996], FCI [@mooij_classen2020] and CCI [@strobl2019] --- and investigates their performance in typical psychological research contexts through a simulation study.
 
-This supplementary material provides a more detailed results from the main simulation study, including the estimated partial ancestral graphs (PAGs) from each simulated condition and their corresponding accuracy and uncertainty measures at the edge-endpoint level. This encompasses the proportion of correct predictions for each endpoint, as well as the proportion of circle marks produced for each endpoint out of 500 iterations. In addition, the material offers the findings from a comparison of the running time for the algorithms employed in the study. Finally, we also present some extra empirical analyses conducted purely out of interest. Due to space limitations, we excluded these results from the main text.
+This supplementary material provides a more detailed results from the main simulation study, including the estimated partial ancestral graphs (PAGs) from each simulated condition and their corresponding accuracy and uncertainty measures at the edge-endpoint level. 
+Specifically, we present the proportion of correct predictions and the proportion of circle marks produced for each endpoint out of 500 iterations. Additionally, we report findings from a comparison of the running time for the algorithms discussed in the paper. Lastly, we present the results from additional empirical analyses using the same dataset as in the original study [@mcnally_co-morbid_2017].
 
 <hr>
 
 # Simulation Conditions
 
-Below, we show the directed cyclic graph (DCG) and the corresponding true ancestral graph for each condition in the main simulation study. There are in total eight conditions: model size ($p = 5$, $p = 10$) $\times$ density (sparse, dense) $\times$ presence of latent confounder (presence, absence).
+Below, we show the directed cyclic graph (DCG) and the corresponding true ancestral graph for each condition. There are in total eight conditions: model size ($p = 5$, $p = 10$) $\times$ density (sparse, dense) $\times$ presence of latent confounder (presence, absence).
 
 Eight conditions include: 5p sparse, 5p dense, 10p sparse, 10p dense, 5p sparse with LC (latent confounder), 5p dense with LC, 10p sparse with LC. 10p dense with LC.
 
@@ -141,9 +140,9 @@ plotAG(trueag_5psparse)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_5psparse.RData")
-load("../simulation/data/fixedB_n500/fci_5psparse.RData")
-load("../simulation/data/fixedB_n500/cci_5psparse.RData")
+load("../    simulation/data/fixedB_n500/mat_5psparse.RData")
+load("../    simulation/data/fixedB_n500/fci_5psparse.RData")
+load("../    simulation/data/fixedB_n500/cci_5psparse.RData")
 
 ## Evaluation 
 # CCD
@@ -223,9 +222,9 @@ plotAG(trueag_5pdense)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_5pdense.RData")
-load("../simulation/data/fixedB_n500/fci_5pdense.RData")
-load("../simulation/data/fixedB_n500/cci_5pdense.RData")
+load("../    simulation/data/fixedB_n500/mat_5pdense.RData")
+load("../    simulation/data/fixedB_n500/fci_5pdense.RData")
+load("../    simulation/data/fixedB_n500/cci_5pdense.RData")
 
 ## Evaluation 
 # CCD
@@ -330,9 +329,9 @@ plotAG(trueag_10psparse)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_10psparse.RData")
-load("../simulation/data/fixedB_n500/fci_10psparse.RData")
-load("../simulation/data/fixedB_n500/cci_10psparse.RData")
+load("../    simulation/data/fixedB_n500/mat_10psparse.RData")
+load("../    simulation/data/fixedB_n500/fci_10psparse.RData")
+load("../    simulation/data/fixedB_n500/cci_10psparse.RData")
 
 ## Evaluation 
 # CCD
@@ -429,9 +428,9 @@ plotAG(trueag_10pdense)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_10pdense.RData")
-load("../simulation/data/fixedB_n500/fci_10pdense.RData")
-load("../simulation/data/fixedB_n500/cci_10pdense.RData")
+load("../    simulation/data/fixedB_n500/mat_10pdense.RData")
+load("../    simulation/data/fixedB_n500/fci_10pdense.RData")
+load("../    simulation/data/fixedB_n500/cci_10pdense.RData")
 
 ## Evaluation 
 # CCD
@@ -524,9 +523,9 @@ plotAG(trueag_5psparseLV)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_5pLVsparse.RData")
-load("../simulation/data/fixedB_n500/fci_5pLVsparse.RData")
-load("../simulation/data/fixedB_n500/cci_5pLVsparse.RData")
+load("../    simulation/data/fixedB_n500/mat_5pLVsparse.RData")
+load("../    simulation/data/fixedB_n500/fci_5pLVsparse.RData")
+load("../    simulation/data/fixedB_n500/cci_5pLVsparse.RData")
 
 ## Evaluation 
 # CCD
@@ -612,9 +611,9 @@ plotAG(trueag_5pdenseLV)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_5pLVdense.RData")
-load("../simulation/data/fixedB_n500/fci_5pLVdense.RData")
-load("../simulation/data/fixedB_n500/cci_5pLVdense.RData")
+load("../    simulation/data/fixedB_n500/mat_5pLVdense.RData")
+load("../    simulation/data/fixedB_n500/fci_5pLVdense.RData")
+load("../    simulation/data/fixedB_n500/cci_5pLVdense.RData")
 
 ## Evaluation 
 # CCD
@@ -725,9 +724,9 @@ plotAG(trueag_10psparseLV)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_10pLVsparse.RData")
-load("../simulation/data/fixedB_n500/fci_10pLVsparse.RData")
-load("../simulation/data/fixedB_n500/cci_10pLVsparse.RData")
+load("../    simulation/data/fixedB_n500/mat_10pLVsparse.RData")
+load("../    simulation/data/fixedB_n500/fci_10pLVsparse.RData")
+load("../    simulation/data/fixedB_n500/cci_10pLVsparse.RData")
 
 ## Evaluation 
 # CCD
@@ -824,9 +823,9 @@ plotAG(trueag_10pdenseLV)
 title(main = "True ancestral graph", font.main = 1, cex.main = 1.2, line = 2, outer=TRUE, adj = 0.86)
 
 ## Load results from running algorithms
-load("../simulation/data/fixedB_n500/mat_10pLVdense.RData")
-load("../simulation/data/fixedB_n500/fci_10pLVdense.RData")
-load("../simulation/data/fixedB_n500/cci_10pLVdense.RData")
+load("../    simulation/data/fixedB_n500/mat_10pLVdense.RData")
+load("../    simulation/data/fixedB_n500/fci_10pLVdense.RData")
+load("../    simulation/data/fixedB_n500/cci_10pLVdense.RData")
 
 ## Evaluation 
 # CCD
@@ -879,7 +878,8 @@ SHD_cci10pLVdense <- cci_10pLVdense %>%
 
 # Performance Evaluation per Edge-endpoint
 
-Below, we present the most frequently estimated PAG for each sample size (N) from each algorithm. The graphs are obtained by picking the most frequent type of edge-endpoint produced by algorithms out of 500 simulations. Additionally, we present the matrix plots of the correct estimation and uncertainty for each edge-endpoint. The darker the color (blue/red) is, the higher the rate of correct estimation (blue) or uncertainty (red).
+Below, we present the most frequently estimated PAG for each sample size (N) from each algorithm, obtained by selecting the most frequently occurring edge-endpoint type out of 500 simulations.   
+We also include matrix plots that depict the proportion of correct estimation and uncertainty rates for each edge-endpoint. The color intensity in the matrix plots represents the rate of correct estimation (blue) or uncertainty (red), with darker colors indicating higher rates.
 
 ::: panel-tabset
 ## 5P sparse
@@ -2106,7 +2106,7 @@ cci_10pLVdense %>%
 
 # Performance Evalulation per Condition
 
-Here we summarize the performance of the algorithms across all conditions using the evaluation metrics: structural Hamming distance (SHD), precision, recall, and uncertainty. Each point represents the average value of each metric and shaded area represents interquartile range (IQR).
+Here, we summarize the performance of the algorithms across all conditions using the evaluation metrics: structural Hamming distance (SHD), precision, recall, and uncertainty. Each point represents the average value of each metric and shaded area represents interquartile range (IQR).
 
 ```{r}
 #| fig-width: 10
@@ -2300,14 +2300,14 @@ uncertainties %>%
 
 # Algorithm Running Time Analysis
 
-The figure below illustrates the running time of the three algorithms across every simulated condition, with time expressed in $log(ms)$.
+The figure below displays the running time of the three algorithms for every simulated condition, with time expressed in $log(ms)$.
 
 Based on the figure, we can observe that:
 
--   CCD is the most stable of the three algorithms and is largely unaffected by model size.
--   FCI and CCI are dependent on the model size as they take significantly more time for larger models (10-variable models) than for smaller models (5-variable models).
+-   CCD is the most stable algorithm, with its running time mostly unaffected by model size.
+-   FCI and CCI show dependence on the model size, as they take significantly more time for larger models (10-variable models) compared to smaller models (5-variable models).
 -   While CCD takes the longest for relatively small models, FCI and CCI require much more time than CCD for larger models.
--   In general, CCI takes more time than FCI in general, which is somewhat expected, since CCI has longer and more complex orientation rules compared to FCI.
+-   In general, CCI takes longer time than FCI, which is expected since CCI has longer and more complex orientation rules compared to FCI.
 
 ```{r}
 #| label: running-time
@@ -2315,7 +2315,7 @@ Based on the figure, we can observe that:
 #| fig-hight: 9
 
 ## Load results of algorithm running time
-load("../simulation/data/fixedB_n500/algo_runningtime.RData")
+load("../    simulation/data/fixedB_n500/algo_runningtime.RData")
 
 ## Plot the result
 times %>%
@@ -2340,17 +2340,23 @@ times %>%
 
 <hr>
 
-# Empirical Example (extra)
+# Empirical Analysis (extra)
 
-We estimated the PAGs using the same empirical data from @mcnally_co-morbid_2017 as those employed in the original paper. Since we only used the depression symptoms in the paper, here we attempt to extend it and apply the algorithms to the entire dataset, including the OCD symptoms. For this analysis, we use the algorithms implemented in the `TETRAD` software [@ramsey2018tetrad], which is why the CCI algorithm is excluded (since it is not yet available in `TETRAD`).[^1] Below, we begin by presenting a summary of the entire dataset, followed by the estimated PAGs, which can be found in @fig-9, @fig-10, and @fig-11.
+We estimated partial ancestral graphs (PAGs) using the same empirical data from @mcnally_co-morbid_2017 as those employed in the original paper. Since we only used the depression symptoms in the original analysis, here we attempt to extend it and apply the algorithms to the entire dataset, including the OCD symptoms. For this analysis, we use the algorithms implemented in the `TETRAD` software [@ramsey2018tetrad], excluding the CCI algorithm, which is not yet available in `TETRAD`.[^1]  
+In addition, instead of using Fisher's Z transformation, which relies on Gaussian-distributed data assumptions, we chose to use Chi-square based discrete type conditional independence (CI) tests.
+Below, we begin by presenting a summary of the entire dataset, followed by the estimated PAGs, which can be found in @fig-9, @fig-10, and @fig-11.
 
+
+From @fig-9 and @fig-10, we can see two distinct clusters of depression and OCD symptoms. Consistent with the findings in the main paper, the FCI PAG tends to contain more circle endpoints than the CCD PAG, as FCI accounts for latent confounding. In addition, the PAG for OCD symptoms exhibit a more active causal dynamic in general compared to the PAG for depression symptoms, which is evident from the dense network structure shown in @fig-11. 
+
+[^1]: In the original analyses, we used the `R` package `pcalg` [@pcalg] and `CCI`[@strobl2019].
 
 ```{r}
 #| label: empirical-data
 #| output: true
 
 # empirical data 408 rows by 26 columns (p = 26)
-mcnally <- read.csv("../empirical_example/data/McNally.csv") 
+mcnally <- read.csv("../   empirical_example/data/McNally.csv") 
 # check the data
 skimr::skim(mcnally)
 # separate dep / ocd symptoms
@@ -2358,8 +2364,11 @@ depression <- mcnally[,1:16]
 ocd <- mcnally[,17:26]
 ```
 
-***Note***. The abbreviation of the variable names is explained in the footnote.[^2]  
+***Note***. The abbreviation of the variable names is explained in the footnote.[^2]
 
+[^2]:
+    -   OCD symptoms: (1) obtime (time consumed by obsessions); (2) obinterfer (interference due to obsessions); (3) obdistress (distress caused by obsessions); (4) obresist (difficulty resisting obsessions); (5) obcontrol (difficulty controlling obsessions); (6) comptime (time consumed by compulsions); (7) compinterf(interference due to compulsions); (8) compdis (distress caused by compulsions); (9) compresis (difficulty resisting compulsions); and (10) compcont (difficulty controlling compulsions).
+    -   Depression symptoms: (1) onset(sleep-onset insomnia); (2) middle (difficulty falling back asleep in the middle of the night); (3) late (early morning awakening); (4) hypersom (hypersomnia); (5)sad (sadness); (6) decappetite (decreased appetite); (7)incappetite (increased appetite); (8) weightloss (weight loss, within the last 2 weeks); (9) weightgain (weight gain, within the last 2 weeks); (10) concen (concentration/decision-making impairment); (11) guilt (guilt and self-blame); (12) suicide (suicidal thoughts, plans or attempts); (13) anhedonia; (14) fatigue; (15) retard (psychomotor retardation); and (16) agitation.
 
 ```{r}
 #| label: running-algo-emp
@@ -2438,11 +2447,7 @@ plotPAG(ccd_mcnally_ocd, mat_mcnally_ocd)
 plotPAG(fci_mcocd, matfci_mcocd)
 ```
 
-[^1]: In the original analyses, we used the `R` package `pcalg` [@pcalg] and `CCI`[@strobl2019].
-[^2]:
-    -   OCD symptoms: (1) obtime (time consumed by obsessions); (2) obinterfer (interference due to obsessions); (3) obdistress (distress caused by obsessions); (4) obresist (difficulty resisting obsessions); (5) obcontrol (difficulty controlling obsessions); (6) comptime (time consumed by compulsions); (7) compinterf(interference due to compulsions); (8) compdis (distress caused by compulsions); (9) compresis (difficulty resisting compulsions); and (10) compcont (difficulty controlling compulsions).
-    -   Depression symptoms: (1) onset(sleep-onset insomnia); (2) middle (difficulty falling back asleep in the middle of the night); (3) late (early morning awakening); (4) hypersom (hypersomnia); (5)sad (sadness); (6) decappetite (decreased appetite); (7)incappetite (increased appetite); (8) weightloss (weight loss, within the last 2 weeks); (9) weightgain (weight gain, within the last 2 weeks); (10) concen (concentration/decision-making impairment); (11) guilt (guilt and self-blame); (12) suicide (suicidal thoughts, plans or attempts); (13) anhedonia; (14) fatigue; (15) retard (psychomotor retardation); and (16) agitation.
-    
+
 <hr>
 
 # References
