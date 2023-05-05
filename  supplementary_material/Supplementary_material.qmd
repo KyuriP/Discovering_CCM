@@ -71,12 +71,9 @@ set.seed(123)
 
 # Introduction
 
-Statistical network models have gained popularity in analyzing multivariate psychological data [@borsboom_network_2021]. In empirical practice, network parameters are often interpreted as reflecting causal relationships -- an approach that can be characterized as a form of causal discovery. However, recent research has shown that network models may not perform well as causal discovery tools for discovering acyclic causal structures (DAGs), and alternative methods are preferred for this task [@Ryan2022].
-But, acyclic causal models may not be suitable for some psychological phenomena, such as psychopathologies, which we expect to have cycles or feedback loop relationships between symptoms [@borsboom_network_2017]. While cyclic causal discovery methods have been developed in the computer science literature, they are not widely applied or well understood in empirical practice [@Bongers2021; @peters_elements_2017].
-To address this gap, the main paper provides an accessible introduction to the basics of cyclic causal discovery for empirical researchers [@Park_Discovering_cyclic_causal_2023]. It examines three different cyclic causal discovery methods --- CCD [@richardson1996], FCI [@mooij_classen2020] and CCI [@strobl2019] --- and investigates their performance in typical psychological research contexts through a simulation study.
+Statistical network models have gained popularity in analyzing multivariate psychological data [@borsboom_network_2021]. In empirical practice, network parameters are often interpreted as reflecting causal relationships -- an approach that can be characterized as a form of causal discovery. However, recent research has shown that network models may not perform well as causal discovery tools for discovering acyclic causal structures (DAGs), and alternative methods are preferred for this task [@Ryan2022]. But, acyclic causal models may not be suitable for some psychological phenomena, such as psychopathologies, which we expect to have cycles or feedback loop relationships between symptoms [@borsboom_network_2017]. While cyclic causal discovery methods have been developed in the computer science literature, they are not widely applied or well understood in empirical practice [@Bongers2021; @peters_elements_2017]. To address this gap, the main paper provides an accessible introduction to the basics of cyclic causal discovery for empirical researchers [@Park_Discovering_cyclic_causal_2023]. It examines three different cyclic causal discovery methods --- CCD [@richardson1996], FCI [@mooij_classen2020] and CCI [@strobl2019] --- and investigates their performance in typical psychological research contexts through a simulation study.
 
-This supplementary material provides a more detailed results from the main simulation study, including the estimated partial ancestral graphs (PAGs) from each simulated condition and their corresponding accuracy and uncertainty measures at the edge-endpoint level. 
-Specifically, we present the proportion of correct predictions and the proportion of circle marks produced for each endpoint out of 500 iterations. Additionally, we report findings from a comparison of the running time for the algorithms discussed in the paper. Lastly, we present the results from additional empirical analyses using the same dataset as in the original study [@mcnally_co-morbid_2017].
+This supplementary material provides a more detailed results from the main simulation study, including the estimated partial ancestral graphs (PAGs) from each simulated condition and their corresponding accuracy and uncertainty measures at the edge-endpoint level. Specifically, we present the proportion of correct predictions and the proportion of circle marks produced for each endpoint out of 500 iterations. Additionally, we report findings from a comparison of the running time for the algorithms discussed in the paper. Lastly, we present the results from additional empirical analyses using the same dataset as in the original study [@mcnally_co-morbid_2017].
 
 <hr>
 
@@ -878,7 +875,7 @@ SHD_cci10pLVdense <- cci_10pLVdense %>%
 
 # Performance Evaluation per Edge-endpoint
 
-Below, we present the most frequently estimated PAG for each sample size (N) from each algorithm, obtained by selecting the most frequently occurring edge-endpoint type out of 500 simulations.   
+Below, we present the most frequently estimated PAG for each sample size (N) from each algorithm, obtained by selecting the most frequently occurring edge-endpoint type out of 500 simulations.\
 We also include matrix plots that depict the proportion of correct estimation and uncertainty rates for each edge-endpoint. The color intensity in the matrix plots represents the rate of correct estimation (blue) or uncertainty (red), with darker colors indicating higher rates.
 
 ::: panel-tabset
@@ -1540,7 +1537,7 @@ cci_10pdense %>%
 
 ```
 
-## 5P sparse - LV
+## 5P sparse - LC
 
 ```{r}
 #| fig-width: 10
@@ -1681,7 +1678,7 @@ cci_5pLVsparse %>%
 
 ```
 
-## 5P dense - LV
+## 5P dense - LC
 
 ```{r}
 #| fig-width: 10
@@ -1821,7 +1818,7 @@ cci_5pLVdense %>%
 
 ```
 
-## 10P sparse - LV
+## 10P sparse - LC
 
 ```{r}
 #| fig-width: 14
@@ -1961,7 +1958,7 @@ cci_10pLVsparse %>%
 
 ```
 
-## 10P dense - LV
+## 10P dense - LC
 
 ```{r}
 #| fig-width: 14
@@ -2342,14 +2339,12 @@ times %>%
 
 # Empirical Analysis (extra)
 
-We estimated partial ancestral graphs (PAGs) using the same empirical data from @mcnally_co-morbid_2017 as those employed in the original paper. Since we only used the depression symptoms in the original analysis, here we attempt to extend it and apply the algorithms to the entire dataset, including the OCD symptoms. For this analysis, we use the algorithms implemented in the `TETRAD` software [@ramsey2018tetrad], excluding the CCI algorithm, which is not yet available in `TETRAD`.[^1]  
-In addition, instead of using Fisher's Z transformation, which relies on Gaussian-distributed data assumptions, we chose to use Chi-square based discrete type conditional independence (CI) tests.
-Below, we begin by presenting a summary of the entire dataset, followed by the estimated PAGs, which can be found in @fig-9, @fig-10, and @fig-11.
-
-
-From @fig-9 and @fig-10, we can see two distinct clusters of depression and OCD symptoms. Consistent with the findings in the main paper, the FCI PAG tends to contain more circle endpoints than the CCD PAG, as FCI accounts for latent confounding. In addition, the PAG for OCD symptoms exhibit a more active causal dynamic in general compared to the PAG for depression symptoms, which is evident from the dense network structure shown in @fig-11. 
+We estimated partial ancestral graphs (PAGs) using the same empirical data from @mcnally_co-morbid_2017 as those employed in the original paper. Since we only used the depression symptoms in the original analysis, here we attempt to extend it and apply the algorithms to the entire dataset, including the OCD symptoms. For this analysis, we use the algorithms implemented in the `TETRAD` software [@ramsey2018tetrad], excluding the CCI algorithm, which is not yet available in `TETRAD`.[^1]\
+In addition, instead of using Fisher's Z transformation, which relies on Gaussian-distributed data assumptions, we chose to use Chi-square based discrete type conditional independence (CI) tests. Below, we begin by presenting a summary of the entire dataset, followed by the estimated PAGs, which can be found in @fig-9, @fig-10, and @fig-11.
 
 [^1]: In the original analyses, we used the `R` package `pcalg` [@pcalg] and `CCI`[@strobl2019].
+
+From @fig-9 and @fig-10, we can see two distinct clusters of depression and OCD symptoms. Consistent with the findings in the main paper, the FCI PAG tends to contain more circle endpoints than the CCD PAG, as FCI accounts for latent confounding. In addition, the PAG for OCD symptoms exhibit a more active causal dynamic in general compared to the PAG for depression symptoms, which is evident from the dense network structure shown in @fig-11.
 
 ```{r}
 #| label: empirical-data
@@ -2446,7 +2441,6 @@ plotPAG(ccd_mcnally_ocd, mat_mcnally_ocd)
 ## FCI PAG for the ocd symptoms
 plotPAG(fci_mcocd, matfci_mcocd)
 ```
-
 
 <hr>
 
