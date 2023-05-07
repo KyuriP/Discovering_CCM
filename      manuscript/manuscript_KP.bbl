@@ -1,0 +1,490 @@
+\begin{thebibliography}{}
+
+\bibitem[Baba et~al., 2004]{baba_partial_2004}
+Baba, K., Shibata, R., \& Sibuya, M. (2004).
+\newblock Partial correlation and conditional correlation as measures of
+  conditional independence.
+\newblock {\em Australian \& New Zealand Journal of Statistics}, {\em 46}(4),
+  657--664.
+\newblock \url{https://doi.org/10.1111/j.1467-842X.2004.00360.x}
+
+\bibitem[Beller \& Baier, 2013]{beller_differential_2013}
+Beller, J. \& Baier, D. (2013).
+\newblock Differential effects: Are the effects studied by psychologists really
+  linear and homogeneous?
+\newblock {\em Europe's Journal of Psychology}, {\em 9}(2), 378--384.
+\newblock \url{https://doi.org/10.5964/ejop.v9i2.528}
+
+\bibitem[Bollen, 1989]{bollen_structural_1989}
+Bollen, K.~A. (1989).
+\newblock {\em Structural Equations with Latent Variables}.
+\newblock John Wiley \& Sons.
+
+\bibitem[Bollen \& Long, 1993]{bollen1993testing}
+Bollen, K.~A. \& Long, J.~S. (1993).
+\newblock {\em Testing structural equation models}  (Vol. 154).
+\newblock Sage.
+
+\bibitem[Bongers et~al., 2021]{Bongers2021}
+Bongers, S., Forr{\'e}, P., Peters, J., \& Mooij, J.~M. (2021).
+\newblock {Foundations of structural causal models with cycles and latent
+  variables}.
+\newblock {\em The Annals of Statistics}, {\em 49}(5), 2885--2915.
+\newblock \url{https://doi.org/10.1214/21-AOS2064}
+
+\bibitem[Bongers et~al., 2018]{bongers2018theoretical}
+Bongers, S., Peters, J., Sch{\"o}lkopf, B., \& Mooij, J.~M. (2018).
+\newblock Theoretical aspects of cyclic structural causal models.
+\newblock {\em arXiv preprint arXiv:1611.06221}.
+
+\bibitem[Borsboom, 2017]{borsboom_network_2017}
+Borsboom, D. (2017).
+\newblock A network theory of mental disorders.
+\newblock {\em World Psychiatry}, {\em 16}(1), 5--13.
+\newblock \url{https://doi.org/10.1002/wps.20375}
+
+\bibitem[Borsboom \& Cramer, 2013]{BorsboomCramer2013}
+Borsboom, D. \& Cramer, A.~O. (2013).
+\newblock Network analysis: An integrative approach to the structure of
+  psychopathology.
+\newblock {\em Annual Review of Clinical Psychology}, {\em 9}(1), 91--121.
+\newblock \url{https://doi.org/10.1146/annurev-clinpsy-050212-185608}
+
+\bibitem[Borsboom et~al., 2021]{borsboom_network_2021}
+Borsboom, D., Deserno, M.~K., Rhemtulla, M., Epskamp, S., Fried, E.~I.,
+  McNally, R.~J., Robinaugh, D.~J., Perugini, M., Dalege, J., Costantini, G.,
+  Isvoranu, A.-M., Wysocki, A.~C., van Borkulo, C.~D., van Bork, R., \&
+  Waldorp, L.~J. (2021).
+\newblock Network analysis of multivariate data in psychological science.
+\newblock {\em Nature Reviews Methods Primers}, {\em 1}(1), 1--18.
+\newblock \url{https://doi.org/10.1038/s43586-021-00055-w}
+
+\bibitem[Briganti et~al., 2022]{briganti_tutorial_2022}
+Briganti, G., Scutari, M., \& McNally, R.~J. (2022).
+\newblock A tutorial on bayesian networks for psychopathology researchers.
+\newblock {\em Psychological Methods}.
+\newblock \url{https://doi.org/10.1037/met0000479}
+
+\bibitem[Canonne et~al., 2018]{canonne_testing_2018}
+Canonne, C.~L., Diakonikolas, I., Kane, D.~M., \& Stewart, A. (2018).
+\newblock Testing conditional independence of discrete distributions.
+\newblock {\em arXiv preprint arXiv:1711.11560}.
+\newblock \url{https://doi.org/10.48550/arXiv.1711.11560}
+
+\bibitem[Coccurello, 2019]{coccurello_anhedonia_2019}
+Coccurello, R. (2019).
+\newblock Anhedonia in depression symptomatology: {Appetite} dysregulation and
+  defective brain reward processing.
+\newblock {\em Behavioural Brain Research}, {\em 372}, 112041.
+\newblock \url{https://doi.org/10.1016/j.bbr.2019.112041}
+
+\bibitem[Colombo et~al., 2012]{diego2012}
+Colombo, D., Maathuis, M.~H., Kalisch, M., \& Richardson, T.~S. (2012).
+\newblock {Learning high-dimensional directed acyclic graphs with latent and
+  selection variables}.
+\newblock {\em The Annals of Statistics}, {\em 40}(1), 294--321.
+\newblock \url{https://doi.org/10.1214/11-AOS940}
+
+\bibitem[Dablander \& Hinne, 2019]{dablander2019node}
+Dablander, F. \& Hinne, M. (2019).
+\newblock Node centrality measures are a poor substitute for causal inference.
+\newblock {\em Scientific Reports}, {\em 9}(1), 6846.
+\newblock \url{https://doi.org/10.1038/s41598-019-43033-9}
+
+\bibitem[de~Jongh \& Druzdzel, 2009]{de2009comparison}
+de~Jongh, M. \& Druzdzel, M.~J. (2009).
+\newblock A comparison of structural distance measures for causal bayesian
+  network models.
+\newblock {\em Recent Advances in Intelligent Information Systems},  443--456.
+
+\bibitem[de~Ridder et~al., 2008]{de_ridder_psychological_2008}
+de~Ridder, D., Geenen, R., Kuijer, R., \& van Middendorp, H. (2008).
+\newblock Psychological adjustment to chronic disease.
+\newblock {\em The Lancet}, {\em 372}(9634), 246--255.
+\newblock \url{https://doi.org/10.1016/S0140-6736(08)61078-8}
+
+\bibitem[Drton \& Maathuis, 2017]{drton_structure_2017}
+Drton, M. \& Maathuis, M.~H. (2017).
+\newblock Structure learning in graphical modeling.
+\newblock {\em Annual Review of Statistics and Its Application}, {\em 4}(1),
+  365--393.
+\newblock \url{https://doi.org/10.1146/annurev-statistics-060116-053803}
+
+\bibitem[Eberhardt et~al., 2010]{eberhardt2010}
+Eberhardt, F., Hoyer, P., \& Scheines, R. (2010).
+\newblock Combining experiments to discover linear cyclic models with latent
+  variables, In {\em Proceedings of the {Thirteenth} {International}
+  {Conference} on {Artificial} {Intelligence} and {Statistics}} (pp. 185--192).
+  JMLR Workshop and Conference Proceedings.
+
+\bibitem[Eigenmann et~al., 2017]{eigenmann_structure_2017}
+Eigenmann, M.~F., Nandy, P., \& Maathuis, M.~H. (2017).
+\newblock Structure learning of linear {Gaussian} structural equation models
+  with weak edges.
+\newblock {\em arXiv preprint arXiv:1707.07560}.
+\newblock \url{https://doi.org/10.48550/arXiv.1707.07560}
+
+\bibitem[Epskamp et~al., 2018a]{epskamp_estimating_2018}
+Epskamp, S., Borsboom, D., \& Fried, E.~I. (2018a).
+\newblock Estimating psychological networks and their accuracy: {A} tutorial
+  paper.
+\newblock {\em Behavior Research Methods}, {\em 50}(1), 195--212.
+\newblock \url{https://doi.org/10.3758/s13428-017-0862-1}
+
+\bibitem[Epskamp \& Fried, 2018]{epskamp_tutorial_2018}
+Epskamp, S. \& Fried, E.~I. (2018).
+\newblock A tutorial on regularized partial correlation networks.
+\newblock {\em Psychological Methods}, {\em 23}(4), 617--634.
+\newblock \url{https://doi.org/10.1037/met0000167}
+
+\bibitem[Epskamp et~al., 2018b]{epskamp_gaussian_2018}
+Epskamp, S., Waldorp, L.~J., M{\~o}ttus, R., \& Borsboom, D. (2018b).
+\newblock The {Gaussian} graphical model in cross-sectional and time-series
+  data.
+\newblock {\em Multivariate Behavioral Research}, {\em 53}(4), 453--480.
+\newblock \url{https://doi.org/10.1080/00273171.2018.1454823}
+
+\bibitem[Forr{\'e} \& Mooij, 2017]{forre_markov_2017}
+Forr{\'e}, P. \& Mooij, J.~M. (2017).
+\newblock Markov properties for graphical models with cycles and latent
+  variables.
+\newblock {\em arXiv preprint arXiv:1710.08775}.
+\newblock \url{https://doi.org/10.48550/arXiv.1710.08775}
+
+\bibitem[Friedman et~al., 2008]{friedman_sparse_2008}
+Friedman, J., Hastie, T., \& Tibshirani, R. (2008).
+\newblock Sparse inverse covariance estimation with the graphical lasso.
+\newblock {\em Biostatistics}, {\em 9}(3), 432--441.
+\newblock \url{https://doi.org/10.1093/biostatistics/kxm045}
+
+\bibitem[Geiger \& Pearl, 1990]{geiger_logic_1990}
+Geiger, D. \& Pearl, J. (1990).
+\newblock On the logic of causal models.
+\newblock In Shachter, R.~D., Levitt, T.~S., Kanal, L.~N., \& Lemmer, J.~F.
+  (Eds.). {\em Machine intelligence and pattern recognition} (Vol. 9, pp.
+  3--14). North-Holland.
+\newblock \url{https://doi.org/10.1016/B978-0-444-88650-7.50006-8}
+
+\bibitem[Geiger et~al., 1990]{geiger_d-separation_1990}
+Geiger, D., Verma, T., \& Pearl, J. (1990).
+\newblock d-{Separation}: {From} theorems to algorithms.
+\newblock In Henrion, M., Shachter, R.~D., Kanal, L.~N., \& Lemmer, J.~F.
+  (Eds.). {\em Machine intelligence and pattern recognition} (Vol. 10, pp.
+  139--148). North-Holland.
+\newblock \url{https://doi.org/10.1016/B978-0-444-88738-2.50018-X}
+
+\bibitem[Glymour et~al., 2019]{Glymour2019}
+Glymour, C., Zhang, K., \& Spirtes, P. (2019).
+\newblock Review of causal discovery methods based on graphical models.
+\newblock {\em Frontiers in Genetics}, {\em 10}, 524.
+\newblock \url{https://doi.org/10.3389/fgene.2019.00524}
+
+\bibitem[Go{\"e}rtz et~al., 2021]{goertz_fatigue_2021}
+Go{\"e}rtz, Y. M.~J., Braamse, A. M.~J., Spruit, M.~A., Ebadi, Z., Van~Herck,
+  M., Burtin, C., Peters, J.~B., Lamers, F., Geerlings, S.~E., Vaes, A.~W., van
+  Beers, M., \& Knoop, H. (2021).
+\newblock Fatigue in patients with chronic disease: results from the
+  population-based {Lifelines} {Cohort} {Study}.
+\newblock {\em Scientific Reports}, {\em 11}(1), 20977.
+\newblock \url{https://doi.org/10.1038/s41598-021-00337-z}
+
+\bibitem[Hallquist et~al., 2021]{hallquist2019}
+Hallquist, M.~N., Wright, A. G.~C., \& Molenaar, P. C.~M. (2021).
+\newblock Problems with centrality measures in psychopathology symptom
+  networks: {Why} network psychometrics cannot escape psychometric theory.
+\newblock {\em Multivariate Behavioral Research}, {\em 56}(2), 199--223.
+\newblock \url{https://doi.org/10.1080/00273171.2019.1640103}
+
+\bibitem[Haslbeck et~al., 2022]{haslbeck_sum_2022}
+Haslbeck, J. M.~B., Ryan, O., \& Dablander, F. (2022).
+\newblock The sum of all fears: {Comparing} networks based on symptom
+  sum-scores.
+\newblock {\em Psychological Methods}, {\em 27}, 1061--1068.
+\newblock \url{https://doi.org/10.1037/met0000418}
+
+\bibitem[Huang et~al., 2016]{huang_sun_white_2016}
+Huang, M., Sun, Y., \& White, H. (2016).
+\newblock A flexible nonparametric test for conditional independence.
+\newblock {\em Econometric Theory}, {\em 32}(6), 1434–1482.
+\newblock \url{https://doi.org/10.1017/S0266466615000286}
+
+\bibitem[Huang, 2010]{huang_testing_2010}
+Huang, T.~M. (2010).
+\newblock Testing conditional independence using maximal nonlinear conditional
+  correlation.
+\newblock {\em The Annals of Statistics}, {\em 38}(4).
+\newblock \url{https://doi.org/10.1214/09-AOS770}
+
+\bibitem[Hyttinen et~al., 2013]{hyttinen_discovering_2013}
+Hyttinen, A., Hoyer, P.~O., Eberhardt, F., \& Jarvisalo, M. (2013).
+\newblock Discovering cyclic causal models with latent variables: {A} general
+  {SAT}-based procedure.
+\newblock {\em arXiv preprint arXiv:1309.6836}.
+\newblock \url{https://doi.org/10.48550/arXiv.1309.6836}
+
+\bibitem[Kalisch \& Buehlmann, 2005]{kalisch_estimating_2005}
+Kalisch, M. \& Buehlmann, P. (2005).
+\newblock Estimating high-dimensional directed acyclic graphs with the
+  {PC}-algorithm.
+\newblock {\em arXiv preprint arXiv:math/0510436}.
+\newblock \url{https://doi.org/10.48550/arXiv.math/0510436}
+
+\bibitem[Kossakowski et~al., 2021]{Kossakowski2021}
+Kossakowski, J., Waldorp, L.~J., \& van~der Maas, H. L.~J. (2021).
+\newblock The search for causality: A comparison of different techniques for
+  causal inference graphs.
+\newblock {\em Psychological Methods}, {\em 26}(6), 719--742.
+\newblock \url{https://doi.org/10.1037/met0000390}
+
+\bibitem[Lauritzen, 1996]{lauritzen1996graphical}
+Lauritzen, S. (1996).
+\newblock {\em Graphical models}  (Vol. 17).
+\newblock Clarendon Press.
+
+\bibitem[Lauritzen, 2001]{lauritzen2000graphical}
+Lauritzen, S. (2001).
+\newblock Causal inference from graphical models.
+\newblock {\em Monographs on Statistics and Applied Probability}, {\em 87},
+  63--108.
+
+\bibitem[Lawrance, 1976]{lawrance_conditional_1976}
+Lawrance, A.~J. (1976).
+\newblock On conditional and partial correlation.
+\newblock {\em The American Statistician}, {\em 30}(3), 146--149.
+\newblock \url{https://doi.org/10.2307/2683864}
+
+\bibitem[Li \& Fan, 2020]{li_fan2020}
+Li, C. \& Fan, X. (2020).
+\newblock On nonparametric conditional independence tests for continuous
+  variables.
+\newblock {\em WIREs Computational Statistics}, {\em 12}(3), e1489.
+\newblock \url{https://doi.org/10.1002/wics.1489}
+
+\bibitem[Magliacane et~al., 2017]{magliacane_ancestral_2017}
+Magliacane, S., Claassen, T., \& Mooij, J.~M. (2017).
+\newblock Ancestral causal inference.
+\newblock {\em arXiv preprint arXiv:1606.07035}.
+\newblock \url{https://doi.org/10.48550/arXiv.1606.07035}
+
+\bibitem[Malinsky \& Danks, 2018]{malinsky_causal_2018}
+Malinsky, D. \& Danks, D. (2018).
+\newblock Causal discovery algorithms: {A} practical guide.
+\newblock {\em Philosophy Compass}, {\em 13}(1), e12470.
+\newblock \url{https://doi.org/10.1111/phc3.12470}
+
+\bibitem[McNally et~al., 2017]{mcnally_co-morbid_2017}
+McNally, R.~J., Mair, P., Mugno, B.~L., \& Riemann, B.~C. (2017).
+\newblock Co-morbid obsessive-compulsive disorder and depression: a {Bayesian}
+  network approach.
+\newblock {\em Psychological Medicine}, {\em 47}(7), 1204--1214.
+\newblock \url{https://doi.org/10.1017/S0033291716003287}
+
+\bibitem[Menzies et~al., 2021]{menzies_systematic_2021}
+Menzies, V., Kelly, D.~L., Yang, G.~S., Starkweather, A., \& Lyon, D.~E.
+  (2021).
+\newblock A systematic review of the association between fatigue and cognition
+  in chronic noncommunicable diseases.
+\newblock {\em Chronic illness}, {\em 17}(2), 129--150.
+\newblock \url{https://doi.org/10.1177/1742395319836472}
+
+\bibitem[Mooij \& Claassen, 2020]{mooij_classen2020}
+Mooij, J.~M. \& Claassen, T. (2020).
+\newblock Constraint-based causal discovery using partial ancestral graphs in
+  the presence of cycles, In {\em Proceedings of the 36th Conference on
+  Uncertainty in Artificial Intelligence} (pp. 1159--1168). Proceedings of
+  Machine Learning Research.
+
+\bibitem[Mooij et~al., 2020]{mooij_joint_2020}
+Mooij, J.~M., Magliacane, S., \& Claassen, T. (2020).
+\newblock Joint causal inference from multiple contexts.
+\newblock {\em arXiv preprint arXiv:1611.10351}.
+\newblock \url{https://doi.org/10.48550/arXiv.1611.10351}
+
+\bibitem[Park, 2023]{Park_Discovering_cyclic_causal_2023}
+Park, K. (2023).
+\newblock {Discovering cyclic causal models in psychological research}.
+\newblock {\em GitHub repository}. Retrieved from
+  \url{https://github.com/KyuriP/Thesis_KP}
+
+\bibitem[Pearl, 1988]{pearl_probabilistic_1988}
+Pearl, J. (1988).
+\newblock {\em Probabilistic {Reasoning} in {Intelligent} {Systems}: {Networks}
+  of {Plausible} {Inference}}.
+\newblock Morgan Kaufmann.
+
+\bibitem[Pearl, 2009]{pearl2009causality}
+Pearl, J. (2009).
+\newblock {\em Causality}.
+\newblock Cambridge university press.
+
+\bibitem[Pek et~al., 2018]{pek_how_2018}
+Pek, J., Wong, O., \& Wong, A. C.~M. (2018).
+\newblock How to address non-normality: {A} taxonomy of approaches, reviewed,
+  and illustrated.
+\newblock {\em Frontiers in Psychology}, {\em 9}.
+\newblock \url{https://doi.org/10.3389/fpsyg.2018.02104}
+
+\bibitem[Peters et~al., 2016]{peters_causal_2016}
+Peters, J., B{\"u}hlmann, P., \& Meinshausen, N. (2016).
+\newblock Causal {Inference} by using {Invariant} {Prediction}:
+  {Identification} and {Confidence} {Intervals}.
+\newblock {\em Journal of the Royal Statistical Society Series B: Statistical
+  Methodology}, {\em 78}(5), 947--1012.
+\newblock \url{https://doi.org/10.1111/rssb.12167}
+
+\bibitem[Peters et~al., 2017]{peters_elements_2017}
+Peters, J., Janzing, D., \& Sch\"{o}lkopf, B. (2017).
+\newblock {\em Elements of causal inference: {Foundations} and learning
+  algorithms}.
+\newblock MIT Press.
+
+\bibitem[{R Core Team}, 2023]{R}
+{R Core Team} (2023).
+\newblock R: {A} Language and Environment for Statistical Computing.
+\newblock R Foundation for Statistical Computing, Vienna, Austria. URL
+  \url{https://www.R-project.org/}
+
+\bibitem[Richardson, 1996a]{richardson1996}
+Richardson, T. (1996a).
+\newblock {\em Discovering cyclic causal structure} (Publication No.
+  CMU-PHIL-68).
+\newblock Carnegie Mellon University, Department of Philosophy.
+\bibitem[Richardson, 1996b]{Richardson1996a}
+Richardson, T. (1996b).
+\newblock A discovery algorithm for directed cyclic graphs, In {\em Proceedings
+  of the Twelfth International Conference on Uncertainty in Artificial
+  Intelligence} (pp. 454–461). Morgan Kaufmann Publishers Inc.
+
+\bibitem[Richardson, 2003]{richardson_markov_2003}
+Richardson, T. (2003).
+\newblock Markov properties for acyclic directed mixed graphs.
+\newblock {\em Scandinavian Journal of Statistics}, {\em 30}(1), 145--157.
+\newblock \url{https://doi.org/10.1111/1467-9469.00323}
+
+\bibitem[Richardson \& Spirtes, 1999]{richardson1996automated}
+Richardson, T. \& Spirtes, P. (1999).
+\newblock Automated discovery of linear feedback models.
+\newblock In Glymour, C. \& Cooper, G.~F. (Eds.). {\em Computation, causation,
+  and discovery} (pp. 253 -- 302). MIT Press.
+\newblock \url{https://doi.org/10.7551/mitpress/2006.001.0001}
+
+\bibitem[Richardson \& Spirtes, 2002]{Richardson2002}
+Richardson, T. \& Spirtes, P. (2002).
+\newblock {Ancestral graph Markov models}.
+\newblock {\em The Annals of Statistics}, {\em 30}(4), 962 -- 1030.
+\newblock \url{https://doi.org/10.1214/aos/1031689015}
+
+\bibitem[Robinaugh et~al., 2020]{robinaugh2020}
+Robinaugh, D.~J., Hoekstra, R. H.~A., Toner, E.~R., \& Borsboom, D. (2020).
+\newblock The network approach to psychopathology: {A} review of the literature
+  2008–2018 and an agenda for future research.
+\newblock {\em Psychological Medicine}, {\em 50}(3), 353–366.
+\newblock \url{https://doi.org/10.1017/S0033291719003404}
+
+\bibitem[Rohrer, 2018]{rohrer_thinking_2018}
+Rohrer, J.~M. (2018).
+\newblock Thinking clearly about correlations and causation: {Graphical} causal
+  models for observational data.
+\newblock {\em Advances in Methods and Practices in Psychological Science},
+  {\em 1}(1), 27--42.
+\newblock \url{https://doi.org/10.1177/2515245917745629}
+
+\bibitem[Rohrer et~al., 2022]{rohr2022}
+Rohrer, J.~M., H{\"u}nermund, P., Arslan, R.~C., \& Elson, M. (2022).
+\newblock That's a lot to process! {Pitfalls} of popular path models.
+\newblock {\em Advances in Methods and Practices in Psychological Science},
+  {\em 5}(2).
+\newblock \url{https://doi.org/10.1177/25152459221095827}
+
+\bibitem[Rothenh{\"a}usler et~al., 2015]{rothenhausler_backshift_2015}
+Rothenh{\"a}usler, D., Heinze, C., Peters, J., \& Meinshausen, N. (2015).
+\newblock {backShift}: {Learning} causal cyclic graphs from unknown shift
+  interventions.
+\newblock {\em arXiv preprint arXiv:1506.02494}.
+\newblock \url{https://doi.org/10.48550/arXiv.1506.02494}
+
+\bibitem[Ryan et~al., 2022]{Ryan2022}
+Ryan, O., Bringmann, L.~F., \& Schuurman, N.~K. (2022).
+\newblock The challenge of generating causal hypotheses using network models.
+\newblock {\em Structural Equation Modeling: A Multidisciplinary Journal}, {\em
+  0}(0), 1--18.
+\newblock \url{https://doi.org/10.1080/10705511.2022.2056039}
+
+\bibitem[Scheines et~al., 1998]{scheines_tetrad_1998}
+Scheines, R., Spirtes, P., Glymour, C., Meek, C., \& Richardson, T. (1998).
+\newblock The {TETRAD} project: {Constraint} based aids to causal model
+  specification.
+\newblock {\em Multivariate Behavioral Research}, {\em 33}(1), 65--117.
+\newblock \url{https://doi.org/10.1207/s15327906mbr3301_3}
+
+\bibitem[Spirtes, 1994]{spirtes1994}
+Spirtes, P. (1994).
+\newblock {\em Conditional independence in directed cyclic graphical models for
+  feedback} (Publication No. CMU-PHIL-53).
+\newblock Carnegie Mellon University, Department of Philosophy.
+\bibitem[Spirtes \& Glymour, 1991]{spirtes_algorithm_1991}
+Spirtes, P. \& Glymour, C. (1991).
+\newblock An algorithm for fast recovery of sparse causal graphs.
+\newblock {\em Social Science Computer Review}, {\em 9}(1), 62--72.
+\newblock \url{https://doi.org/10.1177/089443939100900106}
+
+\bibitem[Spirtes et~al., 2000]{spirtes2000}
+Spirtes, P., Glymour, C.~N., Scheines, R., \& Heckerman, D. (2000).
+\newblock {\em Causation, prediction, and search}.
+\newblock MIT press.
+
+\bibitem[Spirtes et~al., 2013]{spirtes_causal_2013}
+Spirtes, P., Meek, C., \& Richardson, T. (2013).
+\newblock Causal inference in the presence of latent variables and selection
+  bias.
+\newblock {\em arXiv preprint arXiv:1302.4983}.
+\newblock \url{https://doi.org/10.48550/arXiv.1302.4983}
+
+\bibitem[Strobl, 2019]{strobl2019}
+Strobl, E.~V. (2019).
+\newblock A constraint-based algorithm for causal discovery with cycles, latent
+  variables and selection bias.
+\newblock {\em International Journal of Data Science and Analytics}, {\em
+  8}(1), 33--56.
+\newblock \url{https://doi.org/10.1007/s41060-018-0158-2}
+
+\bibitem[Strobl et~al., 2017]{strobl_estimating_2017}
+Strobl, E.~V., Spirtes, P.~L., \& Visweswaran, S. (2017).
+\newblock Estimating and controlling the false discovery rate for the {PC}
+  algorithm using edge-specific p-values.
+\newblock {\em arXiv preprint arXiv:1607.03975}.
+\newblock \url{https://doi.org/10.48550/arXiv.1607.03975}
+
+\bibitem[Versteeg et~al., 2022]{versteeg_local_2022}
+Versteeg, P., Mooij, J., \& Zhang, C. (2022).
+\newblock Local constraint-based causal discovery under selection bias, In {\em
+  Proceedings of the {First} {Conference} on {Causal} {Learning} and
+  {Reasoning}} (pp. 840--860). Proceedings of Machine Learning Research.
+
+\bibitem[Wittenborn et~al., 2016]{wittenborn_2016}
+Wittenborn, A.~K., Rahmandad, H., Rick, J., \& Hosseinichimeh, N. (2016).
+\newblock Depression as a systemic syndrome: {Mapping} the feedback loops of
+  major depressive disorder.
+\newblock {\em Psychological Medicine}, {\em 46}(3), 551–562.
+\newblock \url{https://doi.org/10.1017/S0033291715002044}
+
+\bibitem[Zhang, 2008]{zhang_completeness_2008}
+Zhang, J. (2008).
+\newblock On the completeness of orientation rules for causal discovery in the
+  presence of latent confounders and selection bias.
+\newblock {\em Artificial Intelligence}, {\em 172}(16), 1873--1896.
+\newblock \url{https://doi.org/10.1016/j.artint.2008.08.001}
+
+\bibitem[Zhang \& Spirtes, 2005]{zhang_characterization_2005}
+Zhang, J. \& Spirtes, P. (2005).
+\newblock {\em A characterization of {Markov} equivalence classes for ancestral
+  graphical models} (Publication No. CMU-PHIL-168).
+\newblock Carnegie Mellon University, Department of Philosophy.
+\bibitem[Zhang et~al., 2012]{zhang_kernel-based_2012}
+Zhang, K., Peters, J., Janzing, D., \& Sch\"{o}lkopf, B. (2012).
+\newblock Kernel-based conditional independence test and application in causal
+  discovery.
+\newblock {\em arXiv preprint arXiv:1202.3775}.
+\newblock \url{https://doi.org/10.48550/arXiv.1202.3775}
+
+\end{thebibliography}
