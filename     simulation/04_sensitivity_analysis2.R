@@ -103,9 +103,9 @@ truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse,
                  trueag_10psparseLV, trueag_10pdenseLV)
 
 # load results
-load("data/randomB_pos/CCDres3_pos.Rdata") # CCDres
-load("data/randomB_pos/FCIres3_pos.Rdata") # FCIres
-load("data/randomB_pos/CCIres3_pos.Rdata") # CCIres
+load("    simulation/output/randomB_pos/CCDres3_pos.Rdata") # CCDres
+load("    simulation/output/randomB_pos/FCIres3_pos.Rdata") # FCIres
+load("    simulation/output/randomB_pos/CCIres3_pos.Rdata") # CCIres
 
 
 ## =============================================================================

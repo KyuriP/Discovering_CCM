@@ -110,14 +110,14 @@ truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse,
                  trueag_10psparseLV, trueag_10pdenseLV)
 
 
-# save(CCDres, file ="simulation/data/randomB_n500/CCDres2_randomB.Rdata")
-# save(FCIres, file = "simulation/data/randomB_n500/FCIres2_randomB.Rdata")
-# save(CCIres, file = "simulation/data/randomB_n500/CCIres2_randomB.Rdata")
+# save(CCDres, file ="    simulation/output/randomB_n500/CCDres2_randomB.Rdata")
+# save(FCIres, file = "    simulation/output/randomB_n500/FCIres2_randomB.Rdata")
+# save(CCIres, file = "    simulation/output/randomB_n500/CCIres2_randomB.Rdata")
 
 # load results
-load("simulation/data/randomB_n500/CCDres2_randomB.Rdata")
-load("simulation/data/randomB_n500/FCIres2_randomB.Rdata")
-load("simulation/data/randomB_n500/CCIres2_randomB.Rdata")
+load("    simulation/output/randomB_n500/CCDres2_randomB.Rdata")
+load("    simulation/output/randomB_n500/FCIres2_randomB.Rdata")
+load("    simulation/output/randomB_n500/CCIres2_randomB.Rdata")
 
 
 
