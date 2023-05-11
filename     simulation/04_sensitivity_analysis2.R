@@ -148,16 +148,22 @@ names(CCIshd) <- names(CCIres)
 
 ## combine the SHD values
 SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
+    # create variables (conditions)
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
     latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
+  # unnest a list-column
   tidyr::unnest(value) %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols = starts_with("N ="), names_to = "n", values_to = "value") %>% 
+  # create variables (statistics & sample size)
   mutate(statistics = stringr::str_split(n, "_", simplify=T)[,2],
          n = as.numeric(stringr::str_extract_all(n, "[0-9]+")))  %>% 
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
 
@@ -195,16 +201,22 @@ names(CCIprec) <- names(CCIres)
 
 ## combine the precision values
 prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
+    # create variables (conditions)
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
     latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
+  # unnest a list-column
   tidyr::unnest(value) %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols = starts_with("N ="), names_to = "n", values_to = "value") %>% 
+  # create variables (statistics & sample size)
   mutate(statistics = stringr::str_split(n, "_", simplify=T)[,2],
          n = as.numeric(stringr::str_extract_all(n, "[0-9]+")))  %>% 
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
 
@@ -241,16 +253,22 @@ names(CCIrec) <- names(CCIres)
 
 ## combine the recall values
 rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
+    # create variables (conditions)
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
     latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>%  
+  # unnest a list-column
   tidyr::unnest(value) %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols = starts_with("N ="), names_to = "n", values_to = "value") %>% 
+  # create variables (statistics & sample size)
   mutate(statistics = stringr::str_split(n, "_", simplify=T)[,2],
          n = as.numeric(stringr::str_extract_all(n, "[0-9]+")))  %>% 
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
 
@@ -299,12 +317,15 @@ names(CCIunc) <- names(CCIres)
 unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>% 
   # n = repeat N: 3 algo * 2 (mean & sd), repeat c(means,sd) by length of N * 3 algo
   mutate(n = rep(N,6), statistics = rep(c("means", "sds"), each = length(N), times = 3)) %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols = -c(id, n, statistics), names_to = "condition", values_to = "value") %>% 
   mutate(
+    # create variables (conditions)
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
     latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>% 
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
 
@@ -347,7 +368,7 @@ shdplot_ranB_pos <- SHD_ranB %>%
   # apply themes
   theme_minimal() +
   MyTheme + 
-  # create facet
+  # create facets
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
                              labels=c("p = 5", "p = 10")) ~ 
                         factor(latentvar, levels = c("without LC", "with LC")) + 

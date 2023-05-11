@@ -968,17 +968,22 @@ times <- times %>%
          condition = stringr::str_split(expr, "_", simplify=T)[,2])
 
 
-## create a boxplot
+## create a figure 
 timeplot <- times %>%
+  # create ggplot object
   ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", 
                                            "5pLVsparse","5pLVdense", "10pLVsparse","10pLVdense")), 
              y = log(time), col= factor(algorithm))) +
+  # add boxplots
   geom_boxplot(position = "dodge", outlier.size = 0.8, outlier.alpha = 0.2) + 
+  # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  # specify plot labels
   labs(y = " log(ms)", x = "conditions", title = "Algorithm Running Time", 
        subtitle = "Time in milliseconds (ms)") +
   scale_x_discrete(labels=c("5p sparse", "5p dense", "10p sparse", "10p dense", 
                             "5p sparse LC","5p dense LC", "10p sparse LC","10p dense LC")) +
+  # apply the themes
   theme_classic() +
   theme(axis.text.x = element_text(face = "bold", margin = margin(t = 13)),
         plot.title = element_text(face = "bold", family = "Palatino", size = 15),

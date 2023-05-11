@@ -77,6 +77,7 @@ simdat_alpha2 <- simdat_alpha %>% bind_rows(.id="id")
 ## =============
 ## B5 sparse 
 ## =============
+# run CCD on B5 sparse data
 CCDB5sparse <- list()
 for(i in 1:length(N)){
   CCDB5sparse[[i]] <- simdat_alpha2 %>% filter(id == "B5sparse") %>% 
@@ -87,6 +88,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B5 sparse data
 FCIB5sparse <- list()
 for(i in 1:length(N)){
   FCIB5sparse[[i]] <- simdat_alpha2 %>% filter(id == "B5sparse") %>% 
@@ -97,6 +99,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B5 sparse data
 CCIB5sparse <- list()
 for(i in 1:length(N)){
   CCIB5sparse[[i]] <- simdat_alpha2 %>% filter(id == "B5sparse") %>% 
@@ -111,6 +114,7 @@ for(i in 1:length(N)){
 ## =============
 ## B5 dense 
 ## =============
+# run CCD on B5 dense data
 CCDB5dense <- list()
 for(i in 1:length(N)){
   CCDB5dense[[i]] <- simdat_alpha2 %>% filter(id == "B5dense") %>% 
@@ -121,6 +125,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B5 dense data
 FCIB5dense <- list()
 for(i in 1:length(N)){
   FCIB5dense[[i]] <- simdat_alpha2 %>% filter(id == "B5dense") %>% 
@@ -131,6 +136,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B5 dense data
 CCIB5dense <- list()
 for(i in 1:length(N)){
   CCIB5dense[[i]] <- simdat_alpha2 %>% filter(id == "B5dense") %>% 
@@ -145,6 +151,7 @@ for(i in 1:length(N)){
 ## =============
 ## B10 sparse 
 ## =============
+# run CCD on B10 sparse data
 CCDB10sparse <- list()
 for(i in 1:length(N)){
   CCDB10sparse[[i]] <- simdat_alpha2 %>% filter(id == "B10sparse") %>% 
@@ -155,6 +162,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B10 sparse data
 FCIB10sparse <- list()
 for(i in 1:length(N)){
   FCIB10sparse[[i]] <- simdat_alpha2 %>% filter(id == "B10sparse") %>% 
@@ -165,6 +173,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B10 sparse data
 CCIB10sparse <- list()
 for(i in 1:length(N)){
   CCIB10sparse[[i]] <- simdat_alpha2 %>% filter(id == "B10sparse") %>% 
@@ -179,6 +188,7 @@ for(i in 1:length(N)){
 ## =============
 ## B10 dense 
 ## =============
+# run CCD on B10 dense data
 CCDB10dense <- list()
 for(i in 1:length(N)){
   CCDB10dense[[i]] <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
@@ -189,6 +199,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B10 dense data
 FCIB10dense <- list()
 for(i in 1:length(N)){
   FCIB10dense[[i]] <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
@@ -199,6 +210,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B10 dense data
 CCIB10dense <- list()
 for(i in 1:length(N)){
   CCIB10dense[[i]] <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
@@ -213,6 +225,7 @@ for(i in 1:length(N)){
 ## =============
 ## B5 sparse LV
 ## =============
+# run CCD on B5 sparse LV data
 CCDB5_LVsparse <- list()
 for(i in 1:length(N)){
   CCDB5_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvsparse") %>% 
@@ -223,6 +236,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B5 sparse LV data
 FCIB5_LVsparse <- list()
 for(i in 1:length(N)){
   FCIB5_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvsparse") %>% 
@@ -233,6 +247,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B5 sparse LV data
 CCIB5_LVsparse <- list()
 for(i in 1:length(N)){
   CCIB5_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvsparse") %>% 
@@ -247,6 +262,7 @@ for(i in 1:length(N)){
 ## =============
 ## B5 dense LV
 ## =============
+# run CCD on B5 dense LV data
 CCDB5_LVdense <- list()
 for(i in 1:length(N)){
   CCDB5_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvdense") %>% 
@@ -257,6 +273,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B5 dense LV data
 FCIB5_LVdense <- list()
 for(i in 1:length(N)){
   FCIB5_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvdense") %>% 
@@ -267,6 +284,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B5 dense LV data
 CCIB5_LVdense <- list()
 for(i in 1:length(N)){
   CCIB5_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvdense") %>% 
@@ -281,6 +299,7 @@ for(i in 1:length(N)){
 ## =============
 ## B10 sparse LV
 ## =============
+# run CCD on B10 sparse LV data
 CCDB10_LVsparse <- list()
 for(i in 1:length(N)){
   CCDB10_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvsparse") %>% 
@@ -291,6 +310,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B10 sparse LV data
 FCIB10_LVsparse <- list()
 for(i in 1:length(N)){
   FCIB10_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvsparse") %>% 
@@ -301,6 +321,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B10 sparse LV data
 CCIB10_LVsparse <- list()
 for(i in 1:length(N)){
   CCIB10_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvsparse") %>% 
@@ -315,6 +336,7 @@ for(i in 1:length(N)){
 ## =============
 ## B10 dense LV
 ## =============
+# run CCD on B10 dense LV data
 CCDB10_LVdense <- list()
 for(i in 1:length(N)){
   CCDB10_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvdense") %>% 
@@ -325,6 +347,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run FCI on B10 dense LV data
 FCIB10_LVdense <- list()
 for(i in 1:length(N)){
   FCIB10_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvdense") %>% 
@@ -335,6 +358,7 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
+# run CCI on B10 dense LV data
 CCIB10_LVdense <- list()
 for(i in 1:length(N)){
   CCIB10_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvdense") %>% 
@@ -830,6 +854,7 @@ uncertainties2 <- bind_rows(
   mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
   dplyr::select(-id, -name) %>%  
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
 
@@ -864,7 +889,9 @@ SHDs2 <- bind_rows(
   # Add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
-  dplyr::select(-id, -name) %>%  relocate(where(is.character), .before = where(is.numeric)) 
+  dplyr::select(-id, -name) %>%  
+  # bring the algorithm and condition names first
+  relocate(where(is.character), .before = where(is.numeric)) 
 
 
 
