@@ -1,31 +1,19 @@
 ## ============================================================================
-## It contains five function: `ccdKP`, `loadContinuousData`, `loadDiscreteData`,
-## `extractTetradNodes`, and `extractTetradEdges`.
-##
-## The primary function is `ccdKP`, which runs the CCD algorithm,
-## and it is dependent on the other four auxiliary functions.
-##
-## Purpose: To run the CCD algorithm.
-##
-## Note: This is a wrapper function for the CCD algorithm in the TETRAD software.
-## For more detailed information on the CCD function, 
-## please refer to TETRAD's documentation (https://sites.google.com/view/tetradcausal).
+## Description
+#
+# This script contains five function: `ccdKP`, `loadContinuousData`, 
+# `loadDiscreteData`, `extractTetradNodes`, and `extractTetradEdges`.
+#
+# The primary function is `ccdKP`, which runs the CCD algorithm,
+# and it is dependent on the other four auxiliary functions.
+#
+# Purpose: To run the CCD algorithm.
+#
+# Note: This is a wrapper function for the CCD algorithm from the TETRAD software,
+#       with slight modifications. For more detailed information on this 
+#       CCD function,  please refer to TETRAD's documentation 
+#       (https://sites.google.com/view/tetradcausal).
 ## ============================================================================
-
-## ====================
-## preparation
-## ====================
-# install.packages("stringr")
-# install.packages("rJava")
-# install.packages("devtools")
-# install.packages("DOT")
-# install_github("bd2kccd/r-causal")
-library(rJava)
-library(usethis)
-library(devtools)
-library(rcausal)
-library(DOT)
-library(pcalg)
 
 
 
@@ -42,8 +30,8 @@ ccdKP <- function (df, dataType = "continuous", numCategoriesToDiscretize = 4,
   ## - alpha: alpha value for conditional independence test
   ## - numBootstrap: number of bootstrapping performed (default = -1 : no bootstrap)
   ## - ensembleMethod: type of ensemble method to use
-  ## - java.parameters: when specify tetrad java parameters
-  ## - priorKnowledge: when incorporate additional knowledge
+  ## - java.parameters: when specifying TETRAD java parameters
+  ## - priorKnowledge: when incorporating additional knowledge
 
   ## ----------------------------------------------------------------------
   ## Value:
@@ -122,7 +110,7 @@ ccdKP <- function (df, dataType = "continuous", numCategoriesToDiscretize = 4,
   if (!is.null(priorKnowledge)) {
     .jcall(ccd_instance, "V", "setKnowledge", priorKnowledge)
   }
-  params <- c(params, dataType = dataType) # why as.integer(dataType)??
+  params <- c(params, dataType = dataType) 
   params <- c(params, depth = as.integer(depth))
   params <- c(params, alpha = alpha)
   if (numBootstrap > 0) {

@@ -2,12 +2,15 @@
 ## Description
 #
 # This script contains six functions for computing evaluation metrics 
-# for algorithm performance: 
+# to assess algorithm performance: 
 # `precision_recall`, `uncertainty`,`SHD`,
 # `high_freq`, `prop_correct`, and `prop_uncertain`.
-#
+# 
+# Each function computes the corresponding evaluation metrics.
+# See below for the detailed description of each function.
 ## ============================================================================
 
+# load package
 library(magrittr) # for pipes used in functions
 
 
@@ -28,7 +31,6 @@ precision_recall <- function(truepag, estimatedpag){
     rec_null = cm["0","0"]/sum(cm["0",])
   } else {
     pre_null = 0; rec_null = 0;
-    # print("No null endpoint occurred in the estimated graph.")
   }
   
   if(2 %in% estimatedpag) {
@@ -36,7 +38,6 @@ precision_recall <- function(truepag, estimatedpag){
     rec_head = cm["2","2"]/sum(cm["2",])
   } else {
     pre_head = 0; rec_head = 0;
-    # print("No tail endpoint occurred in the estimated graph.")
   }
   
   if(3 %in% estimatedpag) {
@@ -44,7 +45,6 @@ precision_recall <- function(truepag, estimatedpag){
     rec_tail = cm["3","3"]/sum(cm["3",])
   } else {
     pre_tail = 0; rec_tail = 0;
-    #print("No head endpoint occurred in the estimated graph.")
   }
   # average precision and recall
   avg_pre = sum(pre_null, pre_tail, pre_head) / 3
@@ -205,9 +205,9 @@ prop_uncertain <- function(amat, p){
 
 
 ## ============================================================================
-# Extra: two functions below `precision2` and `recall2` are the same as 
-# `precision_recall` function but only return average precision and recall value, 
-# respectively. They are used in the extended simulation study 
+# Extra: two functions below `precision2` and `recall2` are essentially the same 
+# as `precision_recall` function but only return average precision and recall 
+# value, respectively. They are used in the extended simulation study 
 # where we randomly sample B matrices. 
 ## ============================================================================
 

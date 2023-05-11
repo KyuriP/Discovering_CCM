@@ -93,28 +93,34 @@ load("data/empirical/cci_subsample_dep.RData")
 ## =============================================================================
 ## 4. Compute the frequencies
 ## =============================================================================
-## frequency table per cell
+## construct frequency table per cell
 combmat_CCD <- simplify2array(mat_subsample_dep) %>% apply(c(1, 2), table)
 combmat_FCI <- simplify2array(fci_subsample_dep) %>% apply(c(1, 2), table)
 combmat_CCI <- simplify2array(cci_subsample_dep) %>% apply(c(1, 2), table)
 
 
 ## get the most frequently occurring endpoint
+# most frequent endpoints for CCD
 freqlistCCD <- combmat_CCD %>% 
   purrr::map_dfr(
     ~as.data.frame(.x) %>% 
+      # get the most frequent endpoint along with its frequency
       summarise(val = Var1[which.max(Freq)], 
                 freq = max(Freq))
   )
+# most frequent endpoints for FCI
 freqlistFCI <- combmat_FCI %>% 
   purrr::map_dfr(
     ~as.data.frame(.x) %>% 
+      # get the most frequent endpoint along with its frequency
       summarise(val = Var1[which.max(Freq)], 
                 freq = max(Freq))
   )
+# most frequent endpoints for CCI
 freqlistCCI <- combmat_CCI %>% 
   purrr::map_dfr(
     ~as.data.frame(.x) %>% 
+      # get the most frequent endpoint along with its frequency
       summarise(val = Var1[which.max(Freq)], 
                 freq = max(Freq))
   )
@@ -125,8 +131,9 @@ freqlistCCI <- combmat_CCI %>%
 adjmat_CCD <- freqlistCCD %>% 
   rowwise() %>% 
   summarize(val = case_when(
+    # if more than 70%, assign the corresponding endpoint (val)
     freq > 700 ~ val,
-    # if not more than 80%, and not 0 (no edge), then place circle
+    # if not more than 70%, and not 0 (no edge), then place circle
     freq <700 & val !=0 ~ "1",
     # regardless, if 0 has the highest frequency, then place 0
     .default = "0"
@@ -140,8 +147,9 @@ adjmat_CCD <- freqlistCCD %>%
 adjmat_FCI <- freqlistFCI %>% 
   rowwise() %>% 
   summarize(val = case_when(
+    # if more than 70%, assign the corresponding endpoint (val)
     freq > 700 ~ val,
-    # if not more than 80%, and not 0 (no edge), then place circle
+    # if not more than 70%, and not 0 (no edge), then place circle
     freq <700 & val !=0 ~ "1",
     # regardless, if 0 has the highest frequency, then place 0
     .default = "0"
@@ -155,8 +163,9 @@ adjmat_FCI <- freqlistFCI %>%
 adjmat_CCI <- freqlistCCI %>% 
   rowwise() %>% 
   summarize(val = case_when(
+    # if more than 70%, assign the corresponding endpoint (val)
     freq > 700 ~ val,
-    # if not more than 80%, and not 0 (no edge), then place circle
+    # if not more than 70%, and not 0 (no edge), then place circle
     freq <700 & val !=0 ~ "1",
     # regardless, if 0 has the highest frequency, then place 0
     .default = "0"  )) %>% 
@@ -169,7 +178,7 @@ adjmat_CCI <- freqlistCCI %>%
 ## =============================================================================
 ## 5. Plot the PAGs
 ## =============================================================================
-# plot the PAGs
+# plot the PAGs with most frequently occurring endpoints 
 plotAG(adjmat_CCD)
 plotAG(adjmat_FCI)
 plotAG(adjmat_CCI)

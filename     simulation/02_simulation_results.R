@@ -50,6 +50,7 @@ library(ggh4x)
 ## 5P sparse 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd5psparse <- mat_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -64,7 +65,6 @@ uncer_ccd5psparse <- mat_5psparse %>%
   rename_with(~ paste0("N = ", N))
 # average uncertainty
 colMeans(uncer_ccd5psparse, na.rm=T)
-
 # SHD
 SHD_ccd5psparse <- mat_5psparse %>% 
   map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
@@ -76,6 +76,7 @@ SHD_ccd5psparse <- mat_5psparse %>%
 colMeans(SHD_ccd5psparse)
 
 ## FCI
+# PRECISION & RECALL
 res_fci5psparse <- fci_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -96,6 +97,7 @@ SHD_fci5psparse <- fci_5psparse %>%
 colMeans(SHD_fci5psparse)
 
 ## CCI
+# PRECISION & RECALL
 res_cci5psparse <- cci_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -120,6 +122,7 @@ colMeans(SHD_cci5psparse)
 ## 5P dense 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd5pdense <- mat_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -138,6 +141,7 @@ SHD_ccd5pdense <- mat_5pdense %>%
 colMeans(SHD_ccd5pdense)
 
 ## FCI
+# PRECISION & RECALL
 res_fci5pdense <- fci_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -156,6 +160,7 @@ SHD_fci5pdense <- fci_5pdense %>%
 colMeans(SHD_fci5pdense)
 
 ## CCI
+# PRECISION & RECALL
 res_cci5pdense <- cci_5pdense %>% 
   map_depth(2, ~precision_recall(trueag_5pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -178,11 +183,11 @@ colMeans(SHD_cci5pdense)
 ## 10P sparse 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd10psparse <- mat_10psparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>%
   do.call("cbind", .) %>% t() %>%  
   apply(., 2, unlist) %>%  as.data.frame()
-
 # UNCERTAINTY
 uncer_ccd10psparse <- mat_10psparse %>% 
   map_depth(2, ~uncertainty(.x)) %>% 
@@ -199,6 +204,7 @@ SHD_ccd10psparse <- mat_10psparse %>%
 colMeans(SHD_ccd10psparse)
 
 ## FCI
+# PRECISION & RECALL
 res_fci10psparse <- fci_10psparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -217,6 +223,7 @@ SHD_fci10psparse <- fci_10psparse %>%
 colMeans(SHD_fci10psparse)
 
 ## CCI
+# PRECISION & RECALL
 res_cci10psparse <- cci_10psparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -241,6 +248,7 @@ colMeans(SHD_cci10psparse)
 ## 5P dense 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd10pdense  <- mat_10pdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -261,6 +269,7 @@ SHD_ccd10pdense  <- mat_10pdense %>%
 colMeans(SHD_ccd10pdense)
 
 ## FCI
+# PRECISION & RECALL
 res_fci10pdense  <- fci_10pdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
@@ -280,6 +289,7 @@ SHD_fci10pdense  <- fci_10pdense %>%
 colMeans(SHD_fci10pdense)
 
 ## CCI
+# PRECISION & RECALL
 res_cci10pdense <- cci_10pdense %>% 
   map_depth(2, ~precision_recall(trueag_10pdense, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -304,6 +314,7 @@ colMeans(SHD_cci10pdense)
 ## 5P sparse w/ LV 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd5pLVsparse  <- mat_5pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -324,6 +335,7 @@ SHD_ccd5pLVsparse <- mat_5pLVsparse %>%
 colMeans(SHD_ccd5pLVsparse)
 
 ## FCI
+# PRECISION & RECALL
 res_fci5pLVsparse  <- fci_5pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -344,6 +356,7 @@ SHD_fci5pLVsparse <- fci_5pLVsparse %>%
 colMeans(SHD_fci5pLVsparse)
 
 ## CCI
+# PRECISION & RECALL
 res_cci5pLVsparse <- cci_5pLVsparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -368,6 +381,7 @@ colMeans(SHD_cci5pLVsparse)
 ## 5P dense w/ LV 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd5pLVdense  <- mat_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -388,6 +402,7 @@ SHD_ccd5pLVdense <- mat_5pLVdense %>%
 colMeans(SHD_ccd5pLVdense)
 
 ## FCI
+# PRECISION & RECALL
 res_fci5pLVdense  <- fci_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -408,6 +423,7 @@ SHD_fci5pLVdense  <- fci_5pLVdense  %>%
 colMeans(SHD_fci5pLVdense)
 
 ## CCI
+# PRECISION & RECALL
 res_cci5pLVdense  <- cci_5pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_5pdenseLV , .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -432,6 +448,7 @@ colMeans(SHD_cci5pLVdense )
 ## 10P sparse w/ LV 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd10pLVsparse   <- mat_10pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -452,6 +469,7 @@ SHD_ccd10pLVsparse <- mat_10pLVsparse %>%
 colMeans(SHD_ccd10pLVsparse)
 
 ## FCI
+# PRECISION & RECALL
 res_fci10pLVsparse <- fci_10pLVsparse  %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -472,6 +490,7 @@ SHD_fci10pLVsparse <- fci_10pLVsparse %>%
 colMeans(SHD_fci10pLVsparse)
 
 ## CCI 
+# PRECISION & RECALL
 res_cci10pLVsparse <- cci_10pLVsparse %>% 
   map_depth(2, ~precision_recall(trueag_10psparseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -496,6 +515,7 @@ colMeans(SHD_cci10pLVsparse)
 ## 10P dense w/ LV 
 ## ================
 ## CCD
+# PRECISION & RECALL
 res_ccd10pLVdense   <- mat_10pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -516,6 +536,7 @@ SHD_ccd10pLVdense <- mat_10pLVdense %>%
 colMeans(SHD_ccd10pLVdense)
 
 ## FCI
+# PRECISION & RECALL
 res_fci10pLVdense <- fci_10pLVdense  %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  
@@ -536,6 +557,7 @@ SHD_fci10pLVdense <- fci_10pLVdense %>%
 colMeans(SHD_fci10pLVdense)
 
 ## CCI
+# PRECISION & RECALL
 res_cci10pLVdense <- cci_10pLVdense %>% 
   map_depth(2, ~precision_recall(trueag_10pdenseLV, .x)) %>% 
   do.call("cbind", .) %>% t() %>%  

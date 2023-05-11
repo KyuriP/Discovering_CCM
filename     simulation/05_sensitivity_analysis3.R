@@ -849,7 +849,8 @@ uncertainties2 <- bind_rows(
          densities = stringr::str_remove(stringr::str_split(condition, "-", simplify=T)[,2], "LV")
   ) %>% 
   # convert it to a long format
-  tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), names_to = "name", values_to = "value") %>% 
+  tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
+                      names_to = "name", values_to = "value") %>% 
   # Add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
@@ -885,7 +886,8 @@ SHDs2 <- bind_rows(
          densities = stringr::str_remove(stringr::str_split(condition, "-", simplify=T)[,2], "LV")
   ) %>% 
   # convert it to a long format
-  tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), names_to = "name", values_to = "value") %>% 
+  tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
+                      names_to = "name", values_to = "value") %>% 
   # Add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 

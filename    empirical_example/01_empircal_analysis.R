@@ -27,8 +27,6 @@
 ## =============================================================================
 
 
-
-
 ## =============================================================================
 ## 1. Preparation
 ## =============================================================================
@@ -44,7 +42,7 @@ library(furrr)
 source("utils/CCD_fnc.R")
 source("utils/plot_fnc.R")
 
-## import the example empirical data
+## import the empirical data
 mcnally <- read.csv("empirical_example/data/McNally.csv")
 
 # separate depression / OCD symptoms
@@ -53,17 +51,13 @@ mcnally <- read.csv("empirical_example/data/McNally.csv")
 depression <- mcnally[,1:16] %>% apply(., 2, as.numeric) # convert it to numeric (for CCD)
 ocd <- mcnally[,17:26] %>% apply(., 2, as.numeric)
 
-# paranormal transformation using huge package
-# trans_dep <- huge::huge.npn(depression)
-# trans_ocd <- huge::huge.npn(ocd)
-
 
 ## =============================================================================
 ## 2. Estimate GGM with GLASSO 
 ## =============================================================================
 ## estimate GGM via graphical LASSO on depression symptoms
 cordep <- cor(depression)
-# found the optimal sparsity by gamma = 1
+# found the optimal sparsity with gamma = 1
 glassoFitdep <- EBICglasso(cordep, n = nrow(depression), gamma = 1)
 qgraph(glassoFitdep, layout = "spring", theme="colorblind",
        nodeNames = colnames(depression), legend.cex = 0.4)
@@ -108,7 +102,7 @@ MyTheme2 <-  theme(plot.title = element_text(family = "Palatino", size = 14, hju
                    panel.border = element_rect(color = "#DCDCDC", fill = NA)
 )
 
-# Just distribution
+# distributions of depression symptoms (figureJ1 in Appendix J)
 dist <- as.data.frame(depression) %>%
   tidyr::pivot_longer(where(is.numeric)) %>%
   ggplot(aes(x = value)) +
@@ -129,8 +123,8 @@ p1 <- as.data.frame(depression) %>%
   ggtitle("(a) Original data") +
   MyTheme2
 
-## transform data
-# some are not normal --> makes the data semi-parametric Gaussian using huge package
+## paranormal transformation using huge package
+# some are not normal --> makes the data semi-parametric Gaussian
 transformed_dat <- huge::huge.npn(depression) %>% as.data.frame()
 
 ## check the distributions of transformed data

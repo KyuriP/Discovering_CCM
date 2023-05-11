@@ -1,5 +1,6 @@
 ## ============================================================================
 ## Description
+#
 # It contains five functions: `equilibrium_check`, `gen_dat`, `generatesimdat`,
 # `sampleranB2`, and `sampleranB2_pos`.
 #

@@ -1,5 +1,5 @@
 ## ============================================================================
-## It contains a function `true_ancestral`.
+## This script contains a function `true_ancestral`.
 ##
 ## Purpose: It generates the adjacency matrix of a true ancestral graph given
 ##          the adjacency matrix of a directed cyclic graph (DCG).

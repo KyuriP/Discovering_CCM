@@ -1,13 +1,17 @@
 ## ============================================================================
-## It contains four functions:
-## `CreateAdjMat`, `extracttriples`, `extractnode`, and `plotPAG`.
-##
-## Purpose: It plots a partial ancestral graph (PAG).
-##          `plotPAG` is specifically designed for the ccd object.
-##          `plotAG` plots a PAG given an (ancestral) adjacency matrix.
+## Description
+#
+# This script contains four functions:
+# `CreateAdjMat`, `extracttriples`, `extractnode`, `plotPAG` and `plotAG`.
+#
+# Purpose: It plots a partial ancestral graph (PAG).
+#          `plotPAG` is specifically designed for the ccd object.
+#          `plotAG` plots a PAG given an (ancestral) adjacency matrix.
+#
+# See below for the detailed description of each function.
 ## ============================================================================
 
-## load necessary package
+## load a required package
 library(Rgraphviz)
 
 
@@ -188,12 +192,17 @@ plotPAG <- function(ccd.obj, amat)
 #' @return a PAG graph of graphNEL class
 plotAG <- function(amat)
 {
+  # create a graph object
   g <- as(amat,"graphNEL")
+  # extract node info
   nn <- nodes(g)
+  # extract number of nodes
   p <- numNodes(g)
+  # extract number of edges
   n.edges <- numEdges(g)
   ah.list <- at.list <- vector("list", n.edges)
   l.names <- character(n.edges)
+  # assign a shape for each edge type
   amat[amat == 1] <- "odot"
   amat[amat == 2] <- "vee"
   amat[amat == 3] <- "none"
@@ -215,6 +224,7 @@ plotAG <- function(amat)
   edgeRenderInfo(g) <- list(arrowhead = ah.list, arrowtail = at.list)
   # global features
   graph.par(list(nodes=list(cex = 1)))
+  # plot the PAG
   Rgraphviz::renderGraph(Rgraphviz::layoutGraph(g))
 }
 
