@@ -11,20 +11,21 @@
 # The remaining setup is identical to that of `03_sensitivity_analysis1.R`.
 ## =============================================================================
 # The content is as follows.
-# 0. Preparation: we source and load necessary functions and packages.
+# 0. Preparation: Source and load necessary functions and packages.
 #
-# 1. Generate data: we generate data based on randomly sampled B matrix 
-#    at every iteration. 
+# 1. Simulate data: Generate data based on randomly sampled B matrix (with only
+#    positive values) at every iteration. 
 #
-# 2. Run algorithms: we apply three algorithms -- CCD, FCI, and CCI -- to each 
+# 2. Run algorithms: Apply three algorithms -- CCD, FCI, and CCI -- to each 
 #    of the simulated datasets then estimate PAGs.
 #
-# 3. Evaluate performance: we compute structural Hamming distance, precision, 
+# 3. Evaluate performance: Compute structural Hamming distance, precision, 
 #    recall, and uncertainty rate for each of the estimated PAGs.
 #
-# 4. Create figures: we create figures for each evaluation metric comparing the 
+# 4. Create figures: Plot figures for each evaluation metric comparing the 
 #    performance of each algorithm per condition.
 ## =============================================================================
+
 
 ## =============================================================================
 ## 0. Preparation
@@ -41,6 +42,7 @@ library(ggh4x)
 ## set the seed
 set.seed(123)
 
+
 ## =============================================================================
 ## 1. Generate data 
 ## =============================================================================
@@ -53,76 +55,49 @@ n <- 500
 alpha <- 0.01
 
 
-
-## function used to generate data from randomly sampled B weights (only positive)
-sampleranB2 <- function(B, LV=NULL, seed=123){
-  set.seed(seed)
-  # variable number
-  p <- ncol(B)
-  # data storage
-  simdat <- list()
-  # number of diff sample size
-  for(i in 1:length(N)){
-    simdat[[i]] <- list()
-    # number of repetition
-    for(j in 1:n){
-      # sample random weights for B from uniform distribution: unif[0.1, 0.8]
-      ranB <- matrix((0.7*runif(p^2)+0.1), p, p)
-      # assign 0 where B = 0
-      ind <- which(B == 0, arr.ind = TRUE)
-      ranB[ind] <- 0
-      if(is.null(LV)){
-        simdat[[i]][[j]] <- gen_dat(ranB, N = N[i])
-        colnames(simdat[[i]][[j]]) <- colnames(B)
-      } else {
-        simdat[[i]][[j]] <- gen_dat(ranB, N = N[i])[,-LV]
-        colnames(simdat[[i]][[j]]) <- colnames(B)[-LV]
-      }
-    }
-  }
-  return(simdat)
-}
-
 ## create all simulated data using random B 
 simdata_woLV <- list(B5sparse = B5sparse, B5dense = B5dense, 
                      B10sparse =  B10sparse, B10dense = B10dense) %>% 
   map(~
-        sampleranB2(.x)
+        sampleranB2_pos(.x)
   )
 
 simdata_5pwLV <- list(B5_lvsparse = B5_lvsparse, B5_lvdense = B5_lvdense) %>% 
   map(~
-        sampleranB2(.x, LV = 6)
+        sampleranB2_pos(.x, LV = 6)
   )
 
 simdata_10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %>% 
   map(~
-        sampleranB2(.x, LV = c(11, 12))
+        sampleranB2_pos(.x, LV = c(11, 12))
   )
 
+# append all datasets in a single list
 simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 
 
 ## =============================================================================
 ## 2. Run algorithms
 ## =============================================================================
+# run CCD
 CCDres_pos <- simdatalist %>% 
   map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
   map_depth(3, ~CreateAdjMat(.x, length(.x$nodes)))
 
-
+# run FCI
 FCIres_pos <- simdatalist %>% 
   map_depth(3, ~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
                      alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
                      labels = colnames(.x)) %>% .@amat 
   )
 
+# run CCI
 CCIres_pos <- simdatalist %>% 
   map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, 
                      labels = colnames(.x), p = ncol(.x)) %>% .$maag 
   )
 
-# true adj.matrices
+# append all true adj.matrices into a single list
 truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, 
                  trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, 
                  trueag_10psparseLV, trueag_10pdenseLV)
@@ -133,13 +108,12 @@ load("data/randomB_pos/FCIres3_pos.Rdata") # FCIres
 load("data/randomB_pos/CCIres3_pos.Rdata") # CCIres
 
 
-
-
 ## =============================================================================
 ## 3. Evaluate performance
 ## =============================================================================
 
-## SHD
+## compute SHD
+# SHD values for CCD
 CCDshd <- list()
 for(i in 1:length(CCDres)){
   CCDshd[[i]] <- CCDres[[i]] %>% 
@@ -150,7 +124,7 @@ for(i in 1:length(CCDres)){
 }
 names(CCDshd) <- names(CCDres)
 
-
+# SHD values for FCI
 FCIshd <- list()
 for(i in 1:length(FCIres)){
   FCIshd[[i]] <- FCIres[[i]] %>% 
@@ -161,7 +135,7 @@ for(i in 1:length(FCIres)){
 }
 names(FCIshd) <- names(FCIres)
 
-
+# SHD values for CCI
 CCIshd <- list()
 for(i in 1:length(CCIres)){
   CCIshd[[i]] <- CCIres[[i]] %>% 
@@ -172,7 +146,7 @@ for(i in 1:length(CCIres)){
 }
 names(CCIshd) <- names(CCIres)
 
-## combine the SHDs
+## combine the SHD values
 SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>% 
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
@@ -188,7 +162,8 @@ SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>%
 
 
 
-## Precision
+## compute precision
+# precision for CCD
 CCDprec <- list()
 for(i in 1:length(CCDres)){
   CCDprec[[i]] <- CCDres[[i]] %>% 
@@ -198,6 +173,7 @@ for(i in 1:length(CCDres)){
 }
 names(CCDprec) <- names(CCDres)
 
+# precision for FCI
 FCIprec <- list()
 for(i in 1:length(FCIres)){
   FCIprec[[i]] <- FCIres[[i]] %>% 
@@ -207,6 +183,7 @@ for(i in 1:length(FCIres)){
 }
 names(FCIprec) <- names(FCIres)
 
+# precision for CCI
 CCIprec <- list()
 for(i in 1:length(CCIres)){
   CCIprec[[i]] <- CCIres[[i]] %>% 
@@ -216,7 +193,7 @@ for(i in 1:length(CCIres)){
 }
 names(CCIprec) <- names(CCIres)
 
-## combine the precisions
+## combine the precision values
 prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>% 
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
@@ -231,7 +208,8 @@ prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>
   relocate(where(is.character), .before = where(is.numeric))
 
 
-## Recall
+## compute recall
+# recall for CCD
 CCDrec <- list()
 for(i in 1:length(CCDres)){
   CCDrec[[i]] <- CCDres[[i]] %>% 
@@ -241,6 +219,7 @@ for(i in 1:length(CCDres)){
 }
 names(CCDrec) <- names(CCDres)
 
+# recall for FCI
 FCIrec <- list()
 for(i in 1:length(FCIres)){
   FCIrec[[i]] <- FCIres[[i]] %>% 
@@ -250,6 +229,7 @@ for(i in 1:length(FCIres)){
 }
 names(FCIrec) <- names(FCIres)
 
+# recall for CCI
 CCIrec <- list()
 for(i in 1:length(CCIres)){
   CCIrec[[i]] <- CCIres[[i]] %>% 
@@ -259,7 +239,7 @@ for(i in 1:length(CCIres)){
 }
 names(CCIrec) <- names(CCIres)
 
-## combine the recalls
+## combine the recall values
 rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>% 
   tidyr::pivot_longer(cols = -c(id), names_to = "condition", values_to = "value") %>% 
   mutate(
@@ -274,7 +254,8 @@ rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>%
   relocate(where(is.character), .before = where(is.numeric))
 
 
-## Uncertainty
+## compute uncertainty
+# uncertainty for CCD
 CCDunc <- list()
 for(i in 1:length(CCDres)){
   CCDunc[[i]] <- CCDres[[i]] %>% 
@@ -287,7 +268,7 @@ for(i in 1:length(CCDres)){
 }
 names(CCDunc) <- names(CCDres)
 
-
+# uncertainty for FCI
 FCIunc <- list()
 for(i in 1:length(FCIres)){
   FCIunc[[i]] <- FCIres[[i]] %>% 
@@ -300,7 +281,7 @@ for(i in 1:length(FCIres)){
 }
 names(FCIunc) <- names(FCIres)
 
-
+# uncertainty for CCI
 CCIunc <- list()
 for(i in 1:length(CCIres)){
   CCIunc[[i]] <- CCIres[[i]] %>% 
@@ -314,7 +295,7 @@ for(i in 1:length(CCIres)){
 names(CCIunc) <- names(CCIres)
 
 
-## combine the uncertainties
+## combine the uncertainty values
 unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>% 
   # n = repeat N: 3 algo * 2 (mean & sd), repeat c(means,sd) by length of N * 3 algo
   mutate(n = rep(N,6), statistics = rep(c("means", "sds"), each = length(N), times = 3)) %>% 
@@ -347,20 +328,31 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 )
 
 
-## plot SHD
+## plot SHD figure
 shdplot_ranB_pos <- SHD_ranB %>%
+  # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+  # create a ggplot object
   ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  # add line graphs
   geom_line(aes(group = id)) +
+  # add scattered points
   geom_point(size=1) + 
   # add interquartile range (IQR)
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   labs(x="", y="", title = "") +
+  # apply themes
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), scales = "free_y", switch="y") +
+  # create facet
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")), scales = "free_y", switch="y") +
+  # specify custom breaks
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(a) SHD")  +
   guides(color = "none", fill = "none")
@@ -369,19 +361,30 @@ shdplot_ranB_pos <- SHD_ranB %>%
 
 
 
-## plot precision
+## plot precision figure
 precisionplot_ranB_pos <- prec_ranB %>% 
+  # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+  # create a ggplot object
   ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill=id)) +
+  # add line graphs
   geom_line(aes(group = id)) +
+  # add scattered points
   geom_point(size=1) +
   # add interquartile range (IQR)
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  # apply themes
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
+  # create facets
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")), switch="y") +
+  # specify custom breaks
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   labs(title = "(b) Precision", x = "", y = "") +
   guides(color = "none", fill = "none")
@@ -389,45 +392,68 @@ precisionplot_ranB_pos <- prec_ranB %>%
 # ggsave(precisionplot_ranB_pos, filename = "results/samplingbeta_pos_prec.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
 
-## plot recall
+## plot recall figure
 recallplot_ranB_pos <- rec_ranB %>% 
+  # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+  # create a ggplot object
   ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill=id)) +
+  # add line graphs
   geom_line(aes(group = id)) +
+  # add scattered points
   geom_point(size=1) +
   # add interquartile range (IQR)
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  # apply themes
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")), switch="y") +
+  # create facets
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")), switch="y") +
+  # specify custom breaks
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   labs(title = "(c) Recall", x = "", y = "")+
   guides(color = "none", fill = "none")
 # save the plot
 # ggsave(recallplot_ranB_pos, filename = "results/samplingbeta_pos_recall.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
-## plot uncertainty 
-uncertaintyplot_ranB_pos <- unc_ranB %>%  tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+## plot uncertainty figure
+uncertaintyplot_ranB_pos <- unc_ranB %>%  
+  # convert it to a wide format
+  tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+  # create a ggplot object
   ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  # add line graphs
   geom_line(aes(group = id)) +
+  # add scattered points
   geom_point(size=1) + 
   # add interquartile range (IQR)
   geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
   scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
   scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
-  #scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   labs(x="N", y="", title = "") +
+  # apply themes
   theme_minimal() +
   MyTheme + 
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  # create facets
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  # specify custom breaks
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(d) Uncertainty") 
 # save the plot
 # ggsave(uncertaintyplot_ranB_pos, filename = "results/samplingbeta_pos_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
 
-# combine the plots
+
+## combine the plots
 ggpubr::ggarrange(shdplot_ranB_pos, precisionplot_ranB_pos, 
                   recallplot_ranB_pos, uncertaintyplot_ranB_pos, 
                   nrow=4, common.legend = TRUE, legend = "bottom")

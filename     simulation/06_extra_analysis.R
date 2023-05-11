@@ -1,6 +1,6 @@
 ## =============================================================================
 ## Purpose
-# To investigate the unexpected patterns (i.e., brief dips and spikes in the
+# To investigate the unexpected patterns (i.e., brief dips and spikes in the 
 # performance graphs) in the "B5 dense" conditions from the main simulation study. 
 #
 ## Description
@@ -12,18 +12,19 @@
 #
 # To test our hypothesis, we examined the partial correlations between
 # X2 and X5 per different sample sizes and looked into what was happening in
-# each step of the algorithm.
+# each step of the algorithm. 
 ## =============================================================================
 # The content is as follows.
-# 0. Preparation: we source and load necessary functions & packages.
+# 0. Preparation: Source and load necessary functions & packages.
 # 
-# 1. Examining partial correlation: we examine all  partial correlations 
-#    between X2 and X5.
+# 1. Examining partial correlation: Examine all  partial correlations 
+#    between X2 and X5. And create histograms.
 #
-# 2. Testing conditional independencies: we check the results of conditional 
+# 2. Testing conditional independencies: Check the results of conditional 
 #    independence tests; whether it is significant or not significant as 
 #    sample size (N) becomes larger.
 ## =============================================================================
+
 
 ## =============================================================================
 ## 0. Preparation
@@ -43,6 +44,7 @@ library(ppcor)
 ## 1. Examining partial correlations
 ## =============================================================================
 ## Check every partial correlations between X2 and X5
+# storage
 marginal <- c()
 partialX1 <- c()
 partialX3 <- c()
@@ -51,6 +53,7 @@ partialX1X4 <- c()
 partialX1X3 <- c()
 partialX3X4 <- c()
 partialX1X3X4 <- c()
+# extract marginal/partial correlations
 for(j in 1:500){
   data <- simdata_5pdense[[10]][[j]]
   marginal[j] <- cor.test(data[,"X2"], data[,"X5"])$estimate
@@ -77,14 +80,18 @@ MyTheme3 <-  theme(
                   panel.spacing.y = unit(4, "mm"),panel.spacing.x = unit(4, "mm")
 )
 
-# ggplot histograms
+## ggplot histograms
 bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partialX3, 
           "partial_X4" = partialX4, "partial_X1 & X3" = partialX1X3, "partial_X1 & X4" = partialX1X4, 
           "partial_X3 & X4" = partialX3X4, "partial_X1 & X3 & X4" = partialX1X3X4) %>% 
+  # convert it to a long format
   tidyr::pivot_longer(cols=everything(), names_to = "id", values_to = "cors") %>% 
   group_by(id) %>% 
+  # store the average and minimum values
   mutate(means= round(mean(cors),3), min = min(cors)) %>% 
+  # create ggplot object
   ggplot(aes(x=cors)) + 
+  # add histogram
   geom_histogram(fill="gray", col="white", bins=25) + 
   # add mean values in text
   geom_text(aes(x = min, y = 60, hjust= -0.01, 
@@ -112,8 +119,10 @@ bind_cols("marginal" = marginal, "partial_X1" = partialX1, "partial_X3" = partia
 ## 2. Testing conditional independencies
 ## =============================================================================
 ## Create a table counting how many times it was significant given alpha = 0.05
+# storage
 count <- matrix(0, 8, 10)
 indep <- matrix(NA, 8, 10)
+# extract p-values
 for(j in 1:500){
   for(i in 1:10){
     data <- simdata_5pdense[[i]][[j]]
@@ -126,6 +135,7 @@ for(j in 1:500){
     indep[7,i] <- ppcor::pcor.test(data[,"X2"], data[,"X5"], data[,c("X3", "X4")])$p.value
     indep[8,i] <- ppcor::pcor.test(data[,"X2"], data[,"X5"], data[,c("X1", "X3", "X4")])$p.value
   }
+  # count how many p-value > 0.05
   count <- ifelse(indep > 0.05, count+1, count)
 }
 # specify dim names

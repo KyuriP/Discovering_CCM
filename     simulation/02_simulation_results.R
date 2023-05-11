@@ -1,7 +1,9 @@
 ## ============================================================================
 ## Description
 #
-# This script creates the overall result figure (Figure 14 & Figure 15).
+# This script evaluates the performance of algorithms using structural Hamming 
+# distance (SHD), precision and recall.
+# Then, it creates the overall result figures (Figure 14 & Figure 15 in paper).
 #
 # (i) First part of this script concerns creating a neat dataframe of 
 # each evaluation metrics (precision, recall, and uncertainty rate)
@@ -9,17 +11,18 @@
 #
 # (ii) Second part of this script concerns creating the figures.
 ## =============================================================================
-## The content is as follows.
-# 0. Preparation: we source and load necessary functions & packages.
+## The script is organized as follows.
+# 0. Preparation: Source and load necessary functions & packages.
 #
-# 1. Evaluate performance: we compute structural Hamming distance, precision, 
-# recall, and uncertainty rate for each condition (8 conditions in total).
+# 1. Evaluate performance: Compute structural Hamming distance (SHD), precision, 
+#           recall, and uncertainty rate for each algorithm under each condition 
+#           (8 conditions in total).
 #
-# 2. Organize results: we make neat data frames of resulting values of 
-# evaluation metrics from each algorithm.
+# 2. Organize results: Make neat data frames of resulting values of 
+#           evaluation metrics from each algorithm.
 #
-# 3. Create figures: we create figures for each evaluation metric comparing the 
-# performance of each algorithm per condition.
+# 3. Create figures: Plot the figures for each evaluation metric comparing the 
+#           performance of each algorithm per condition.
 ## ============================================================================
 
 
@@ -49,7 +52,8 @@ library(ggh4x)
 ## CCD
 res_ccd5psparse <- mat_5psparse %>% 
   map_depth(2, ~precision_recall(trueag_5psparse, .x)) %>% 
-  do.call("cbind", .) %>% t() %>%  apply(., 2, unlist) %>%  as.data.frame() 
+  do.call("cbind", .) %>% t() %>%  
+  apply(., 2, unlist) %>% as.data.frame() 
 
 # UNCERTAINTY
 uncer_ccd5psparse <- mat_5psparse %>% 
@@ -175,8 +179,7 @@ colMeans(SHD_cci5pdense)
 ## ================
 ## CCD
 res_ccd10psparse <- mat_10psparse %>% 
-  map_depth(2, 
-            ~precision_recall(trueag_10psparse, .x)) %>%
+  map_depth(2, ~precision_recall(trueag_10psparse, .x)) %>%
   do.call("cbind", .) %>% t() %>%  
   apply(., 2, unlist) %>%  as.data.frame()
 
@@ -576,6 +579,7 @@ pre_rec <- list(
         dplyr::summarise(across(everything(.), list(mean = ~mean(., na.rm=T), 
                                                     sd = ~sd(., na.rm=T))))) %>% 
   bind_rows() %>% 
+  # create columns 
   mutate(algorithm = rep(c("CCD", "FCI", "CCI"), 8),
          condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", 
                            "5p_LVsparse", "5p_LVdense", "10p_LVsparse", 
@@ -586,12 +590,12 @@ pre_rec <- list(
          densities = stringr::str_remove(
            stringr::str_split(condition, "_", simplify=T)[,2], "LV")
   ) %>%
-  # brings the algorithm and condition names first
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric)) %>% 
   # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition, netsize, latentvar, densities), 
                       names_to = "metric", values_to = "value") %>% 
-  # Add sample size column (N) & clean up the column name 
+  # add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(metric, "(?<=[N =])\\d+"),
          metric = stringr::str_replace_all(metric, "[0-9.]+|[N =]", "")) 
 
@@ -629,11 +633,12 @@ uncertainties <- bind_rows(
   # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
                       names_to = "name", values_to = "value") %>% 
-  # Add sample size column (N) & clean up the column name 
+  # add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(
     stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
   dplyr::select(-id, -name) %>%  
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
 
@@ -670,11 +675,12 @@ SHDs <- bind_rows(
   # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
                       names_to = "name", values_to = "value") %>% 
-  # Add sample size column (N) & clean up the column name 
+  # add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(
     stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
   dplyr::select(-id, -name) %>%  
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric)) 
 
 
@@ -684,18 +690,15 @@ SHDs <- bind_rows(
 ## =============================================================================
 
 ## specify the common figure theme
-MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
-                                            size = 15, hjust=0.5),
-                  plot.subtitle = element_text(face = "italic", family = "Palatino", 
-                                               size = 15, hjust=0.5),
+MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", size = 15, hjust=0.5),
+                  plot.subtitle = element_text(face = "italic", family = "Palatino", size = 15, hjust=0.5),
                   axis.text=element_text(face = "bold",family = "Palatino", size = 11),
                   axis.text.x = element_text(angle = 45, hjust = 1.2, vjust =1.2),
                   axis.title = element_text(face = "bold",family = "Palatino", size = 12),
                   legend.text = element_text(face = "bold", family = "Palatino", size = 12),
                   legend.position="bottom",
                   strip.text = element_text(face="bold", size=13, family = "Palatino"),
-                  strip.background = element_rect(fill="#f0f0f0", linetype = "solid", 
-                                                  color="gray"),
+                  strip.background = element_rect(fill="#f0f0f0", linetype = "solid", color="gray"),
                   strip.placement = "outside",
                   panel.border = element_rect(color = "#DCDCDC", fill = NA),
                   panel.spacing.y = unit(4, "mm")
@@ -704,7 +707,9 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino",
 
 ## SHD figure
 SHDs %>%
+  # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from = value) %>% 
+  # create a ggplot object
   ggplot(aes(x = as.numeric(N), y = means, group = algorithm, 
              colour = algorithm, fill = algorithm)) +
   # add line plots
@@ -721,30 +726,36 @@ SHDs %>%
   # apply the theme
   theme_minimal() +
   MyTheme + 
-  # create a facet
+  # create facets
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
-                             labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  
+                             labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  
                       scales = "free_y", switch="y") +
   # manually specify the x-axis break
+  scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  ## other x-axis labeling options that could be considered
   # 1) log10 transformation with unequally spaced labels
   # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   # 2) log 10 transformation, trying to get the equal spaced labels with log transformation
   # scale_x_continuous(trans= "log10", breaks=c(50, 100, 250, 500, 1000, 2500, 5000, 10000)) +
   # 3) real N values with equally spaced labels
   # scale_x_continuous(breaks=c(seq(1000, 10000, by = 1000),10000)) +
-  # 4) N as factor and equally spaced labels: 
-  # then need to change N as factor: ggplot(aes(x= factor(N, levels= c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000))...
+  # 4) N as a factor and equally spaced labels: 
+  # then need to change N as factor: ggplot(aes(x= factor(N, levels= c(50, 150, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000)) ...
   ggtitle("SHD") 
 
-# save the plot
+## save the plot
 # ggsave(filename = "figures/SHD_alpha0.01_label10.pdf", width = 25, height = 13, dpi = 300, units = "cm")
 
 
 
 ## Precision figure
 precision_plot <- pre_rec %>% 
+  # extract the average precision
   filter(grepl("average_precision", metric)) %>% 
+  # convert it to a wide format
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
+  # create a ggplot object
   ggplot(aes(x= as.numeric(N), y=average_precision_mean, group = algorithm, 
              colour = algorithm, fill=algorithm)) +
   # add line plots
@@ -761,14 +772,14 @@ precision_plot <- pre_rec %>%
   # apply the theme
   theme_minimal() +
   MyTheme + 
-  # create a facet
+  # create facets
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
                              labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + 
                         factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
-  # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(title = "(a) Precision", x = "", y = "")
+
 
 
 ## Recall figure
@@ -791,16 +802,14 @@ recall_plot <- pre_rec %>%
   # apply the theme
   theme_minimal() +
   MyTheme + 
-  # create a facet
+  # create facets
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
-                             labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+                             labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
-  # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
   labs(title = "(b) Recall", x = "", y = "")
 
-# combine the plots together
-# ggpubr::ggarrange(precision_plot, recall_plot, nrow=2, common.legend = TRUE, legend = "bottom")
 
 
 ## Uncertainty figure
@@ -821,19 +830,20 @@ uncertainty_plot <- uncertainties %>%
   # apply the theme
   theme_minimal() +
   MyTheme + 
-  # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  
+  # create facets
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  
                       scales = "free_y", switch="y") +
   # manually specify the x-axis break
   scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
-  # scale_x_continuous(trans= "log10", breaks=scales::breaks_log(n=15)) +
   ggtitle("(c) Uncertainty")
 
 # combine the plots
 ggpubr::ggarrange(precision_plot, recall_plot, uncertainty_plot, nrow=3, 
                   common.legend = TRUE, legend = "bottom")
 
-# save the plot
+## save the plot
 # ggsave(filename = "figures/prec-recall-uncer_alpha0.01_10label.pdf", width = 25, height = 30, dpi = 300, units = "cm")
 
 

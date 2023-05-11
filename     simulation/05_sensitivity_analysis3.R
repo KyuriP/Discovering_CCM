@@ -1,6 +1,6 @@
 ## =============================================================================
-## Description
-#
+## Description 
+# 
 # This script contains the code for the secondary analysis 
 # with varying alpha levels based on the sample size (N).
 #
@@ -8,19 +8,19 @@
 # we generate 500 datasets from each model.
 ## =============================================================================
 # The content is as follows.
-# 0. Preparation: we source and load necessary functions & packages and 
+# 0. Preparation: Source and load necessary functions & packages and 
 #    generate data with varying alpha levels based on the sample size (N).
 #
-# 1. Run algorithms: we run three algorithms CCD, FCI, and CCI on the simulated 
+# 1. Run algorithms: Apply three algorithms CCD, FCI, and CCI to the simulated 
 #    data then estimate PAGs.
 #
-# 2. Evaluate performance: we compute structural Hamming distance, precision, 
+# 2. Evaluate performance: Compute structural Hamming distance, precision, 
 #    recall, and uncertainty rate for each condition.
 #
-# 3. Organize results: we make neat data frames of resulting values of evaluation 
+# 3. Organize results: Make neat data frames of resulting values of evaluation 
 #    metrics from each algorithm.
 #
-# 4. Create figures: we create figures for each evaluation metric comparing the 
+# 4. Create figures: Plot figures for each evaluation metric comparing the 
 #    performance of each algorithm per condition.
 ## =============================================================================
 
@@ -30,8 +30,6 @@
 ## =============================================================================
 # source the simulation study results
 source("    simulation/01_simulation.R")
-source("  utils/eval_metrics_fnc.R")
-source("  utils/true_ancestral_fnc.R")
 
 # load packages
 library(dplyr)
@@ -51,18 +49,6 @@ alpha <- 1/sqrt(N)
 # allow parallel processing
 plan(multisession) 
 
-## Function that generates data
-generatesimdat <- function(B, N, LV = NULL, seed=123){
-  # generate data n times for each N
-  simdat <- N %>% future_map(function(z) {
-    replicate(n = n,
-              expr = if(is.null(LV)) gen_dat(B, N = z) else gen_dat(B, N = z)[,-LV],
-              simplify = FALSE)
-  }, .options = furrr_options(seed=seed) 
-  ) %>% 
-    rlang::set_names(.,  N)
-  return(simdat)
-}
 
 ## Generate data
 # models without LV
@@ -84,6 +70,7 @@ simdata_alpha10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvden
 simdat_alpha <- append(simdat_alphawoLV, append(simdata_alpha5pwLV, simdata_alpha10pwLV))
 simdat_alpha2 <- simdat_alpha %>% bind_rows(.id="id")
 
+
 ## =============================================================================
 ## 1. Running algorithms
 ## =============================================================================
@@ -94,7 +81,7 @@ CCDB5sparse <- list()
 for(i in 1:length(N)){
   CCDB5sparse[[i]] <- simdat_alpha2 %>% filter(id == "B5sparse") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -128,7 +115,7 @@ CCDB5dense <- list()
 for(i in 1:length(N)){
   CCDB5dense[[i]] <- simdat_alpha2 %>% filter(id == "B5dense") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -162,7 +149,7 @@ CCDB10sparse <- list()
 for(i in 1:length(N)){
   CCDB10sparse[[i]] <- simdat_alpha2 %>% filter(id == "B10sparse") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -196,7 +183,7 @@ CCDB10dense <- list()
 for(i in 1:length(N)){
   CCDB10dense[[i]] <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -223,7 +210,6 @@ for(i in 1:length(N)){
     rlang::set_names(., N[i])
 }
 
-
 ## =============
 ## B5 sparse LV
 ## =============
@@ -231,7 +217,7 @@ CCDB5_LVsparse <- list()
 for(i in 1:length(N)){
   CCDB5_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvsparse") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -265,7 +251,7 @@ CCDB5_LVdense <- list()
 for(i in 1:length(N)){
   CCDB5_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B5_lvdense") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -299,7 +285,7 @@ CCDB10_LVsparse <- list()
 for(i in 1:length(N)){
   CCDB10_LVsparse[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvsparse") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -333,7 +319,7 @@ CCDB10_LVdense <- list()
 for(i in 1:length(N)){
   CCDB10_LVdense[[i]] <- simdat_alpha2 %>% filter(id == "B10_lvdense") %>% 
     dplyr::select(paste(N[i])) %>% 
-    .[[paste(N[i])]] %>%  # can I use sth else not paste? lol 
+    .[[paste(N[i])]] %>%  
     map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i]) %>% 
           CreateAdjMat(., length(.$nodes))
     ) %>% 
@@ -414,7 +400,6 @@ SHD_cci5psparse2 <- CCIB5sparse %>%
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
 
-
 ## =============
 ## B5 dense
 ## =============
@@ -464,7 +449,6 @@ SHD_cci5pdense2 <- CCIB5dense %>%
   map_depth(2, ~SHD(trueag_5psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-
 
 ## =============
 ## B10 sparse
@@ -518,7 +502,6 @@ SHD_cci10psparse2 <- CCIB10sparse %>%
   map_depth(2, ~SHD(trueag_10psparse, .x)) %>% 
   do.call("cbind", .) %>% apply(., 2, unlist) %>%  
   as.data.frame %>% rename_with(~ paste0("N = ", N))
-
 
 ## =============
 ## B10 dense
@@ -794,7 +777,8 @@ pre_rec2 <- list(
         # add sample size (N) info
         rename_with(~paste0(.x, "N = ", rep(N, each=8)))  %>%
         # get the mean and sd
-        dplyr::summarise(across(everything(.), list(mean = ~mean(., na.rm=T), sd = ~sd(., na.rm=T))))) %>%
+        dplyr::summarise(across(everything(.), list(mean = ~mean(., na.rm=T), 
+                                                    sd = ~sd(., na.rm=T))))) %>%
   bind_rows() %>% 
   # create columns
   mutate(algorithm = rep(c("CCD", "FCI", "CCI"), 8),
@@ -807,11 +791,11 @@ pre_rec2 <- list(
   # brings the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric)) %>% 
   # convert it to a long format
-  tidyr::pivot_longer(!c(algorithm, condition, netsize, latentvar, densities), names_to = "metric", values_to = "value") %>% 
+  tidyr::pivot_longer(!c(algorithm, condition, netsize, latentvar, densities), 
+                      names_to = "metric", values_to = "value") %>% 
   # Add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(metric, "(?<=[N =])\\d+"),
          metric = stringr::str_replace_all(metric, "[0-9.]+|[N =]", "")) 
-
 
 
 ## Compute average uncertainty rate and corresponding sd for each condition
@@ -907,7 +891,8 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 ## SHD figure
 shdplot <- SHDs2 %>%
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
-  ggplot(aes(x= as.numeric(N), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
+  ggplot(aes(x= as.numeric(N), y=means, group = algorithm, 
+             colour = algorithm, fill = algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
@@ -923,7 +908,10 @@ shdplot <- SHDs2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels = c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  
                       scales = "free_y", switch="y") +
   # manually specify the x-axis break
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
@@ -941,7 +929,8 @@ precision_plot <- pre_rec2 %>%
   filter(grepl("average_precision", metric)) %>% 
   # convert it to a wide format
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= as.numeric(N), y=average_precision_mean, group = algorithm, colour = algorithm, fill=algorithm)) +
+  ggplot(aes(x= as.numeric(N), y=average_precision_mean, group = algorithm, 
+             colour = algorithm, fill=algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
@@ -957,7 +946,10 @@ precision_plot <- pre_rec2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   labs(title = "(b) Precision", x = "", y = "") +
@@ -967,13 +959,15 @@ precision_plot <- pre_rec2 %>%
 # ggsave(filename = "results/varyingalpha_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
+
 ## Recall figure
 recall_plot <- pre_rec2 %>% 
   # filter out the average recall only
   filter(grepl("average_recall", metric)) %>% 
   # convert it to a wide format
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
-  ggplot(aes(x= as.numeric(N), y=average_recall_mean, group = algorithm, colour = algorithm, fill= algorithm)) +
+  ggplot(aes(x= as.numeric(N), y=average_recall_mean, group = algorithm, 
+             colour = algorithm, fill= algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +
   # add scattered points
@@ -989,7 +983,10 @@ recall_plot <- pre_rec2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  switch="y") +
   # manually specify the x-axis break
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   labs(title = "(c) Recall", x = "", y = "") + 
@@ -1000,6 +997,8 @@ recall_plot <- pre_rec2 %>%
 
 # combine the plots together
 #ggpubr::ggarrange(precision_plot, recall_plot, nrow=2, common.legend = TRUE, legend = "bottom")
+
+
 
 ## Uncertainty figure
 uncertainty_plot <- uncertainties2 %>%
@@ -1019,7 +1018,10 @@ uncertainty_plot <- uncertainties2 %>%
   theme_minimal() +
   MyTheme + 
   # create a facet
-  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), labels=c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
+  ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
+                             labels=c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
+                        factor(densities, levels=c("sparse", "dense")),  scales = "free_y", switch="y") +
   # manually specify the x-axis break
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(d) Uncertainty")
