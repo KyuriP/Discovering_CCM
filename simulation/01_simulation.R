@@ -384,7 +384,7 @@ B10dense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 1, 0, 0, 0.4, 
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 10, 10, byrow = T)
-dimnames(B10sparse) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
+dimnames(B10dense) <- list(paste("X", 1:10, sep=""), paste("X", 1:10, sep=""))
 # specify layout
 layout10 = matrix(c(0,1,
                     2,1,
@@ -583,7 +583,7 @@ B5_lvdense = matrix(c(0, 0, 0, 0, 0, 1,
                       0, 0.7, 0, 0, 1.5, 0,
                       1, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0), 6, 6, byrow = T)
-dimnames(B5_lvsparse) <- list(c(paste("X", 1:5, sep=""), "L1"), 
+dimnames(B5_lvdense) <- list(c(paste("X", 1:5, sep=""), "L1"), 
                               c(paste("X", 1:5, sep=""), "L1"))
 # specify layout
 layout5_lv = matrix(c(0,1,
@@ -796,7 +796,7 @@ B10_lvdense = matrix(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 12, 12, byrow = T)
-dimnames(B10_lvsparse) <- list(c(paste("X", 1:10, sep=""), "L1", "L2"), 
+dimnames(B10_lvdense) <- list(c(paste("X", 1:10, sep=""), "L1", "L2"), 
                                c(paste("X", 1:10, sep=""), "L1", "L2"))
 # specify layout
 layout10LV2 = matrix(c(0, 1,
