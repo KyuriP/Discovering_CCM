@@ -199,16 +199,6 @@ for(i in 1:length(N)){
     ) %>% 
     rlang::set_names(., N[i])
 }
-
-i = 1
-a <- simdat_alpha2 %>% filter(id == "B10dense") %>% 
-  dplyr::select(paste(N[i])) %>% 
-  .[[paste(N[i])]] %>%  
-  map(~ccdKP(df=.x, dataType = "continuous", alpha = alpha[i])) #%>% 
-        CreateAdjMat(., length(.$nodes))
-  ) #%>% 
-  rlang::set_names(., N[i])
-
 # run FCI on B10 dense data
 FCIB10dense <- list()
 for(i in 1:length(N)){

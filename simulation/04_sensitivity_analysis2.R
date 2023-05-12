@@ -18,6 +18,9 @@
 #
 # 2. Run algorithms: Apply three algorithms -- CCD, FCI, and CCI -- to each 
 #    of the simulated datasets then estimate PAGs.
+#    *NOTE*: the code for running the algorithms is currently commented out due 
+#    to the long running time. If you are interested in running the algorithms, 
+#    simply uncomment the relevant code lines and execute the code.
 #
 # 3. Evaluate performance: Compute structural Hamming distance, precision, 
 #    recall, and uncertainty rate for each of the estimated PAGs.
@@ -80,23 +83,23 @@ simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 ## =============================================================================
 ## 2. Run algorithms
 ## =============================================================================
-# run CCD
-CCDres_pos <- simdatalist %>% 
-  map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
-  map_depth(3, ~CreateAdjMat(.x, length(.x$nodes)))
-
-# run FCI
-FCIres_pos <- simdatalist %>% 
-  map_depth(3, ~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
-                     labels = colnames(.x)) %>% .@amat 
-  )
-
-# run CCI
-CCIres_pos <- simdatalist %>% 
-  map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, 
-                     labels = colnames(.x), p = ncol(.x)) %>% .$maag 
-  )
+# # run CCD
+# CCDres_pos <- simdatalist %>% 
+#   map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
+#   map_depth(3, ~CreateAdjMat(.x, length(.x$nodes)))
+# 
+# # run FCI
+# FCIres_pos <- simdatalist %>% 
+#   map_depth(3, ~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
+#                      alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+#                      labels = colnames(.x)) %>% .@amat 
+#   )
+# 
+# # run CCI
+# CCIres_pos <- simdatalist %>% 
+#   map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, 
+#                      labels = colnames(.x), p = ncol(.x)) %>% .$maag 
+#   )
 
 # append all true adj.matrices into a single list
 truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, 
