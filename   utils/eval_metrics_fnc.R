@@ -1,4 +1,4 @@
-## ============================================================================
+## =============================================================================
 ## Description
 #
 # This script contains six functions for computing evaluation metrics 
@@ -8,7 +8,7 @@
 # 
 # Each function computes the corresponding evaluation metrics.
 # See below for the detailed description of each function.
-## ============================================================================
+## =============================================================================
 
 # load package
 library(magrittr) # for pipes used in functions
@@ -227,21 +227,18 @@ precision2 <- function(truepag, estimatedpag){
     pre_null = cm["0","0"]/sum(cm[,"0"])
   } else {
     pre_null = 0;
-    # print("No null endpoint occurred in the estimated graph.")
   }
   
   if(2 %in% estimatedpag) {
     pre_head = cm["2","2"]/sum(cm[,"2"])
   } else {
     pre_head = 0; 
-    # print("No tail endpoint occurred in the estimated graph.")
   }
   
   if(3 %in% estimatedpag) {
     pre_tail = cm["3","3"]/sum(cm[,"3"])
   } else {
     pre_tail = 0; 
-    #print("No head endpoint occurred in the estimated graph.")
   }
   # if there is any NaN, replace with zero (it is due to the zero in the denominator)
   tmp <- c(pre_null, pre_head, pre_tail)
@@ -272,21 +269,18 @@ recall2 <- function(truepag, estimatedpag){
     rec_null = cm["0","0"]/sum(cm["0",])
   } else {
     rec_null = 0;
-    # print("No null endpoint occurred in the estimated graph.")
   }
   
   if(2 %in% estimatedpag) {
     rec_head = cm["2","2"]/sum(cm["2",])
   } else {
     rec_head = 0;
-    # print("No tail endpoint occurred in the estimated graph.")
   }
   
   if(3 %in% estimatedpag) {
     rec_tail = cm["3","3"]/sum(cm["3",])
   } else {
     rec_tail = 0;
-    #print("No head endpoint occurred in the estimated graph.")
   }
   # if there is any NaN, replace with zero (it is due to the zero in the denominator)
   tmp <- c(rec_null, rec_head, rec_tail)

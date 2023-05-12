@@ -1,23 +1,26 @@
 ## =============================================================================
 ## Purpose
+#
 # To investigate the unexpected patterns (i.e., brief dips and spikes in the 
 # performance graphs) in the "B5 dense" conditions from the main simulation study. 
 #
+#
 ## Description
+#
 # This script contains code for investigating the observed phenomenon where the 
 # performance in the "B5 dense" cases deteriorates as the sample size N increases.
 #
 # We presumed that the inducing path between X2 and X5 plays a role in
 # achieving the correct orientation when N is relatively small.
 #
-# To test our hypothesis, we examined the partial correlations between
-# X2 and X5 per different sample sizes and looked into what was happening in
-# each step of the algorithm. 
+# To test our hypothesis, we examined the partial correlations between X2 and X5 
+# for different sample sizes and looked into the results of conditional
+# independence tests.
 ## =============================================================================
 # The content is as follows.
 # 0. Preparation: Source and load necessary functions & packages.
 # 
-# 1. Examining partial correlation: Examine all  partial correlations 
+# 1. Examining partial correlation: Examine all partial correlations 
 #    between X2 and X5. And create histograms.
 #
 # 2. Testing conditional independencies: Check the results of conditional 
@@ -39,6 +42,9 @@ library(ggplot2)
 library(ggpubr)
 library(ppcor)
 
+# set the seed
+set.seed(123)
+
 
 ## =============================================================================
 ## 1. Examining partial correlations
@@ -55,7 +61,7 @@ partialX3X4 <- c()
 partialX1X3X4 <- c()
 # extract marginal/partial correlations
 for(j in 1:500){
-  data <- simdata_5pdense[[10]][[j]]
+  data <- simdata_5pdense[[10]][[j]] # using simulated data with N = 10000
   marginal[j] <- cor.test(data[,"X2"], data[,"X5"])$estimate
   partialX1[j] <- ppcor::pcor.test(data[,"X2"], data[,"X5"], data[,("X1")])$estimate
   partialX3[j] <- ppcor::pcor.test(data[,"X2"], data[,"X5"], data[,("X3")])$estimate
@@ -145,5 +151,5 @@ rownames(count) <- c("marginal", "conditional on X1", "conditional on X3",
 colnames(count) <- c("N=50" , "N=150", "N=500", "N=1000", "N=2000", "N=3000", 
                      "N=4000", "N=5000", "N=7500", "N=10000")
 
-# show table
-count
+# show the table of proportion
+count/500 

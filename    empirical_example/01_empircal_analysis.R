@@ -39,15 +39,15 @@ library(CCI.KP)
 library(furrr)
 
 ## source all the necessary functions
-source("utils/CCD_fnc.R")
-source("utils/plot_fnc.R")
+source("  utils/CCD_fnc.R")
+source("  utils/plot_fnc.R")
 
 ## import the empirical data
-mcnally <- read.csv("empirical_example/data/McNally.csv")
+mcnally <- read.csv("   empirical_example/data/McNally.csv")
 
 # separate depression / OCD symptoms
 # (original data contains both depression and OCD symptoms)
-# (here we only use depression symptoms)
+# (in the paper, we only use depression symptoms)
 depression <- mcnally[,1:16] %>% apply(., 2, as.numeric) # convert it to numeric (for CCD)
 ocd <- mcnally[,17:26] %>% apply(., 2, as.numeric)
 
@@ -66,22 +66,25 @@ qgraph(glassoFitdep, layout = "spring", theme="colorblind",
 ## =============================================================================
 ## 3. Estimate PAGs using CCD, FCI and CCI
 ## =============================================================================
+# set the seed
 set.seed(123)
+# set alpha to 0.01
 alpha <- 0.01
+
 ## estimate the PAG on depression symptoms by running CCD
 # run CCD
-ccd_mcnally_dep <- ccdKP(df=depression, dataType = "continuous", alpha=0.01)
+ccd_mcnally_dep <- ccdKP(df=depression, dataType = "continuous", alpha = alpha)
 # create an adjacency matrix for PAG
 mat_mcnally_dep <- CreateAdjMat(ccd_mcnally_dep, p = ncol(depression))
 # plot the PAG
 pag_mcnally_dep <- plotPAG(ccd_mcnally_dep, mat_mcnally_dep)
 
 ## estimate the PAG on depression symptoms by running FCI
-fci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01, 
+fci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha = alpha, 
     labels = colnames(depression), verbose=TRUE) %>% .@amat %>% plotAG 
 
 ## estimate the PAG on depression symptoms by running CCI
-cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha=0.01, 
+cci(list(C = cor(depression), n = nrow(depression)), gaussCItest, alpha = alpha, 
     labels = colnames(depression), p = ncol(depression), verbose=TRUE) %>% .$maag %>% plotAG
 
 
@@ -102,23 +105,34 @@ MyTheme2 <-  theme(plot.title = element_text(family = "Palatino", size = 14, hju
                    panel.border = element_rect(color = "#DCDCDC", fill = NA)
 )
 
-# distributions of depression symptoms (figureJ1 in Appendix J)
+# distributions of depression symptoms (figureJ1 in the paper)
 dist <- as.data.frame(depression) %>%
+  # convert it to a long format
   tidyr::pivot_longer(where(is.numeric)) %>%
+  # create ggplot object
   ggplot(aes(x = value)) +
+  # add histograms
   geom_histogram(aes(y = after_stat(density)),bins = 10) +
+  # add density
   geom_density(adjust=1.5)+
+  # create a facet
   facet_wrap(~name) +
+  # apply themes
   theme_minimal() +
   MyTheme2
 # ggsave(dist, filename = "results/dep_dist.pdf", width = 20, height = 13, dpi = 300, units = "cm")
 
 # original data distribution
 p1 <- as.data.frame(depression) %>%
+  # convert it to a long format
   tidyr::pivot_longer(where(is.numeric)) %>%
+  # create ggplot object
   ggplot(aes(x = value)) +
+  # add histograms
   geom_histogram(bins = 10) +
+  # create a facet
   facet_wrap(~name) +
+  # apply themes
   theme_minimal() +
   ggtitle("(a) Original data") +
   MyTheme2
@@ -129,13 +143,19 @@ transformed_dat <- huge::huge.npn(depression) %>% as.data.frame()
 
 ## check the distributions of transformed data
 p2 <- transformed_dat %>%
+  # convert it to a long format
   tidyr::pivot_longer(where(is.numeric)) %>%
+  # create ggplot object
   ggplot(aes(x = value)) +
+  # add histograms
   geom_histogram(bins = 10) +
+  # create a facet
   facet_wrap(~name) +
+  # apply themes
   theme_minimal() +
   ggtitle("(b) Transformed data") +
   MyTheme2
 
-ggpubr::ggarrange(p1,p2)
+# combine figures
+ggpubr::ggarrange(p1, p2)
 #ggsave(filename = "results/transformdat.pdf", width = 25, height = 13, dpi = 300, units = "cm")

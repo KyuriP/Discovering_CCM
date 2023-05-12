@@ -804,7 +804,7 @@ pre_rec2 <- list(
         dplyr::summarise(across(everything(.), list(mean = ~mean(., na.rm=T), 
                                                     sd = ~sd(., na.rm=T))))) %>%
   bind_rows() %>% 
-  # create columns
+  # create columns (conditions)
   mutate(algorithm = rep(c("CCD", "FCI", "CCI"), 8),
          condition = rep(c("5p_sparse", "10p_sparse", "5p_dense", "10p_dense", 
                            "5p_LVsparse", "5p_LVdense", "10p_LVsparse", "10p_LVdense"), each=3),
@@ -817,7 +817,7 @@ pre_rec2 <- list(
   # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition, netsize, latentvar, densities), 
                       names_to = "metric", values_to = "value") %>% 
-  # Add sample size column (N) & clean up the column name 
+  # add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(metric, "(?<=[N =])\\d+"),
          metric = stringr::str_replace_all(metric, "[0-9.]+|[N =]", "")) 
 
@@ -841,7 +841,7 @@ uncertainties2 <- bind_rows(
   group_by(id) %>% 
   # get the mean and sd
   summarise_all(list(means = mean, sds = sd)) %>%  
-  # create columns
+  # create columns (conditions)
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
          condition = stringr::str_split(id, "_", simplify = T)[,2],
          netsize = stringr::str_split(condition, "-", simplify=T)[,1],
@@ -851,7 +851,7 @@ uncertainties2 <- bind_rows(
   # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
                       names_to = "name", values_to = "value") %>% 
-  # Add sample size column (N) & clean up the column name 
+  # add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
   dplyr::select(-id, -name) %>%  
@@ -878,7 +878,7 @@ SHDs2 <- bind_rows(
   group_by(id) %>% 
   # get the mean and sd
   summarise_all(list(means = mean, sds = sd)) %>%  
-  # create columns
+  # create columns (conditions)
   mutate(algorithm = stringr::str_split(id, "_", simplify = T)[,1],
          condition = stringr::str_split(id, "_", simplify = T)[,2],
          netsize = stringr::str_split(condition, "-", simplify=T)[,1],
@@ -888,7 +888,7 @@ SHDs2 <- bind_rows(
   # convert it to a long format
   tidyr::pivot_longer(!c(algorithm, condition, id, netsize, latentvar, densities), 
                       names_to = "name", values_to = "value") %>% 
-  # Add sample size column (N) & clean up the column name 
+  # add sample size column (N) & clean up the column name 
   mutate(N = stringr::str_extract(stringr::str_split(name, "_", simplify = T)[,1], "(\\d)+"),
          statistics = stringr::str_split(name, "_", simplify = T)[,2]) %>% 
   dplyr::select(-id, -name) %>%  
@@ -919,7 +919,9 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 
 ## SHD figure
 shdplot <- SHDs2 %>%
+  # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+  # create ggplot object
   ggplot(aes(x= as.numeric(N), y=means, group = algorithm, 
              colour = algorithm, fill = algorithm)) +
   # add line plots
@@ -954,10 +956,11 @@ shdplot <- SHDs2 %>%
 
 ## Precision figure
 precision_plot <- pre_rec2 %>% 
-  # filter out the average precision only
+  # select only the average precision
   filter(grepl("average_precision", metric)) %>% 
   # convert it to a wide format
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
+  # create ggplot object
   ggplot(aes(x= as.numeric(N), y=average_precision_mean, group = algorithm, 
              colour = algorithm, fill=algorithm)) +
   # add line plots
@@ -991,10 +994,11 @@ precision_plot <- pre_rec2 %>%
 
 ## Recall figure
 recall_plot <- pre_rec2 %>% 
-  # filter out the average recall only
+  # select only the average recall
   filter(grepl("average_recall", metric)) %>% 
   # convert it to a wide format
   tidyr::pivot_wider(names_from = metric, values_from=value) %>% 
+  # create ggplot object
   ggplot(aes(x= as.numeric(N), y=average_recall_mean, group = algorithm, 
              colour = algorithm, fill= algorithm)) +
   # add line plots
@@ -1031,7 +1035,9 @@ recall_plot <- pre_rec2 %>%
 
 ## Uncertainty figure
 uncertainty_plot <- uncertainties2 %>%
+  # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
+  # create ggplot object
   ggplot(aes(x= as.numeric(N), y=means, group = algorithm, colour = algorithm, fill = algorithm)) +
   # add line plots
   geom_line(aes(group = algorithm)) +

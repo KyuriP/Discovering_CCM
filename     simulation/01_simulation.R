@@ -968,7 +968,7 @@ times <- times %>%
          condition = stringr::str_split(expr, "_", simplify=T)[,2])
 
 
-## create a figure 
+## create the figure of algorithm running time
 timeplot <- times %>%
   # create ggplot object
   ggplot(aes(x=factor(condition, levels= c("5psparse", "5pdense", "10psparse", "10pdense", 

@@ -1,4 +1,4 @@
-## ============================================================================
+## =============================================================================
 ## Description
 #
 # This script evaluates the performance of algorithms using structural Hamming 
@@ -580,7 +580,7 @@ colMeans(SHD_cci10pLVdense)
 
 
 ## =============================================================================
-## 2. Create neat dataframe
+## 2. Create neat dataframes
 ## =============================================================================
 
 ## Compute average precision & recall and corresponding sd for each condition

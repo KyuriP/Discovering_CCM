@@ -1,4 +1,4 @@
-## ============================================================================
+## =============================================================================
 ## Description
 #
 # It contains five functions: `equilibrium_check`, `gen_dat`, `generatesimdat`,
@@ -7,11 +7,11 @@
 # - `equilibrium_check`: checks if the specified regression matrix (B) reaches 
 #    an equilibrium state, which is necessary for a cyclic model to converge.
 # - `gen_dat`: generates data according to the specified B matrix.
-# - `generatesimdat`: generates *n* datasets (dependent on gen_dat function).
+# - `generatesimdat`: generates *n* datasets (dependent on `gen_dat` function).
 # - `sampleranB2`: generates data given randomly sampled weights of B matrices.
 # - `sampleranB2_pos`: generates data given randomly sampled *positive* weights 
 #    of B matrices.
-## ============================================================================
+## =============================================================================
 
 
 
@@ -46,7 +46,7 @@ gen_dat <- function(B, N = 1e6, seed = NULL){
   # sample errors (std. normal)
   if(!is.null(seed)) set.seed(seed)
   errors <- MASS::mvrnorm(n = N, mu = rep(0, dimension), Sigma = diag(dimension))
-  # generate data: (I_B)*errors
+  # generate data: (I-B)^-1 * errors
   data <- t(apply(errors, 1, function(x) inverse %*% x))
   colnames(data) <-  colnames(B)
   return(data)
@@ -88,7 +88,7 @@ generatesimdat <- function(B, N, LV = NULL, n = 500, seed=123){
 #' @param seed seed number (default = 123)
 #'
 #' @return list of matrices of simulated data
-sampleranB2 <- function(B, LV=NULL, n = 500, seed=123){
+sampleranB2 <- function(B, LV = NULL, n = 500, seed=123){
   # set the seed
   set.seed(seed)
   # variable number

@@ -1,4 +1,4 @@
-## ============================================================================
+## =============================================================================
 ## Description
 #
 # This script contains four functions:
@@ -9,7 +9,7 @@
 #          `plotAG` plots a PAG given an (ancestral) adjacency matrix.
 #
 # See below for the detailed description of each function.
-## ============================================================================
+## =============================================================================
 
 ## load a required package
 library(Rgraphviz)
@@ -57,7 +57,7 @@ CreateAdjMat <- function(ccd.obj, p){
 
 #' Extract triples
 #'
-#' @param triples the triples in PAG from a ccd object
+#' @param triples the triples of nodes in PAG from a CCD object
 #'
 #' @return the first, middle, last node in each triple
 extracttriples <- function(triples) {
@@ -71,14 +71,14 @@ extracttriples <- function(triples) {
   middlenode <- stringr::str_trim(sapply(triplesets, function(x) x[[2]]))
   # extract third node
   lastnode <- stringr::str_trim(sapply(triplesets, function(x) x[[3]]))
-  return(data.frame(fistnode = firstnode, middlenode= middlenode, lastnode=lastnode))
+  return(data.frame(firstnode = firstnode, middlenode= middlenode, lastnode=lastnode))
 }
 
 
 
 #' Extract middle node in a triple
 #'
-#' @param triples the triples in PAG
+#' @param triples the triples of nodes in PAG from a CCD object
 #'
 #' @return the middle node in the triples
 extractnode <- function(triples) {
@@ -105,15 +105,15 @@ extractnode <- function(triples) {
 #'   firstnode <- stringr::str_trim(sapply(triplesets, function(x) x[[1]]))
 #'   middlenode <- stringr::str_trim(sapply(triplesets, function(x) x[[2]]))
 #'   lastnode <- stringr::str_trim(sapply(triplesets, function(x) x[[3]]))
-#'   return(data.frame(fistnode = firstnode, middlenode= middlenode, lastnode=lastnode))
+#'   return(data.frame(firstnode = firstnode, middlenode= middlenode, lastnode=lastnode))
 #' }
 
 
 
-#' Plot PAG (partial ancestral graph) for CCD algorithm
+#' Plot PAG (partial ancestral graph) for the CCD algorithm
 #'
 #' @param amat the adjacency matrix of PAG
-#' @param ccd.obj the resulting object of ccdKP function
+#' @param ccd.obj the resulting object of `ccdKP` function
 #'
 #' @details
 #' "0": no edge; "1": circle; "2": arrow; "3": tail
@@ -166,7 +166,7 @@ plotPAG <- function(ccd.obj, amat)
   lty <- rep(2, length(dottedunderline_node))
   names(lty) <- dottedunderline_node
   nodeRenderInfo(graph) <- list(lty = lty)
-
+  
   edgeRenderInfo(graph) <- list(arrowhead = ah.list, arrowtail = at.list)
   # global features
   graph.par(list(nodes=list(cex = 1)))

@@ -1,4 +1,4 @@
-## ============================================================================
+## =============================================================================
 ## Description
 #
 # This script contains five function: `ccdKP`, `loadContinuousData`, 
@@ -13,7 +13,7 @@
 #       with slight modifications. For more detailed information on this 
 #       CCD function,  please refer to TETRAD's documentation 
 #       (https://sites.google.com/view/tetradcausal).
-## ============================================================================
+## =============================================================================
 
 
 

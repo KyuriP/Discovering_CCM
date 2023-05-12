@@ -50,7 +50,7 @@ set.seed(123)
 
 
 ## =============================================================================
-## 1. Generate data 
+## 1. Simulate data 
 ## =============================================================================
 
 # specify the sample sizes
@@ -103,13 +103,12 @@ CCIres <- simdatalist %>%
                      labels = colnames(.x), p = ncol(.x)) %>% .$maag 
   )
 
-
 # append all true adj.matrices into a single list
 truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse, 
                  trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, 
                  trueag_10psparseLV, trueag_10pdenseLV)
 
-
+# save results
 # save(CCDres, file ="    simulation/output/randomB_n500/CCDres2_randomB.Rdata")
 # save(FCIres, file = "    simulation/output/randomB_n500/FCIres2_randomB.Rdata")
 # save(CCIres, file = "    simulation/output/randomB_n500/CCIres2_randomB.Rdata")
@@ -341,10 +340,12 @@ unc_ranB <- bind_rows(CCD = CCDunc, FCI = FCIunc, CCI = CCIunc, .id="id") %>%
   # convert it to a long format
   tidyr::pivot_longer(cols = -c(id, n, statistics), names_to = "condition", values_to = "value") %>% 
   mutate(
+    # create variables (conditions)
     netsize = paste0(stringr::str_match_all(condition, "[0-9]+"), "p"),
     latentvar = ifelse(stringr::str_detect(condition, "lv")==TRUE, "with LC", "without LC"),
     densities = ifelse(stringr::str_detect(condition, "dense")==TRUE, "dense", "sparse") 
   ) %>% 
+  # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
 
