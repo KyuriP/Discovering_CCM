@@ -84,7 +84,7 @@ If interested in reproducing the results of:
 - simulation study, please refer to [`guide_simuation`](https://github.com/KyuriP/CCM_Discovery/blob/main/%20%20%20%20simulation/README.md).
 - empirical anlaysis, please refer to [`guide_empirical`](https://github.com/KyuriP/CCM_Discovery/blob/main/%20%20%20empirical_example/README.md).
 
-## Session Information
+## Software & Dependencies 
 <details>
 <summary><b><i>R session & Pacakge information</i></b></summary>
 
@@ -242,7 +242,7 @@ If interested in reproducing the results of:
 </details>
 
 ## Ethics & Access
-All data are simulated in this study except for the one used in the emprical analysis, which is publicly available on the [Psychological Medicine Journal](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900\#supplementary-materials) webpage.
+All data used in this study are simulated, except for the data used in the empirical analysis, which is publicly available on the [Psychological Medicine Journal](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900\#supplementary-materials) webpage. There is no security or privacy concerns associated with the use of either the simulated or empirical data in this study.
 Ethical approval for this study has been granted by the Ethical Review Board of the Faculty of Social and
 Behavioural Sciences [(FETC)](https://ferb.sites.uu.nl/) at Utrecht University, with reference numbers 22-1810 and 22-1825 (see the confirmation of approval: [fetcapproval1.pdf](https://github.com/KyuriP/Thesis_KP/blob/main/others/FETC-approval/fetcapproval1.pdf), [fetcapproval2.pdf](https://github.com/KyuriP/Thesis_KP/blob/main/others/FETC-approval/fetcapproval2.pdf)).
 
@@ -250,5 +250,5 @@ This repository, which serves as an archive of the study is accessible to the pu
 
 
 ## Contact
-The public accessibility of the project repository is maintained by Kyuri Park.
-For any inquiries or feedback about the project, please feel free to contact [Kyuri Park](https://kyurip.github.io/).
+The maintenance and public accessibility of the project repository are managed by Kyuri Park. If you have any inquiries or feedback about the project, please feel free to contact [Kyuri Park](https://kyurip.github.io/).
+
