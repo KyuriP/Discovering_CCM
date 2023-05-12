@@ -36,12 +36,12 @@
 ## =============================================================================
 
 ## source all the necessary functions
-source("  utils/CCD_fnc.R")             # function for running CCD algorithm
-source("  utils/plot_fnc.R")            # function for plotting PAGs
-source("  utils/searchAM_KP_fnc.R")     # function for extracting ancestral relations
-source("  utils/data_generating_fnc.R") # function for generating data
-source("  utils/eval_metrics_fnc.R")    # function for evaluating performance
-source("  utils/true_ancestral_fnc.R")  # function for generation AGs
+source("utils/CCD_fnc.R")             # function for running CCD algorithm
+source("utils/plot_fnc.R")            # function for plotting PAGs
+source("utils/searchAM_KP_fnc.R")     # function for extracting ancestral relations
+source("utils/data_generating_fnc.R") # function for generating data
+source("utils/eval_metrics_fnc.R")    # function for evaluating performance
+source("utils/true_ancestral_fnc.R")  # function for generation AGs
 
 ## load necessary packages
 library(magrittr)
@@ -136,10 +136,10 @@ simdata_5psparse <- N %>% future_map(function(z) {
 # mat_5psparse <- ccd_5psparse %>%
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
-# save(ccd_5psparse, file="    simulation/output/fixedB_n500/ccd_5psparse.RData")
-# save(mat_5psparse, file="    simulation/output/fixedB_n500/mat_5psparse.RData")
+# save(ccd_5psparse, file="simulation/output/fixedB_n500/ccd_5psparse.RData")
+# save(mat_5psparse, file="simulation/output/fixedB_n500/mat_5psparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_5psparse.RData") 
+load("simulation/output/fixedB_n500/mat_5psparse.RData") 
 
 # plot resulting PAGs
 # pag_ccd5psparse <- map2(ccd_5psparse, mat_5psparse,
@@ -153,9 +153,9 @@ load("    simulation/output/fixedB_n500/mat_5psparse.RData")
 #                     labels = colnames(.x)) %>% .@amat 
 #   )
 
-# save(fci_5psparse, file="        simulation/output/fixedB_n500/fci_5psparse.RData")
+# save(fci_5psparse, file="simulation/output/fixedB_n500/fci_5psparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/fci_5psparse.RData")
+load("simulation/output/fixedB_n500/fci_5psparse.RData")
 
 # plot resulting PAGs
 # pag_fci5psparse <- fci_5psparse %>%
@@ -166,9 +166,9 @@ load("    simulation/output/fixedB_n500/fci_5psparse.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, 
 #                     labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
-# save(cci_5psparse, file="fixedB_n500/    simulation/output/fixedB_n500/cci_5psparse.RData")
+# save(cci_5psparse, file="simulation/output/fixedB_n500/cci_5psparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/cci_5psparse.RData")
+load("simulation/output/fixedB_n500/cci_5psparse.RData")
 
 # plot resulting PAGs
 # pag_cci5psparse <- cci_5psparse %>%
@@ -222,10 +222,10 @@ simdata_5pdense <- N %>% future_map(function(z) {
 # mat_5pdense <- ccd_5pdense %>% 
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
-# save(ccd_5pdense, file="    simulation/output/fixedB_n500/ccd_5pdense.RData")
-# save(mat_5pdense, file="    simulation/output/fixedB_n500/mat_5pdense.RData")
+# save(ccd_5pdense, file="simulation/output/fixedB_n500/ccd_5pdense.RData")
+# save(mat_5pdense, file="simulation/output/fixedB_n500/mat_5pdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_5pdense.RData")
+load("simulation/output/fixedB_n500/mat_5pdense.RData")
 
 # pag_ccd5pdense <- map2(ccd_5pdense, mat_5pdense,
 #                         ~map2(.x, .y, plotPAG)
@@ -237,9 +237,9 @@ load("    simulation/output/fixedB_n500/mat_5pdense.RData")
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
 #                     labels = colnames(.x)) %>% .@amat # extract amat
 #   )
-# save(fci_5pdense, file="    simulation/output/fixedB_n500/fci_5pdense.RData")
+# save(fci_5pdense, file="simulation/output/fixedB_n500/fci_5pdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/fci_5pdense.RData")
+load("simulation/output/fixedB_n500/fci_5pdense.RData")
 
 # plot resulting PAGs
 # pag_fci5pdense <- fci_5pdense %>%
@@ -250,9 +250,9 @@ load("    simulation/output/fixedB_n500/fci_5pdense.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag
 #   )
-# save(cci_5pdense, file="    simulation/output/fixedB_n500/cci_5pdense.RData")
+# save(cci_5pdense, file="simulation/output/fixedB_n500/cci_5pdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/cci_5pdense.RData")
+load("simulation/output/fixedB_n500/cci_5pdense.RData")
 
 # plot resulting PAGs
 # pag_cci5pdense <- cci_5pdense %>%
@@ -329,10 +329,10 @@ simdata_10psparse <- N %>% future_map(function(z) {
 # mat_10psparse <- ccd_10psparse %>% 
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
-# save(ccd_10psparse, file="    simulation/output/fixedB_n500/ccd_10psparse.RData")
-# save(mat_10psparse, file="    simulation/output/fixedB_n500/mat_10psparse.RData")
+# save(ccd_10psparse, file="simulation/output/fixedB_n500/ccd_10psparse.RData")
+# save(mat_10psparse, file="simulation/output/fixedB_n500/mat_10psparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_10psparse.RData")
+load("simulation/output/fixedB_n500/mat_10psparse.RData")
 
 # plot resulting PAGs
 # pag_ccd10psparse <- map2(ccd_10psparse, mat_10psparse,
@@ -345,9 +345,9 @@ load("    simulation/output/fixedB_n500/mat_10psparse.RData")
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
 #                     labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
-# save(fci_10psparse, file="    simulation/output/fixedB_n500/fci_10psparse.RData")
+# save(fci_10psparse, file="simulation/output/fixedB_n500/fci_10psparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/fci_10psparse.RData")
+load("simulation/output/fixedB_n500/fci_10psparse.RData")
 
 # plot resulting PAGs
 # pag_fci10psparse <- fci_10psparse %>%
@@ -358,9 +358,9 @@ load("    simulation/output/fixedB_n500/fci_10psparse.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag
 #   )
-# save(cci_10psparse, file="    simulation/output/fixedB_n500/cci_10psparse.RData")
+# save(cci_10psparse, file="simulation/output/fixedB_n500/cci_10psparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/cci_10psparse.RData")
+load("simulation/output/fixedB_n500/cci_10psparse.RData")
 
 # plot resulting PAGs
 # pag_cci10psparse <- cci_10psparse %>%
@@ -436,10 +436,10 @@ simdata_10pdense <- N %>% future_map(function(z) {
 #   )
 # mat_10pdense  <- ccd_10pdense  %>% 
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
-# save(ccd_10pdense, file="    simulation/output/fixedB_n500/ccd_10pdense.RData")
-# save(mat_10pdense, file="    simulation/output/fixedB_n500/mat_10pdense.RData")
+# save(ccd_10pdense, file="simulation/output/fixedB_n500/ccd_10pdense.RData")
+# save(mat_10pdense, file="simulation/output/fixedB_n500/mat_10pdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_10pdense.RData")
+load("simulation/output/fixedB_n500/mat_10pdense.RData")
 
 # plot resulting PAGs
 # pag_ccd10pdense <- map2(ccd_10pdense, mat_10pdense,
@@ -452,9 +452,9 @@ load("    simulation/output/fixedB_n500/mat_10pdense.RData")
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
 #                     labels = colnames(.x)) %>% .@amat # exxtract amat
 #   )
-# save(fci_10pdense, file="    simulation/output/fixedB_n500/fci_10pdense.RData")
+# save(fci_10pdense, file="simulation/output/fixedB_n500/fci_10pdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/fci_10pdense.RData")
+load("simulation/output/fixedB_n500/fci_10pdense.RData")
 
 # plot resulting PAGs
 # pag_fci10pdense <- fci_10pdense  %>%
@@ -465,9 +465,9 @@ load("    simulation/output/fixedB_n500/fci_10pdense.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
-# save(cci_10pdense, file="    simulation/output/fixedB_n500/cci_10pdense.RData")
+# save(cci_10pdense, file="simulation/output/fixedB_n500/cci_10pdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/cci_10pdense.RData")
+load("simulation/output/fixedB_n500/cci_10pdense.RData")
 
 # plot resulting PAGs
 # pag_cci10pdense  <- cci_10pdense  %>%
@@ -531,10 +531,10 @@ simdata_5pLVsparse <- N %>% future_map(function(z) {
 #   )
 # mat_5pLVsparse  <- ccd_5pLVsparse  %>% 
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
-# save(ccd_5pLVsparse, file="    simulation/output/fixedB_n500/ccd_5pLVsparse.RData")
-# save(mat_5pLVsparse, file="    simulation/output/fixedB_n500/mat_5pLVsparse.RData")
+# save(ccd_5pLVsparse, file="simulation/output/fixedB_n500/ccd_5pLVsparse.RData")
+# save(mat_5pLVsparse, file="simulation/output/fixedB_n500/mat_5pLVsparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_5pLVsparse.RData")
+load("simulation/output/fixedB_n500/mat_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_ccd5pLVsparse <- map2(ccd_5pLVsparse, mat_5pLVsparse,
@@ -547,9 +547,9 @@ load("    simulation/output/fixedB_n500/mat_5pLVsparse.RData")
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
 #                     labels = colnames(.x)) %>% .@amat # extract amat
 #   )
-# save(fci_5pLVsparse, file="    simulation/output/fixedB_n500/fci_5pLVsparse.RData")
+# save(fci_5pLVsparse, file="simulation/output/fixedB_n500/fci_5pLVsparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/fci_5pLVsparse.RData")
+load("simulation/output/fixedB_n500/fci_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_fci_5pLVsparse <- fci_5pLVsparse  %>%
@@ -561,9 +561,9 @@ load("    simulation/output/fixedB_n500/fci_5pLVsparse.RData")
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
 # 
-# save(cci_5pLVsparse, file="    simulation/output/fixedB_n500/cci_5pLVsparse.RData")
+# save(cci_5pLVsparse, file="simulation/output/fixedB_n500/cci_5pLVsparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/cci_5pLVsparse.RData")
+load("simulation/output/fixedB_n500/cci_5pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_cci_5pLVsparse <- cci_5pLVsparse  %>%
@@ -627,10 +627,10 @@ simdata_5pLVdense <- N %>% future_map(function(z) {
 #   )
 # mat_5pLVdense  <- ccd_5pLVdense  %>% 
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
-# save(ccd_5pLVdense, file="    simulation/output/fixedB_n500/ccd_5pLVdense.RData")
-# save(mat_5pLVdense, file="    simulation/output/fixedB_n500/mat_5pLVdense.RData")
+# save(ccd_5pLVdense, file="simulation/output/fixedB_n500/ccd_5pLVdense.RData")
+# save(mat_5pLVdense, file="simulation/output/fixedB_n500/mat_5pLVdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_5pLVdense.RData")
+load("simulation/output/fixedB_n500/mat_5pLVdense.RData")
 
 # plot resulting PAGs
 # pag_ccd5pLVdense <- map2(ccd_5pLVdense, mat_5pLVdense,
@@ -644,9 +644,9 @@ load("    simulation/output/fixedB_n500/mat_5pLVdense.RData")
 #                     labels = colnames(.x)) %>% .@amat
 #   )
 
-# save(fci_5pLVdense, file="    simulation/output/fixedB_n500/fci_5pLVdense.RData")
+# save(fci_5pLVdense, file="simulation/output/fixedB_n500/fci_5pLVdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/fci_5pLVdense.RData")
+load("simulation/output/fixedB_n500/fci_5pLVdense.RData")
 
 # plot resulting PAGs
 # pag_fci5pLVdense <- fci_5pLVdense  %>%
@@ -658,9 +658,9 @@ load("    simulation/output/fixedB_n500/fci_5pLVdense.RData")
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
 #   )
 
-# save(cci_5pLVdense, file="    simulation/output/fixedB_n500/cci_5pLVdense.RData")
+# save(cci_5pLVdense, file="simulation/output/fixedB_n500/cci_5pLVdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/cci_5pLVdense.RData")
+load("simulation/output/fixedB_n500/cci_5pLVdense.RData")
 
 # plot resulting PAGs
 # pag_cci5pLVdense <- cci_5pLVdense  %>%
@@ -741,10 +741,10 @@ simdata_10pLVsparse <- N %>% future_map(function(z) {
 #   )
 # mat_10pLVsparse   <- ccd_10pLVsparse %>% 
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
-# save(ccd_10pLVsparse, file="    simulation/output/fixedB_n500/ccd_10pLVsparse.RData")
-# save(mat_10pLVsparse, file="    simulation/output/fixedB_n500/mat_10pLVsparse.RData")
+# save(ccd_10pLVsparse, file="simulation/output/fixedB_n500/ccd_10pLVsparse.RData")
+# save(mat_10pLVsparse, file="simulation/output/fixedB_n500/mat_10pLVsparse.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_10pLVsparse.RData")
+load("simulation/output/fixedB_n500/mat_10pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_ccd10pLVsparse <- map2(ccd_10pLVsparse, mat_10pLVsparse,
@@ -757,8 +757,8 @@ load("    simulation/output/fixedB_n500/mat_10pLVsparse.RData")
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
 #                     labels = colnames(.x)) %>% .@amat  
 #   )
-# save(fci_10pLVsparse, file="    simulation/output/fixedB_n500/fci_10pLVsparse.RData")
-load("    simulation/output/fixedB_n500/fci_10pLVsparse.RData")
+# save(fci_10pLVsparse, file="simulation/output/fixedB_n500/fci_10pLVsparse.RData")
+load("simulation/output/fixedB_n500/fci_10pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_fci10pLV  <- fci_10pLVsparse %>%
@@ -769,8 +769,8 @@ load("    simulation/output/fixedB_n500/fci_10pLVsparse.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag  
 #   )
-# save(cci_10pLVsparse, file="    simulation/output/fixedB_n500/cci_10pLVsparse.RData")
-load("    simulation/output/fixedB_n500/cci_10pLVsparse.RData")
+# save(cci_10pLVsparse, file="simulation/output/fixedB_n500/cci_10pLVsparse.RData")
+load("simulation/output/fixedB_n500/cci_10pLVsparse.RData")
 
 # plot resulting PAGs
 # pag_cci10pLVsparse   <- cci_10pLVsparse %>%
@@ -852,10 +852,10 @@ simdata_10pLVdense <- N %>% future_map(function(z) {
 # mat_10pLVdense   <- ccd_10pLVdense %>% 
 #   map_depth(2, ~CreateAdjMat(.x, length(.x$nodes)))
 
-# save(ccd_10pLVdense, file="    simulation/output/fixedB_n500/ccd_10pLVdense.RData")
-# save(mat_10pLVdense, file="    simulation/output/fixedB_n500/mat_10pLVdense.RData")
+# save(ccd_10pLVdense, file="simulation/output/fixedB_n500/ccd_10pLVdense.RData")
+# save(mat_10pLVdense, file="simulation/output/fixedB_n500/mat_10pLVdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/mat_10pLVdense.RData")
+load("simulation/output/fixedB_n500/mat_10pLVdense.RData")
 
 # plot resulting PAGs
 # pag_ccd10pLVdense <- map2(ccd_10pLVdense, mat_10pLVdense,
@@ -868,9 +868,9 @@ load("    simulation/output/fixedB_n500/mat_10pLVdense.RData")
 #                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
 #                     labels = colnames(.x)) %>% .@amat
 #   )
-# save(fci_10pLVdense, file="    simulation/output/fixedB_n500/fci_10pLVdense.RData")
+# save(fci_10pLVdense, file="simulation/output/fixedB_n500/fci_10pLVdense.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/fci_10pLVdense.RData")
+load("simulation/output/fixedB_n500/fci_10pLVdense.RData")
 
 # plot resulting PAGs
 # pag_fci10pLVdense <- fci_10pLVdense   %>%
@@ -881,8 +881,8 @@ load("    simulation/output/fixedB_n500/fci_10pLVdense.RData")
 #   map_depth(2, ~cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, 
 #                     alpha = alpha, labels = colnames(.x), p = ncol(.x)) %>% .$maag 
 #   )
-# save(cci_10pLVdense, file="    simulation/output/fixedB_n500/cci_10pLVdense.RData")
-load("    simulation/output/fixedB_n500/cci_10pLVdense.RData")
+# save(cci_10pLVdense, file="simulation/output/fixedB_n500/cci_10pLVdense.RData")
+load("simulation/output/fixedB_n500/cci_10pLVdense.RData")
 
 # plot resulting PAGs
 # pag_cci10pLVdense   <- cci_10pLVdense %>%
@@ -958,9 +958,9 @@ dataset <- list(simdata_5psparse[[1]][[1]], simdata_5pdense[[1]][[1]],
 #                        alpha = alpha, p=ncol(dataset[[8]]))
 # )
 
-# save(times, file="    simulation/output/fixedB_n500/algo_runningtime.RData")
+# save(times, file="simulation/output/fixedB_n500/algo_runningtime.RData")
 # load the saved result
-load("    simulation/output/fixedB_n500/algo_runningtime.RData")
+load("simulation/output/fixedB_n500/algo_runningtime.RData")
 
 ## neat up result object
 times <- times %>%

@@ -1,20 +1,20 @@
 ## =============================================================================
 ## Description
 # 
-# This script contains the code to perform the secondary analysis with randomly 
-# sampled coefficients for the regression matrix B with "only positive values".
+# This script contains code for the secondary analysis with 
+# randomly sampled coefficients for the regression matrix B.
 #
-# Purpose: to examine the impact of the specified weights on the results of the 
-# main analysis, and to determine if there are any differences when randomly 
-# sampling B weights from both negative and positive values.
+# Purpose: to determine the extent to which the results of the main analysis 
+# depend on the specific weights that were specified. 
 #
-# The remaining setup is identical to that of `03_sensitivity_analysis1.R`.
+# As is the case with the main analysis, there are in total 8 models considered
+# and 500 datasets are generated from each model.
 ## =============================================================================
 # The content is as follows.
-# 0. Preparation: Source and load necessary functions and packages.
-#
-# 1. Simulate data: Generate data based on randomly sampled B matrix (with only
-#    positive values) at every iteration. 
+# 0. Preparation: Source and load necessary functions and packages. 
+#                  
+# 1. Simulate data: Generate data based on randomly sampled B matrix 
+#    at every iteration. 
 #
 # 2. Run algorithms: Apply three algorithms -- CCD, FCI, and CCI -- to each 
 #    of the simulated datasets then estimate PAGs.
@@ -24,14 +24,19 @@
 #
 # 4. Create figures: Plot figures for each evaluation metric comparing the 
 #    performance of each algorithm per condition.
+#
+# 5. Create an extra sub-figure: Show the performance under 5p dense 
+#    without a latent confounder condition (Figure 18 in the paper).
 ## =============================================================================
+
 
 
 ## =============================================================================
 ## 0. Preparation
 ## =============================================================================
 # source the simulation study results
-source("    simulation/01_simulation.R")
+source("simulation/01_simulation.R")
+
 # load packages
 library(dplyr)
 library(purrr)
@@ -39,8 +44,9 @@ library(ggplot2)
 library(ggpubr)
 library(ggh4x)
 
-## set the seed
+# set the seed
 set.seed(123)
+
 
 
 ## =============================================================================
@@ -54,45 +60,45 @@ n <- 500
 # specify alpha level
 alpha <- 0.01
 
-
-## create all simulated data using random B 
+## simulate datasets using randomly sampled B matrices
 simdata_woLV <- list(B5sparse = B5sparse, B5dense = B5dense, 
-                     B10sparse =  B10sparse, B10dense = B10dense) %>% 
+                     B10sparse = B10sparse, B10dense = B10dense) %>% 
   map(~
-        sampleranB2_pos(.x)
-  )
+        sampleranB2(.x)
+      )
 
 simdata_5pwLV <- list(B5_lvsparse = B5_lvsparse, B5_lvdense = B5_lvdense) %>% 
   map(~
-        sampleranB2_pos(.x, LV = 6)
+        sampleranB2(.x, LV = 6)
   )
 
 simdata_10pwLV <- list(B10_lvsparse = B10_lvsparse, B10_lvdense = B10_lvdense) %>% 
   map(~
-        sampleranB2_pos(.x, LV = c(11, 12))
+        sampleranB2(.x, LV = c(11, 12))
   )
 
 # append all datasets in a single list
 simdatalist <- append(simdata_woLV, append(simdata_5pwLV, simdata_10pwLV))
 
 
+
 ## =============================================================================
 ## 2. Run algorithms
 ## =============================================================================
-# run CCD
-CCDres_pos <- simdatalist %>% 
+# run CCD 
+CCDres <- simdatalist %>% 
   map_depth(3, ~ ccdKP(df = .x, dataType = "continuous", alpha = alpha)) %>% 
   map_depth(3, ~CreateAdjMat(.x, length(.x$nodes)))
-
+            
 # run FCI
-FCIres_pos <- simdatalist %>% 
+FCIres <- simdatalist %>% 
   map_depth(3, ~ fci(list(C = cor(.x), n = nrow(.x)), indepTest=gaussCItest,
-                     alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
+                                   alpha = alpha, doPdsep = TRUE, selectionBias= FALSE, 
                      labels = colnames(.x)) %>% .@amat 
   )
 
 # run CCI
-CCIres_pos <- simdatalist %>% 
+CCIres <- simdatalist %>% 
   map_depth(3, ~ cci(list(C = cor(.x), n = nrow(.x)), gaussCItest, alpha=alpha, 
                      labels = colnames(.x), p = ncol(.x)) %>% .$maag 
   )
@@ -102,10 +108,16 @@ truemods <- list(trueag_5psparse, trueag_5pdense, trueag_10psparse,
                  trueag_10pdense, trueag_5psparseLV, trueag_5pdenseLV, 
                  trueag_10psparseLV, trueag_10pdenseLV)
 
+# save results
+# save(CCDres, file = "simulation/output/randomB_n500/CCDres2_randomB.Rdata")
+# save(FCIres, file = "simulation/output/randomB_n500/FCIres2_randomB.Rdata")
+# save(CCIres, file = "simulation/output/randomB_n500/CCIres2_randomB.Rdata")
+
 # load results
-load("    simulation/output/randomB_pos/CCDres3_pos.Rdata") # CCD results
-load("    simulation/output/randomB_pos/FCIres3_pos.Rdata") # FCI results
-load("    simulation/output/randomB_pos/CCIres3_pos.Rdata") # CCI results
+load("simulation/output/randomB_n500/CCDres2_randomB.Rdata")
+load("simulation/output/randomB_n500/FCIres2_randomB.Rdata")
+load("simulation/output/randomB_n500/CCIres2_randomB.Rdata")
+
 
 
 ## =============================================================================
@@ -115,36 +127,36 @@ load("    simulation/output/randomB_pos/CCIres3_pos.Rdata") # CCI results
 ## compute SHD
 # SHD values for CCD
 CCDshd <- list()
-for(i in 1:length(CCDres)){
-  CCDshd[[i]] <- CCDres[[i]] %>% 
+for(i in 1:length(CCDres2)){
+  CCDshd[[i]] <- CCDres2[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N))  %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCDshd) <- names(CCDres)
+names(CCDshd) <- names(CCDres2)
 
 # SHD values for FCI
 FCIshd <- list()
-for(i in 1:length(FCIres)){
-  FCIshd[[i]] <- FCIres[[i]] %>% 
+for(i in 1:length(FCIres2)){
+  FCIshd[[i]] <- FCIres2[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(FCIshd) <- names(FCIres)
+names(FCIshd) <- names(FCIres2)
 
 # SHD values for CCI
 CCIshd <- list()
-for(i in 1:length(CCIres)){
-  CCIshd[[i]] <- CCIres[[i]] %>% 
+for(i in 1:length(CCIres2)){
+  CCIshd[[i]] <- CCIres2[[i]] %>% 
     map_depth(2, ~SHD(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>% apply(., 2, unlist) %>%  
     as.data.frame %>% rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means=mean, sds=sd))
 }
-names(CCIshd) <- names(CCIres)
+names(CCIshd) <- names(CCIres2)
 
 ## combine the SHD values
 SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>% 
@@ -171,33 +183,36 @@ SHD_ranB <- bind_rows(CCD = CCDshd, FCI = FCIshd, CCI = CCIshd, .id="id") %>%
 ## compute precision
 # precision for CCD
 CCDprec <- list()
-for(i in 1:length(CCDres)){
-  CCDprec[[i]] <- CCDres[[i]] %>% 
+for(i in 1:length(CCDres2)){
+  CCDprec[[i]] <- CCDres2[[i]] %>% 
     map_depth(2, ~precision2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
-    rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
+    rename_with(~ paste0("N = ", N)) %>% 
+    summarize_all(list(means=mean, sds=sd))
 }
-names(CCDprec) <- names(CCDres)
+names(CCDprec) <- names(CCDres2)
 
 # precision for FCI
 FCIprec <- list()
-for(i in 1:length(FCIres)){
-  FCIprec[[i]] <- FCIres[[i]] %>% 
+for(i in 1:length(FCIres2)){
+  FCIprec[[i]] <- FCIres2[[i]] %>% 
     map_depth(2, ~precision2(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
-    rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
+    rename_with(~ paste0("N = ", N)) %>% 
+    summarize_all(list(means=mean, sds=sd))
 }
-names(FCIprec) <- names(FCIres)
+names(FCIprec) <- names(FCIres2)
 
 # precision for CCI
 CCIprec <- list()
-for(i in 1:length(CCIres)){
-  CCIprec[[i]] <- CCIres[[i]] %>% 
+for(i in 1:length(CCIres2)){
+  CCIprec[[i]] <- CCIres2[[i]] %>% 
     map_depth(2, ~precision2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%
-    rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
+    rename_with(~ paste0("N = ", N)) %>% 
+    summarize_all(list(means=mean, sds=sd))
 }
-names(CCIprec) <- names(CCIres)
+names(CCIprec) <- names(CCIres2)
 
 ## combine the precision values
 prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>% 
@@ -220,36 +235,40 @@ prec_ranB <- bind_rows(CCD = CCDprec, FCI = FCIprec, CCI = CCIprec, .id="id") %>
   relocate(where(is.character), .before = where(is.numeric))
 
 
+
 ## compute recall
 # recall for CCD
 CCDrec <- list()
-for(i in 1:length(CCDres)){
-  CCDrec[[i]] <- CCDres[[i]] %>% 
+for(i in 1:length(CCDres2)){
+  CCDrec[[i]] <- CCDres2[[i]] %>% 
     map_depth(2, ~recall2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
-    rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
+    rename_with(~ paste0("N = ", N)) %>% 
+    summarize_all(list(means=mean, sds=sd))
 }
-names(CCDrec) <- names(CCDres)
+names(CCDrec) <- names(CCDres2)
 
 # recall for FCI
 FCIrec <- list()
-for(i in 1:length(FCIres)){
-  FCIrec[[i]] <- FCIres[[i]] %>% 
+for(i in 1:length(FCIres2)){
+  FCIrec[[i]] <- FCIres2[[i]] %>% 
     map_depth(2, ~ recall2(truemods[[i]], .x))  %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%     
-    rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
+    rename_with(~ paste0("N = ", N)) %>% 
+    summarize_all(list(means=mean, sds=sd))
 }
-names(FCIrec) <- names(FCIres)
+names(FCIrec) <- names(FCIres2)
 
 # recall for CCI
 CCIrec <- list()
-for(i in 1:length(CCIres)){
-  CCIrec[[i]] <- CCIres[[i]] %>% 
+for(i in 1:length(CCIres2)){
+  CCIrec[[i]] <- CCIres2[[i]] %>% 
     map_depth(2, ~ recall2(truemods[[i]], .x)) %>% 
     do.call("cbind", .) %>%  apply(., 2, unlist) %>% as.data.frame()  %>%
-    rename_with(~ paste0("N = ", N)) %>% summarize_all(list(means=mean, sds=sd))
+    rename_with(~ paste0("N = ", N)) %>% 
+    summarize_all(list(means=mean, sds=sd))
 }
-names(CCIrec) <- names(CCIres)
+names(CCIrec) <- names(CCIres2)
 
 ## combine the recall values
 rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>% 
@@ -271,12 +290,13 @@ rec_ranB <- bind_rows(CCD = CCDrec, FCI = FCIrec, CCI = CCIrec, .id="id") %>%
   # bring the algorithm and condition names first
   relocate(where(is.character), .before = where(is.numeric))
 
+  
 
 ## compute uncertainty
 # uncertainty for CCD
 CCDunc <- list()
-for(i in 1:length(CCDres)){
-  CCDunc[[i]] <- CCDres[[i]] %>% 
+for(i in 1:length(CCDres2)){
+  CCDunc[[i]] <- CCDres2[[i]] %>% 
     map_depth(2, ~uncertainty(.x)) %>% 
     do.call("cbind", .) %>% 
     apply(., 2, unlist) %>% 
@@ -284,12 +304,12 @@ for(i in 1:length(CCDres)){
     rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means = mean, sds = sd))  %>% t()
 }
-names(CCDunc) <- names(CCDres)
+names(CCDunc) <- names(CCDres2)
 
 # uncertainty for FCI
 FCIunc <- list()
-for(i in 1:length(FCIres)){
-  FCIunc[[i]] <- FCIres[[i]] %>% 
+for(i in 1:length(FCIres2)){
+  FCIunc[[i]] <- FCIres2[[i]] %>% 
     map_depth(2, ~uncertainty(.x))  %>% 
     do.call("cbind", .) %>% 
     apply(., 2, unlist) %>% 
@@ -297,12 +317,12 @@ for(i in 1:length(FCIres)){
     rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means = mean, sds = sd)) %>% t()
 }
-names(FCIunc) <- names(FCIres)
+names(FCIunc) <- names(FCIres2)
 
 # uncertainty for CCI
 CCIunc <- list()
-for(i in 1:length(CCIres)){
-  CCIunc[[i]] <- CCIres[[i]] %>% 
+for(i in 1:length(CCIres2)){
+  CCIunc[[i]] <- CCIres2[[i]] %>% 
     map_depth(2, ~uncertainty(.x)) %>% 
     do.call("cbind", .) %>% 
     apply(., 2, unlist) %>% 
@@ -310,7 +330,7 @@ for(i in 1:length(CCIres)){
     rename_with(~ paste0("N = ", N)) %>% 
     summarize_all(list(means = mean, sds = sd)) %>% t() 
 }
-names(CCIunc) <- names(CCIres)
+names(CCIunc) <- names(CCIres2)
 
 
 ## combine the uncertainty values
@@ -350,7 +370,7 @@ MyTheme <-  theme(plot.title = element_text(face = "bold", family = "Palatino", 
 
 
 ## plot SHD figure
-shdplot_ranB_pos <- SHD_ranB %>%
+shdplot_ranB <- SHD_ranB %>%
   # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   # create a ggplot object
@@ -377,13 +397,12 @@ shdplot_ranB_pos <- SHD_ranB %>%
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(a) SHD")  +
   guides(color = "none", fill = "none")
-# save the plot
-# ggsave(shdplot_ranB_pos, filename = "results/samplingbeta_pos_shd.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
-
+## save the plot
+# ggsave(filename = "figures/samplingbeta_shd.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot precision figure
-precisionplot_ranB_pos <- prec_ranB %>% 
+precisionplot_ranB <- prec_ranB %>% 
   # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   # create a ggplot object
@@ -410,11 +429,11 @@ precisionplot_ranB_pos <- prec_ranB %>%
   labs(title = "(b) Precision", x = "", y = "") +
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(precisionplot_ranB_pos, filename = "results/samplingbeta_pos_prec.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_prec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
 
 
 ## plot recall figure
-recallplot_ranB_pos <- rec_ranB %>% 
+recallplot_ranB <- rec_ranB %>% 
   # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   # create a ggplot object
@@ -441,10 +460,11 @@ recallplot_ranB_pos <- rec_ranB %>%
   labs(title = "(c) Recall", x = "", y = "")+
   guides(color = "none", fill = "none")
 # save the plot
-# ggsave(recallplot_ranB_pos, filename = "results/samplingbeta_pos_recall.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_rec.pdf", width = 25, height = 10, dpi = 300, units = "cm")
+
 
 ## plot uncertainty figure
-uncertaintyplot_ranB_pos <- unc_ranB %>%  
+uncertaintyplot_ranB <- unc_ranB %>%  
   # convert it to a wide format
   tidyr::pivot_wider(names_from = statistics, values_from=value) %>% 
   # create a ggplot object
@@ -471,18 +491,118 @@ uncertaintyplot_ranB_pos <- unc_ranB %>%
   scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
   ggtitle("(d) Uncertainty") 
 # save the plot
-# ggsave(uncertaintyplot_ranB_pos, filename = "results/samplingbeta_pos_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_unc.pdf", width = 25, height = 10.5, dpi = 300, units = "cm")
+
+
+## combine the figures
+ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, recallplot_ranB, uncertaintyplot_ranB, nrow=4, common.legend = TRUE, legend = "bottom")
+#ggsave(filename = "figures/samplingbeta_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+ggpubr::ggarrange(shdplot_ranB, precisionplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
+# ggsave(filename = "figures/samplingbeta_result1.pdf", width = 25, height = 22, dpi = 300, units = "cm")
+ggpubr::ggarrange(recallplot_ranB, uncertaintyplot_ranB, nrow=2, common.legend = TRUE, legend = "bottom")
+# ggsave(filename = "figures/samplingbeta_result2.pdf", width = 25, height = 22, dpi = 300, units = "cm")
+
+
+
+## =============================================================================
+## 5. Extract only 5p dense cases (Figure 18)
+## =============================================================================
+# shd plot
+dense5pshd <- SHD_ranB |> filter(condition == "B5dense") |>
+  # convert it to a wide format
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  # create a ggplot object
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  # add line graphs
+  geom_line(aes(group = id)) +
+  # add scattered points
+  geom_point(size=1) + 
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  # specify custom breaks
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  # scale_x_continuous(breaks=c(seq(50, 10000, by = 1000),10000)) +
+  labs(x="N", y="", title = "") +
+  # apply themes
+  theme_minimal() +
+  MyTheme + 
+  ggtitle("(a) SHD") 
+
+# precision plot
+dense5pprec <-prec_ranB |> filter(condition == "B5dense") |>
+  # convert it to a wide format
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  # create a ggplot object
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  # add line graphs
+  geom_line(aes(group = id)) +
+  # add scattered points
+  geom_point(size=1) + 
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  # specify custom breaks
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(x="N", y="", title = "") +
+  # apply themes
+  theme_minimal() +
+  MyTheme + 
+  ggtitle("(b) Precision") 
+
+# recall plot
+dense5prec <- rec_ranB |> filter(condition == "B5dense") |>
+  # convert it to a wide format
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  # create a ggplot object
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  # add line graphs
+  geom_line(aes(group = id)) +
+  # add scattered points
+  geom_point(size=1) + 
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  # specify custom breaks
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(x="N", y="", title = "") +
+  # apply themes
+  theme_minimal() +
+  MyTheme + 
+  ggtitle("(c) Recall") 
+
+# uncertainty plot
+dense5punc <- unc_ranB |> filter(condition == "B5dense") |>
+  # convert it to a wide format
+  tidyr::pivot_wider(names_from = statistics, values_from=value) |>
+  # create a ggplot object
+  ggplot(aes(x= as.numeric(n), y=means, group = id, colour = id, fill = id)) +
+  # add line graphs
+  geom_line(aes(group = id)) +
+  # add scattered points
+  geom_point(size=1) + 
+  # add interquartile range (IQR)
+  geom_ribbon(aes(ymin=means+qnorm(0.25)*sds, ymax=means+qnorm(0.75)*sds), alpha=0.15, color=NA) +
+  # specify custom colors
+  scale_colour_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  scale_fill_manual(values = c("#FF0000", "#00A08A", "#F2AD00"), name= "") +
+  # specify custom breaks
+  scale_x_continuous(breaks=c(50, 2500, 5000, 7500, 10000)) +
+  labs(x="N", y="", title = "") +
+  # apply themes
+  theme_minimal() +
+  MyTheme + 
+  ggtitle("(d) Uncertainty") 
 
 
 ## combine the plots
-ggpubr::ggarrange(shdplot_ranB_pos, precisionplot_ranB_pos, 
-                  recallplot_ranB_pos, uncertaintyplot_ranB_pos, 
-                  nrow=4, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_pos_result.pdf", width = 25, height = 35, dpi = 300, units = "cm")
-
-ggpubr::ggarrange(shdplot_ranB_pos, precisionplot_ranB_pos, 
-                  nrow=2, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_pos_result1.pdf", width = 25, height = 35, dpi = 300, units = "cm")
-ggpubr::ggarrange(recallplot_ranB_pos, uncertaintyplot_ranB_pos, 
-                  nrow=2, common.legend = TRUE, legend = "bottom")
-#ggsave(filename = "results/samplingbeta_pos_result2.pdf", width = 25, height = 35, dpi = 300, units = "cm")
+ggpubr::ggarrange(dense5pshd, dense5pprec, dense5prec, dense5punc, ncol=2, nrow=2, common.legend = TRUE, legend = "bottom")
+# save the plot
+# ggsave(filename = "figures/samplingbeta_dense5p.pdf", width = 17, height = 13, dpi = 300, units = "cm")
+# ggsave(filename = "figures/samplingbeta_dense5p_label10.pdf", width = 17, height = 13, dpi = 300, units = "cm")

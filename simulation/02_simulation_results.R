@@ -32,7 +32,7 @@
 ## =============================================================================
 
 # source the simulation study results
-source("    simulation/01_simulation.R")
+source("simulation/01_simulation.R")
 
 # load packages
 library(dplyr)
@@ -750,7 +750,8 @@ SHDs %>%
   MyTheme + 
   # create facets
   ggh4x::facet_nested(factor(netsize, levels = c("5p", "10p"), 
-                             labels = c("p = 5", "p = 10")) ~ factor(latentvar, levels = c("without LC", "with LC")) + 
+                             labels = c("p = 5", "p = 10")) ~ 
+                        factor(latentvar, levels = c("without LC", "with LC")) + 
                         factor(densities, levels=c("sparse", "dense")),  
                       scales = "free_y", switch="y") +
   # manually specify the x-axis break

@@ -35,10 +35,10 @@ library(pcalg)
 # remotes::install_github("KyuriP/CCI_KP")
 library(CCI.KP)
 
-source("  utils/CCD_fnc.R")
-source("  utils/plot_fnc.R")
-source("  utils/data_generating_fnc.R")
-source("  utils/eval_metrics_fnc.R")
+source("utils/CCD_fnc.R")
+source("utils/plot_fnc.R")
+source("utils/data_generating_fnc.R")
+source("utils/eval_metrics_fnc.R")
 
 
 ## =============================================================================
@@ -68,7 +68,7 @@ ccd_subsample_dep <- subsamples %>%
 mat_subsample_dep <- ccd_subsample_dep %>% 
   map(~CreateAdjMat(.x, length(.x$nodes)))
 # save the result
-# save(mat_subsample_dep, file="   empirical_example/output/mat_subsample_dep.RData")
+# save(mat_subsample_dep, file="empirical_example/output/mat_subsample_dep.RData")
 
 ## run FCI on subsamples
 fci_subsample_dep <- subsamples %>%
@@ -78,7 +78,7 @@ fci_subsample_dep <- subsamples %>%
         .@amat
   )
 # save the result
-# save(fci_subsample_dep, file="   empirical_example/output/fci_subsample_dep.RData")
+# save(fci_subsample_dep, file="empirical_example/output/fci_subsample_dep.RData")
 
 ## run CCI on subsamples
 cci_subsample_dep <- subsamples %>%
@@ -87,12 +87,12 @@ cci_subsample_dep <- subsamples %>%
         .$maag
   )
 # save the result
-# save(cci_subsample_dep, file="   empirical_example/output/cci_subsample_dep.RData")
+# save(cci_subsample_dep, file="empirical_example/output/cci_subsample_dep.RData")
 
 # load the saved results
-load("   empirical_example/output/mat_subsample_dep.RData")
-load("   empirical_example/output/fci_subsample_dep.RData")
-load("   empirical_example/output/cci_subsample_dep.RData")
+load("empirical_example/output/mat_subsample_dep.RData")
+load("empirical_example/output/fci_subsample_dep.RData")
+load("empirical_example/output/cci_subsample_dep.RData")
 
 
 ## =============================================================================

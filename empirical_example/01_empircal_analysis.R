@@ -39,11 +39,11 @@ library(CCI.KP)
 library(furrr)
 
 ## source all the necessary functions
-source("  utils/CCD_fnc.R")
-source("  utils/plot_fnc.R")
+source("utils/CCD_fnc.R")
+source("utils/plot_fnc.R")
 
 ## import the empirical data
-mcnally <- read.csv("   empirical_example/data/McNally.csv")
+mcnally <- read.csv("empirical_example/data/McNally.csv")
 
 # separate depression / OCD symptoms
 # (original data contains both depression and OCD symptoms)
