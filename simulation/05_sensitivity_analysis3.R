@@ -14,7 +14,7 @@
 # 1. Run algorithms: Apply three algorithms CCD, FCI, and CCI to the simulated 
 #    data then estimate PAGs.
 #
-# 2. Evaluate performance: Compute structural Hamming distance, precision, 
+# 2. Evaluate performance: Compute structural Hamming distance (SHD), precision, 
 #    recall, and uncertainty rate for each condition.
 #
 # 3. Organize results: Make neat data frames of resulting values of evaluation 
