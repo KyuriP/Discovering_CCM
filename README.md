@@ -9,7 +9,7 @@
 
 
 This repository serves as a research archive for the thesis project ***Discovering Cyclic Causal Models in Psychological Research***. 
-It contains the `R` code, data, figures, manuscript, supplementary material, and other subsidiary files related to the project.
+It contains the data, `R` code,  figures, manuscript, supplementary material, and other subsidiary files related to the project. Detailed guidelines on how to reproduce all analyses are also included in separate README files (see below).
 
 <details>
            <summary><b><i>Abstract</i></b></summary>
