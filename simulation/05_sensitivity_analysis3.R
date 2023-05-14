@@ -36,8 +36,8 @@ library(dplyr)    # for dplyr functions
 library(purrr)    # for using map function
 library(ggplot2)  # for creating plots
 library(ggpubr)   # for combining plots
-library(ggh4x)    # for creating facets
-library(magrittr) # for assigning pipes %<>%
+library(ggh4x)    # for creating nested facets
+library(magrittr) # for using pipes 
 
 ## Specify conditions
 # specify the sample sizes

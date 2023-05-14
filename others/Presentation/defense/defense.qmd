@@ -223,7 +223,7 @@ When we see the rows, p refers to the number of variables so I have 5-variable m
 
 And we did not observe any significant difference between the conditions involving latent confounders, LC, here and without the latent confounders.
 
-So overall, it is not so straightforward which algorithm is the best. It is somewhat dependent on the situations.
+So in general, it is not so straightforward which algorithm is the best. It is somewhat dependent on the situations and characteristics of the causal structure.
 
 <!-- First looking at the structural hamming distance, we see that in general CCI the green line and FCI the yellow line perform better in sparse conditions while CCD the red lines perform better in dense conditions. Remember this is structural hamming distance, so the lower the better. the less steps it takes the better estimated graph it is. -->
 <!-- Another thing to note i that it is a bit strange in 5p dense conditions. We see a bit of dips with the small sample sizes and actually it increases as sample size gets bigger... But for now let's move on. -->
@@ -268,7 +268,7 @@ In this project, we show that there are methods available that can estimate the 
 
 <!-- And in fact they can provide all these causal directions and some algorithms can even flag the possibility of latent confounder which are more insightful than using statistical  network models. -->
 
-But, given our simulation study, our conclusion is rather nuanced. We believe that there is no single algorithm that does well across all scenarios. Researchers hence must consider the characteristics of the causal system of interest when choosing an algorithm. 
+But, given our simulation study, our conclusion is rather nuanced. We found that there is no single algorithm that performs well across all scenarios. So, we believe that researchersmust consider the characteristics of the causal system of interest when choosing an algorithm. 
 
 <!-- we cannot say one specific algorithm outperforms in all different scenarios. And unfortunately our conclusion is rather nuanced. We believe that there is no single algorithm that is suitable for all scenarios. Researchers must consider the characteristics -->
 <!-- of the causal system of interest and relative importance of different aspects in their research questions. -->
@@ -289,7 +289,7 @@ Regardless, we emphasize that these causal discovery methods are more informativ
 :::
 
 ::: notes
-That was in a nutshell, what I've been working on for the next few more weeks. Here are the references. Are there any questions? Anything unclear? 
+That was in a nutshell, what I've been working on for the past 9 months. Here are the references. Are there any questions?
 :::
 
 
@@ -299,21 +299,22 @@ That was in a nutshell, what I've been working on for the next few more weeks. H
 
 
 -   [[*Global Markov property*]{style="color:#cc0000"} is no longer guaranteed.]{style="font-size: 0.85em"}
-    -   [Need extra restrictions on $P$. <br> (e.g., linear relations with independent error terms ($\varepsilon$))]{style="font-size: 0.7em"}
+    -   [Need extra restrictions on $P$ [@spirtes1994]. <br> E.g., linear relations with independent error terms ($\varepsilon$).]{style="font-size: 0.7em"}
 
 
--   [Cyclic model is [not always *statistically identified*]{style="color:#cc0000"}.]{style="font-size: 0.85em"}
-    -   [many equivalent models ! $\rightarrow$ PAG (partial ancestral graph).]{style="font-size: 0.7em"}
+-   [Not all cyclic models are [*statistically identified*]{style="color:#cc0000"}.]{style="font-size: 0.85em"}
+    -   [Need additional constraints on $B$: It needs to converge to an *equilibrium* (All $|\lambda| < 1$)[@eberhardt2010].]{style="font-size: 0.7em"}
 
 
--   [[*Equilibrium*]{.highlight-red} *state* is necessary ([All $|\lambda| < 1$]{style="color:#cc0000"})]{style="font-size: 0.85em"}.
+-   [Output of algorithm is [*PAG*]{style="color:#cc0000"} (partial ancestral graph).]{style="font-size: 0.85em"}
+    -   [Large Markov equivalence class.]{style="font-size: 0.7em"}
 
 ::: notes
--   There are many problems with assumptions when estimating causal model with cycles. But I picked three the most crucial ones in my opinion. So when it comes to cyclic models, the most crucial issues are first, the global markov property which is the necessary property in order to read off the graphical model, that is often violated in the models with cycles.
+-   There are many theoretical challenges when estimating causal model with cycles. But I picked three here, the most crucial ones in my opinion. So when it comes to cyclic models, the most crucial issues are first, the global markov property which is the necessary condition in order to read off the causal relationships from the graphical models, that is often violated in the models with cycles. Spirtes proved that under the additional assumptions, such as linear relationships with independent error terms, the global markov property holds even in cyclic models, but that is pretty strict assumption you have to claim.
 
--   And another major issue is that the cyclic models are often not statistically identified, meaning that either there are too many solutions possible or no solution at all.
+-   And another major issue is that not all cyclic models are statistically identified, meaning that the structural equations defining the model can have either too many solutions possible or no solution at all. Again, we need additional constraints on B, the weight matrix. When the eigen values of B are all smaller than one in absolute value, then we can ensure that there is a solution such that the cyclic model reaches an equilibrium inseted of diverging to infinite.
 
--   Lastly, not all cycles can be estimated. The ones we can estimate are limited such that it has to converge to some equilibrium states, and in order for that to happen, all Eigen values of regression matrix has to be smaller than 1 in absolute values!
+-   Lastly, the algorithm typically cannot identify direct causal relationships in cyclic models, but recovers only upto ancestral causal relationships. This is again due to the complexity arising from allowing cycles and this leads to a larger Markov equivalence class of graphs, meaning that there are many more statistically equivalent graphs.
 
 So this causes quite some headaches when trying to estimate the cyclic models. <!-- Basically, in DAG, the global Markov property always holds, and the identifiability problem is not as big of an issue often as the equivalence set is much smaller.. -->
 :::

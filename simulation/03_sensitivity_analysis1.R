@@ -41,11 +41,11 @@
 source("simulation/01_simulation.R")
 
 # load packages
-library(dplyr)
-library(purrr)
-library(ggplot2)
-library(ggpubr)
-library(ggh4x)
+library(dplyr)    # for dplyr functions
+library(purrr)    # for using map function
+library(ggplot2)  # for creating plots
+library(ggpubr)   # for combining plots
+library(ggh4x)    # # for creating nested facets
 
 # set the seed
 set.seed(123)
