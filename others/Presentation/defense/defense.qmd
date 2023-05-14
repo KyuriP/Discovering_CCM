@@ -1,7 +1,7 @@
 ---
-title: "Discovering Cyclic Causal Models in Psychological Reesearch"
+title: "Discovering Cyclic Causal Models in Psychological Research"
 subtitle: "Inferring Causal Relations from Observational Data"
-institute: "May 22, 2023"
+institute: "May 17, 2023"  #change for defense May 22, 2023
 author: "Kyuri Park"
 format: 
   revealjs:
@@ -70,7 +70,7 @@ As you can see here, feeling down makes you sleep poorly and lack of sleep makes
 ::: notes
 And what has happened a lot in psychology is that many empirical researchers try to gain insights into these causal relationships by fitting this statistical network model using observational data. \[Alt + click!\] But these connections in the network are merely statistical relations, which cannot be directly translated into causal relations.
 
-And more and more people have become aware of this issue, and there has come another popular casual modeling tool, which is DAG. DAG stands for directed acyclic graphical model. It has all these arrows you can interpret as a cause and effect. \[Alt + click!\] It seems very promising, however, one of biggest shortcomings of DAG is by definition it does not allow cycles. But as we saw before in the previous slide, the true system of psychopathology we are interested in, contains cycles. And in fact, the cycles are critical in understanding this central dynamic of symptoms. In that sense, we cannot really use DAG to estimate the real underlying mechanism. So what do we need to do?
+And more and more people have become aware of this issue, and there has come another popular casual modeling tool, which is DAG. DAG stands for directed acyclic graphical model. It has all these arrows you can interpret as a cause and effect. \[Alt + click!\] It seems very promising, however, one of biggest shortcomings of DAG is by definition it does not allow cycles. But as we saw before in the previous slide, the true system of psychopathology we are interested in, contains cycles. And in fact, the cycles are critical in understanding this central dynamic of symptoms. In that sense, we cannot really use DAG to estimate the underlying mechanism. So what do we need to do?
 :::
 
 ```{r, fig.show='hide'}
@@ -161,7 +161,7 @@ qgraph(Adj,
 <br><br>
 
 ::: {.fragment style="line-height: 1.5;"}
-[Problem]{style="color:#cc0000; font-weight: bold"}: Estimating a cyclic causal model is fundamentally very difficult. Relaxing the acyclicity assumption entails much of theoretical complication.
+[Problem]{style="color:#cc0000; font-weight: bold"}: Estimating a cyclic causal model is fundamentally very difficult. 
 :::
 
 ::: notes
@@ -212,20 +212,27 @@ What I did in my project is I evaluate these three algorithm's performance using
 
 
 :::notes
-Then we see the results right here.
+This is the part of the results.
 I used four different evaluation metrics, SHD, precision, recall, and  uncertainty rate.
-SHD stands for structural hamming distance, which is basically counting all the steps going from the estimated graph to the true graph. So lower SHD, the better, meaning that the estimated graph is closer to the true graph, hence taking less steps.
-Here we see that overall the green line has a lower SHD value ...
+But here I will present the SHD which stands for structural hamming distance.
+It sounds horrible but it is just counting all the steps going from the estimated graph to the true graph. So the lower SHD, the better, meaning that the estimated graph is closer to the true graph, hence taking less steps.
 
+Here we see that overall CCI the green line and FCI the yellow line perform better in sparse conditions while CCD the red line perform better in dense conditions.
 
-First looking at the structural hamming distance, we see that in general CCI the green line and FCI the yellow line perform better in sparse conditions while CCD the red lines perform better in dense conditions. Remember this is structural hamming distance, so the lower the better. the less steps it takes the better estimated graph it is.
-Another thing to note i that it is a bit strange in 5p dense conditions. We see a bit of dips with the small sample sizes and actually it increases as sample size gets bigger... But for now let's move on.
+When we see the rows, p refers to the number of variables so I have 5-variable model and 10-variable models. Between small and big models, we see that in small models the performance difference between algorithm is more obvious compared to the big models.
 
-Then we see precision. Here we see that FCI, the yellow one, actually doesn't do so well. it records almost always the low precision. And also very similar pattern is observed with recall values. 
+And we did not observe any significant difference between the conditions involving latent confounders, LC, here and without the latent confounders.
 
-Then we look at the uncertainty rate. Then we see CCD actually produces relatively many more circle endpoints than the others. Except for the rather strange 5p dense conditions, the CCD almost always records the highest uncertainty rate.
+So overall, it is not so straightforward which algorithm is the best. It is somewhat dependent on the situations.
 
-Well, what does it mean? It is not so straightforward what is happening here. So we look at the actual graphs.
+<!-- First looking at the structural hamming distance, we see that in general CCI the green line and FCI the yellow line perform better in sparse conditions while CCD the red lines perform better in dense conditions. Remember this is structural hamming distance, so the lower the better. the less steps it takes the better estimated graph it is. -->
+<!-- Another thing to note i that it is a bit strange in 5p dense conditions. We see a bit of dips with the small sample sizes and actually it increases as sample size gets bigger... But for now let's move on. -->
+
+<!-- Then we see precision. Here we see that FCI, the yellow one, actually doesn't do so well. it records almost always the low precision. And also very similar pattern is observed with recall values.  -->
+
+<!-- Then we look at the uncertainty rate. Then we see CCD actually produces relatively many more circle endpoints than the others. Except for the rather strange 5p dense conditions, the CCD almost always records the highest uncertainty rate. -->
+
+<!-- Well, what does it mean? It is not so straightforward what is happening here. So we look at the actual graphs. -->
 
 :::
 
@@ -242,12 +249,12 @@ Well, what does it mean? It is not so straightforward what is happening here. So
 
 -   Our study showcases the [cyclic causal discovery algorithms]{.fragment .highlight-red} that are potentially suitable for typical psychological observational data.
 
--   Causal discovery methods could provide much [richer insights]{.fragment .highlight-red} into the underlying causal dynamics of the system than statistical network models.
-
 -   Conclusion is rather [nuanced]{.fragment .highlight-red} (no one-size-fits-all algorithm).
 
--   Learning cyclic causal models from observational data is [challenging]{.fragment .highlight-red}.
-   
+-   Causal discovery methods could provide much [richer insights]{.fragment .highlight-red} into the underlying causal dynamics of the system than statistical network models.
+
+
+
 
 <!-- - Empirical researchers should be equipped with a [valid tool]{.fragment .highlight-red} to infer causality. -->
 :::
@@ -257,14 +264,18 @@ To sum it up, causal inference is the fundamental interest in science regardless
 
 And often, the underlying causal mechanism of interest contains cycles.
 
-In this project, we show some of the possibilities to researchers that there are methods available that can estimate the cyclic causal models.
+In this project, we show that there are methods available that can estimate the cyclic causal models using observational data.
 
-And in fact they can provide all these causal directions and some algorithms can even flag the possibility of latent confounder which are more insightful than using statistical  network models.
+<!-- And in fact they can provide all these causal directions and some algorithms can even flag the possibility of latent confounder which are more insightful than using statistical  network models. -->
 
-But, we cannot say one specific algorithm outperforms in all different scenarios. And unfortunately our conclusion is rather nuanced. We believe that there is no single algorithm that is suitable for all scenarios. Researchers must consider the characteristics
-of the causal system of interest and relative importance of different aspects in their research questions.
+But, given our simulation study, our conclusion is rather nuanced. We believe that there is no single algorithm that does well across all scenarios. Researchers hence must consider the characteristics of the causal system of interest when choosing an algorithm. 
 
-As a conclusion, estimating causal model with cycles based on observational data is very very challenging and it is not too super easy to understand how they work and how to interpret their output sometimes. There are much more to be done in this topic, but I do hope that the current project would encourage researchers to look at the cyclic causal discovery methods.
+<!-- we cannot say one specific algorithm outperforms in all different scenarios. And unfortunately our conclusion is rather nuanced. We believe that there is no single algorithm that is suitable for all scenarios. Researchers must consider the characteristics -->
+<!-- of the causal system of interest and relative importance of different aspects in their research questions. -->
+
+Regardless, we emphasize that these causal discovery methods are more informative than statistical network analysis when exploring causal structures. And I do hope that this current project encourages researchers to adopt these methods and study the potential applicability in psychology.
+
+<!-- As a conclusion, estimating causal model with cycles based on observational data is very very challenging and it is not too super easy to understand how they work and how to interpret their output sometimes. There are much more to be done in this topic, but I do hope that the current project would encourage researchers to look at the cyclic causal discovery methods. -->
 
 :::
 
@@ -286,15 +297,16 @@ That was in a nutshell, what I've been working on for the next few more weeks. H
 
 ## Theoretical complication {background-image="img/bg_sl3.png"}
 
--   [*Global Markov property*]{style="color:#cc0000"} is no longer guaranteed.
 
-    -   [Need extra restrictions on $P$ (e.g., linearly independent error terms ($\varepsilon$))]{style="font-size: 0.7em"}
+-   [[*Global Markov property*]{style="color:#cc0000"} is no longer guaranteed.]{style="font-size: 0.85em"}
+    -   [Need extra restrictions on $P$. <br> (e.g., linear relations with independent error terms ($\varepsilon$))]{style="font-size: 0.7em"}
 
--   Cyclic model is [not always *statistically identified*]{style="color:#cc0000"} (even in linear case).
 
-    -   [many equivalent models !]{style="font-size: 0.7em"}
+-   [Cyclic model is [not always *statistically identified*]{style="color:#cc0000"}.]{style="font-size: 0.85em"}
+    -   [many equivalent models ! $\rightarrow$ PAG (partial ancestral graph).]{style="font-size: 0.7em"}
 
--   [*Equilibrium*]{.highlight-red} *state* is necessary ([All $|\lambda| < 1$]{style="color:#cc0000"}).
+
+-   [[*Equilibrium*]{.highlight-red} *state* is necessary ([All $|\lambda| < 1$]{style="color:#cc0000"})]{style="font-size: 0.85em"}.
 
 ::: notes
 -   There are many problems with assumptions when estimating causal model with cycles. But I picked three the most crucial ones in my opinion. So when it comes to cyclic models, the most crucial issues are first, the global markov property which is the necessary property in order to read off the graphical model, that is often violated in the models with cycles.
@@ -368,19 +380,19 @@ We vary the number of edges, so the density of the model, as you see in the colu
 
 ### CPDAG
 
-![](img/CBsummaryedited.png){fig-align="center" width="900"}
+![](img/CB_summaryedited2.png){fig-align="center" width="900"}
 
 ### CCD PAG
 
-![](img/CCDsummary.png){fig-align="center" width="900"}
+![](img/CCDsummaryedited.png){fig-align="center" width="900"}
 
 ### FCI PAG
 
-![](img/FCIsummary.png){fig-align="center" height="500"}
+![](img/FCIsummaryedited.png){fig-align="center" height="500"}
 
 ### CCI PAG
 
-![](img/CCIsummary2.png){fig-align="center" height="500"}
+![](img/CCIsummaryedited.png){fig-align="center" height="500"}
 :::
 
 
@@ -429,8 +441,8 @@ So then, basically we assess the performance of each algorithm by comparing thei
 Well, how do we compare exactly?
 So these are evaluation metrics we use in our simulation.
 We first look at the structural hamming distance as an overall performance. So this more of a global evaluation metric.
-And we also look at three different local metrics, which are preicision, recall, and uncertainty rate.
-They are defined as such, which is not immeidiately intuitive.
+And we also look at three different local metrics, which are precision, recall, and uncertainty rate.
+They are defined as such, which is not immediately intuitive.
 
 But these are actually very simple.
 So this is a simple example.
