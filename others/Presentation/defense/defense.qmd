@@ -78,7 +78,7 @@ It has all these arrows you can interpret as a cause and effect.
 \[Alt + click!\]
 It seems very promising, however, one of biggest shortcomings of DAG is by definition it does not allow cycles.
 But as we saw before in the previous slide, the true system of psychopathology we are interested in, contains cycles.
-And in fact, the cycles are critical in understanding this central dynamic of symptoms.
+And in fact, the cycles are critical in understanding the dynamics of symptoms.
 In that sense, we cannot really use DAG to estimate the underlying mechanism.
 So what do we need to do?
 :::
@@ -176,7 +176,7 @@ qgraph(Adj,
 
 ::: notes
 We need to look at directed cyclic graphical models, instead of DAGs.
-However it is not so straightforward to estimate a cyclic model, as relaxing the acyclicity assumption comes with a lot theoretical complication.
+But unfortunately it is not so straightforward to estimate a cyclic model, since relaxing the acyclicity assumption comes with a lot theoretical complication.
 
 <!-- You might wonder then, why do people not use this already? -->
 <!-- Why are they even bothered using DAGs which cannot handle cycles? -->
