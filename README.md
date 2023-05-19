@@ -77,7 +77,7 @@ We examine three different cyclic causal discovery methods and investigate their
 | [`utils`](./utils)               | It includes all the supporting functions required to run the aforementioned `R` scripts for conducting analyses. |
 | [`supplementary_material`](./supplementary_material)           |It contains all files related to the supplementary material of the paper. <br> The supplementary material can be accessed via this [link](https://kyurip.quarto.pub/discovering-cyclic-causal-models/).|
 | [`figures`](./figures)               | It contains all the figures that are presented in the paper.                    |
-| [`others`](./others)               | It contains all types of subsidiary files  created during the course of the project (e.g., [presentation](./others/Presentation), [interim report](./others/Research%20Report/Research%20Report_Kyuri.pdf), and [poster](./others/Poster/Poster.pdf)).                        |
+| [`others`](./others)               | It contains all types of subsidiary files  created during the course of the project (e.g., [presentation](./others/Presentation), [interim report](https://github.com/KyuriP/Discovering_CCM/blob/main/others/Research%20Report/Research%20Reoprt_Kyuri.pdf), and [poster](./others/Poster/Poster.pdf)).                        |
 
 ## Reproducing study
 If interested in reproducing the results of:
