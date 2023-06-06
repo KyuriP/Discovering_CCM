@@ -719,7 +719,7 @@ Acyclicity & \tikzxmark & \textendash $^a$ & \tikzxmark\\
 Causal sufficiency & \checkmark &  \tikzxmark &  \tikzxmark \\
 % Linearity &  \checkmark & \tikzxmark &  \checkmark \\
 Absence of selection bias & \ \checkmark & \textendash $^a$ & \tikzxmark\\
-Independent errors & \checkmark & \checkmark & \checkmark\\
+% Independent errors & \checkmark & \checkmark & \checkmark\\
 Linearity & \checkmark & \textendash $^a$ & \checkmark \\
 \bottomrule
 
@@ -757,6 +757,7 @@ In what follows, we will explain how to interpret a PAG in detail using the exam
     \label{fig:4}
 \end{figure}
 
+\newpage
 \subsubsection{CCD Output Representation: Partial Ancestral Graph (PAG)} \label{CCDPAG}
 % Previously in section \ref{primer}, we showed how a constraint-based method estimated a Markov equivalence class of DAGs. Here, we are interested in directed \textit{cyclic} graphs (DCG). 
 As was the case for DAGs, there typically exist multiple DCGs that imply the same statistical independencies and so are statistically indistinguishable from one another. To represent a set of equivalent DCGs, the CCD algorithm uses a PAG that characterizes the common features shared by all equivalent DCGs, $Equiv(\mathcal{G})$. As discussed in Section \ref{primer}, the causal semantics of edges in PAGs become more complicated due to the presence of cyclic relations. 
