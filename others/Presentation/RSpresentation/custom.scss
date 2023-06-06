@@ -1,0 +1,105 @@
+/*-- scss:defaults --*/
+
+//body-bg: #b7b09c;
+//$body-color: #4e3629;
+//$link-color: #ffc72c;
+//$presentation-heading-color: #cc0000;
+//$code-color: #cc0000;
+//$code-block-bg: #ded9ca;
+//$code-block-border-color: #000000;
+
+/*-- scss:rules --*/
+
+/*-- title page --*/
+
+
+#title-slide.center.present{
+    top: 160px;
+    display: block;
+}
+
+h1.title{
+  font-size: 1.8em;
+  color: white;
+  margin-top: 10;
+}
+
+#title-slide .subtitle {
+    font-size: 1em;
+    margin-bottom: 9rem;
+    color: white;
+}
+
+p.date{
+  font-size: 0.7em;
+  color: white;
+}
+
+div.quarto-title-authors{
+  color: white;
+}
+
+div.quarto-title-author-name{
+  margin-bottom: 1rem;
+}
+
+.reveal .quarto-title-block .quarto-title-authors .quarto-title-author .quarto-title-author-name {
+    margin-bottom: 1rem;
+}
+
+.reveal .slide-logo{
+  height: 70px !important;
+  width: 160px!important;
+  max-width: unset !important;
+  max-height: unset !important;
+  margin: 0;
+vertical-align: bottom;
+  
+}
+
+/*-- header font size--*/
+
+.reveal h2 {
+    font-size: 1.3em;
+
+}
+
+
+/*-- body text size --*/
+
+.reveal section p {
+    display: inline-block;
+    font-size: 0.7em;
+    line-height: 1.2em;
+    vertical-align: top;
+}
+
+
+
+/*-- plots height --*/
+
+.my_class1 {
+height: 200px;
+}
+
+.my_class2 {
+height: 100px;
+}
+
+
+/*-- boris pictrue center alignec --*/
+
+img.fragment.grow{
+  text-align: center;
+}
+
+/*-- tab font smaller--*/
+#tabset-1.panel-tabset-tabby{
+  font-size: 25px;
+}
+
+
+#outputgraph{
+ text-align: center;
+}
+  

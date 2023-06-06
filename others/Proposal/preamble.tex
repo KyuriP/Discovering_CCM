@@ -1,0 +1,50 @@
+
+\usepackage[style=apa, backend=biber]{biblatex}
+\addbibresource{main_ref.bib}
+\addbibresource{additional_ref.bib}
+
+\DeclareSourcemap{
+  \maps[datatype=bibtex, overwrite]{
+    \map{
+      \perdatasource{main_ref.bib}
+      \step[fieldset=keywords, fieldvalue={,main}, append]
+    }
+  }
+}
+
+
+% \begin{document}
+% \begin{refsection}
+% \nocite{*}
+% \printbibliography[keyword={main}, title={References}]
+% \end{refsection}
+% 
+% \begin{refsection}
+% \nocite{*}
+% \printbibliography[keyword={add}, title={Additional references}]
+% \end{refsection}
+% \end{document}
+% \addbibresource{main_ref.bib}
+% \addbibresource{additional_ref.bib}
+% 
+% \begin{document}
+%  \printbibliography[keyword=main,title={References}]
+% \printbibliography[keyword=addition,title={Additional references}]
+% \end{document}
+
+
+% % biblatex
+% \usepackage[backend=bibtex, sorting=none, style=numeric-comp, defernumbers=true]{biblatex} % using biblatex
+% \addbibresource{references.bib} % add reference file
+% % for each cited reference create a category named "cited"
+% \DeclareBibliographyCategory{cited}
+% \AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
+% 
+% 
+% 
+% \nocite{*}
+% \printbibheading
+% \printbibliography[category=cited,heading=subbibliography,title={Cited papers}]
+% \printbibliography[title={Supplementary papers},heading=subbibliography,notcategory=cited]
+% 
+% \end{document}
