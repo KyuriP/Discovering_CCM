@@ -358,6 +358,13 @@
 %\newtheorem{preremark}{Definition}
 %\newenvironment{mydef}{\begin{preremark}\upshape}{\end{preremark}}
 
+% for the footnotes without numbering
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
 
 
 \onehalfspacing
@@ -410,7 +417,7 @@ Constraint-based, cyclic causal discovery, directed cyclic graph (DCG), partial 
 
 \end{adjustwidth}
 
-\let\thefootnote\relax\footnotetext{\textsuperscript{\scriptsize{*}}Correspondence concerning this paper should be addressed to: Kyuri Park, Department of Methodology and Statistics, Utrecht University, Padualaan 14, 3584 CH Utrecht, The Netherlands. e-mail: \href{mailto:kyurheep@gmail.com}{kyurheep@gmail.com}} 
+\blfootnote{\textsuperscript{\scriptsize{*}}Correspondence concerning this paper should be addressed to: Kyuri Park, Department of Methodology and Statistics, Utrecht University, Padualaan 14, 3584 CH Utrecht, The Netherlands. e-mail: \href{mailto:kyurheep@gmail.com}{kyurheep@gmail.com}} 
 
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
