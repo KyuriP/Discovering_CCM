@@ -15,6 +15,8 @@
 #       (https://sites.google.com/view/tetradcausal).
 ## =============================================================================
 
+library(rJava)
+library(rcausal)
 
 
 ccdKP <- function (df, dataType = "continuous", numCategoriesToDiscretize = 4,

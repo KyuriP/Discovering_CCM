@@ -35,6 +35,7 @@ library(qgraph)
 library(pcalg)
 library(ggplot2)
 library(dplyr)
+# remotes::install_github("KyuriP/CCI_KP")
 library(CCI.KP)
 library(furrr)
 
