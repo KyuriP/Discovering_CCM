@@ -56,15 +56,10 @@ We examine three different cyclic causal discovery methods and investigate their
 │   ├── Supplementary_material.html
 │   ├── ...
 │   └── Supplementary_material.qmd
-├── figures
-│   ├── Fig1.pdf
-│   ├── ...
-│   └── FigJ1.pdf
-└── others
-    ├── FETC-approval
-    ├── Presentation
-    ├── Proposal
-    └── Research Report
+└── figures
+    ├── Fig1.pdf
+    ├── ...
+    └── FigJ1.pdf
 ```
 
 ## Description
@@ -77,7 +72,7 @@ We examine three different cyclic causal discovery methods and investigate their
 | [`utils`](https://github.com/KyuriP/Discovering_CCM/tree/main/utils)               | It includes all the supporting functions required to run the aforementioned `R` scripts for conducting analyses. |
 | [`supplementary_material`](https://github.com/KyuriP/Discovering_CCM/tree/main/supplementary_material)           |It contains all files related to the supplementary material of the paper. <br> The supplementary material can be accessed via this [link](https://kyurip.quarto.pub/discovering-cyclic-causal-models/).|
 | [`figures`](https://github.com/KyuriP/Discovering_CCM/tree/main/figures)               | It contains all the figures that are presented in the paper.                    |
-| [`others`](https://github.com/KyuriP/Discovering_CCM/tree/main/others)               | It contains all types of subsidiary files  created during the course of the project (e.g., [presentation](./others/Presentation), [interim report](https://github.com/KyuriP/Discovering_CCM/blob/main/others/Research%20Report/Research%20Reoprt_Kyuri.pdf), and [poster](./others/Poster/Poster.pdf)).                        |
+
 
 ## Reproducing study
 If interested in reproducing the results of:
@@ -243,8 +238,6 @@ If interested in reproducing the results of:
 
 ## Ethics & Access
 All data used in this study are simulated, except for the data used in the empirical analysis, which is publicly available on the [Psychological Medicine Journal](https://www.cambridge.org/core/journals/psychological-medicine/article/abs/comorbid-obsessivecompulsive-disorder-and-depression-a-bayesian-network-approach/DAA4E2352A9E26809A4EAE35C366E900\#supplementary-materials) webpage. There is no security or privacy concerns associated with the use of either the simulated or empirical data in this study.
-Ethical approval for this study has been granted by the Ethical Review Board of the Faculty of Social and
-Behavioural Sciences [(FETC)](https://ferb.sites.uu.nl/) at Utrecht University, with reference numbers 22-1810 and 22-1825 (see the confirmation of approval: [fetcapproval1.pdf](https://github.com/KyuriP/Thesis_KP/blob/main/others/FETC-approval/fetcapproval1.pdf), [fetcapproval2.pdf](https://github.com/KyuriP/Thesis_KP/blob/main/others/FETC-approval/fetcapproval2.pdf)).
 
 This repository, which serves as an archive of the study is accessible to the public on [GitHub](https://github.com/KyuriP/Thesis_KP) under the license type of `GNU General Public License v3.0`. 
 
