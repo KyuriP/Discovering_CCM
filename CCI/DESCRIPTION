@@ -1,0 +1,12 @@
+Package: CCI.KP
+Type: Package
+Title: Cyclic Causal Inference
+Version: 0.1.0
+Author: Kyuri Park
+Maintainer: Kyuri Park <kyurheep@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+Depends: MASS, pcalg
+License: CC BY-NC 4.0
+Encoding: UTF-8
+LazyData: true
