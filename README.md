@@ -79,6 +79,9 @@ If interested in reproducing the results of:
 - simulation study, please refer to [`guide_simuation`](https://github.com/KyuriP/CCM_Discovery/blob/main/simulation/README.md).
 - empirical anlaysis, please refer to [`guide_empirical`](https://github.com/KyuriP/CCM_Discovery/blob/main/empirical_example/README.md).
 
+***Note***. There have been some maintenance issues with the `rcausal` package, which appear to be causing problems when using it. Some parts of the code depend on this package, which may lead to potential issues.
+For more information, please refer to the [`rcausal` GitHub page](https://github.com/bd2kccd/r-causal?tab=readme-ov-file).
+
 ## Software & Dependencies 
 <details>
 <summary><b><i>R session & Pacakge information</i></b></summary>
