@@ -56,7 +56,9 @@ library(rJava)
 library(usethis)
 library(devtools)
 # slightly modified CCI package
-# remotes::install_github("KyuriP/CCI_KP")
+# Install CCI from your GitHub repository
+devtools::install_github("KyuriP/Discovering_CCM/CCI", subdir = "CCI")
+# Load the package
 library(CCI.KP)
 # remotes::install_github("bd2kccd/r-causal")
 library(rcausal)
