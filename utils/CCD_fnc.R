@@ -15,6 +15,7 @@
 #       (https://sites.google.com/view/tetradcausal).
 ## =============================================================================
 
+#remotes::install_github("bd2kccd/r-causal")
 library(rJava)
 library(rcausal)
 
