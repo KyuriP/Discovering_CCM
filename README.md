@@ -1,6 +1,5 @@
 [![DOI](https://zenodo.org/badge/576782527.svg)](https://zenodo.org/badge/latestdoi/576782527) [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/) [![Active](http://img.shields.io/badge/Status-Active-green.svg)](https://github.com/KyuriP/Thesis_KP)  
 
-***MSBBSS Thesis Project***
 <div align="left">
 <img src="https://github.com/KyuriP/Thesis_KP/blob/main/cyclelogo.png" width=10% height=10% align="left">
 <h1> Discovering Cyclic Causal Models in Psychological Research </h1>
